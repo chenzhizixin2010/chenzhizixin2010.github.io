@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>五洲铁路模组服务器地名生成器</title>
+    <style>
+        /* ========== 全局重置 & 字体 ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            background: #f7f2ea;
+            background-image:
+                radial-gradient(ellipse at 20% 50%, rgba(200, 170, 140, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(200, 170, 140, 0.08) 0%, transparent 60%),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4c5b2' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            font-family: 'Georgia', '华文楷体', 'KaiTi', 'SimSun', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 960px;
+            background: rgba(255, 252, 245, 0.85);
+            backdrop-filter: blur(6px);
+            border-radius: 48px 48px 36px 36px;
+            box-shadow: 0 20px 60px rgba(120, 80, 50, 0.18), 0 8px 24px rgba(120, 80, 50, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            padding: 40px 44px 50px;
+            border: 1px solid rgba(200, 170, 140, 0.25);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .container::before,
+        .container::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-color: #b8a088;
+            opacity: 0.25;
+            pointer-events: none;
+        }
+        .container::before {
+            top: 16px;
+            left: 16px;
+            border-top: 2px solid #b8a088;
+            border-left: 2px solid #b8a088;
+            border-radius: 4px 0 0 0;
+        }
+        .container::after {
+            bottom: 16px;
+            right: 16px;
+            border-bottom: 2px solid #b8a088;
+            border-right: 2px solid #b8a088;
+            border-radius: 0 0 4px 0;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+            position: relative;
+        }
+        .header-icon {
+            font-size: 38px;
+            display: block;
+            margin-bottom: 4px;
+            letter-spacing: 6px;
+        }
+        .header h1 {
+            font-size: 42px;
+            font-weight: 400;
+            color: #5a3e2b;
+            letter-spacing: 12px;
+            text-shadow: 0 2px 4px rgba(90, 62, 43, 0.06);
+            font-family: '华文楷体', 'KaiTi', 'Georgia', serif;
+            position: relative;
+            display: inline-block;
+        }
+        .header h1::after {
+            content: '·';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #c4a080;
+            font-size: 28px;
+        }
+        .header .subtitle {
+            font-size: 15px;
+            color: #a08570;
+            letter-spacing: 10px;
+            margin-top: 2px;
+            font-family: '华文楷体', 'KaiTi', serif;
+            opacity: 0.7;
+        }
+        .header .divider-line {
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #c9b09b, transparent);
+            margin: 12px auto 0;
+            border-radius: 2px;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 18px 28px;
+            background: rgba(235, 220, 208, 0.25);
+            padding: 18px 30px;
+            border-radius: 60px;
+            border: 1px solid rgba(200, 180, 160, 0.2);
+            margin-bottom: 32px;
+            backdrop-filter: blur(2px);
+        }
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .control-group label {
+            font-size: 15px;
+            color: #6b5340;
+            letter-spacing: 2px;
+            font-weight: 400;
+        }
+        .control-group input[type="number"] {
+            width: 66px;
+            padding: 6px 4px 6px 12px;
+            border: 1px solid #d6c6b8;
+            border-radius: 30px;
+            background: rgba(255, 252, 248, 0.7);
+            font-size: 16px;
+            color: #4a3525;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.25s;
+            text-align: center;
+        }
+        .control-group input[type="number"]:focus {
+            border-color: #b08870;
+            box-shadow: 0 0 0 3px rgba(176, 136, 112, 0.12);
+        }
+        .control-group input[type="number"]::-webkit-inner-spin-button {
+            opacity: 0.5;
+        }
+        .control-group select {
+            padding: 6px 18px 6px 16px;
+            border: 1px solid #d6c6b8;
+            border-radius: 30px;
+            background: rgba(255, 252, 248, 0.7);
+            font-size: 15px;
+            color: #4a3525;
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.25s;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23907a68' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+        .control-group select:focus {
+            border-color: #b08870;
+            box-shadow: 0 0 0 3px rgba(176, 136, 112, 0.12);
+        }
+        .btn {
+            padding: 8px 32px;
+            border: none;
+            border-radius: 40px;
+            font-size: 17px;
+            font-family: '华文楷体', 'KaiTi', 'Georgia', serif;
+            letter-spacing: 4px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            background: #8b6b54;
+            color: #fcf6ef;
+            box-shadow: 0 4px 14px rgba(139, 107, 84, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn:hover {
+            background: #7a5d48;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 107, 84, 0.30);
+        }
+        .btn:active {
+            transform: translateY(0px);
+            box-shadow: 0 4px 10px rgba(139, 107, 84, 0.20);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: #7a5d48;
+            box-shadow: none;
+            border: 1px solid #c9b09b;
+            padding: 7px 28px;
+        }
+        .btn-secondary:hover {
+            background: rgba(200, 180, 160, 0.15);
+            box-shadow: none;
+            transform: translateY(-2px);
+        }
+        .btn-secondary:active {
+            transform: translateY(0px);
+        }
+        .btn-icon {
+            margin-right: 4px;
+            font-size: 18px;
+            vertical-align: middle;
+        }
+        .stats {
+            text-align: center;
+            font-size: 14px;
+            color: #a08570;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            opacity: 0.7;
+            min-height: 24px;
+        }
+        .result-area {
+            min-height: 260px;
+            padding: 8px 4px;
+        }
+        .name-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 16px 20px;
+            justify-items: center;
+        }
+        .name-item {
+            background: rgba(255, 252, 245, 0.6);
+            border-radius: 20px;
+            padding: 14px 10px 12px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid rgba(200, 180, 160, 0.15);
+            transition: all 0.25s ease;
+            cursor: default;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(120, 80, 50, 0.04);
+        }
+        .name-item:hover {
+            background: rgba(255, 252, 245, 0.9);
+            border-color: rgba(176, 136, 112, 0.30);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(120, 80, 50, 0.08);
+        }
+        .name-item .name-text {
+            font-size: 22px;
+            color: #3d2b1e;
+            letter-spacing: 6px;
+            font-family: '华文楷体', 'KaiTi', 'Georgia', serif;
+            line-height: 1.4;
+        }
+        .name-item .name-length-tag {
+            display: inline-block;
+            font-size: 10px;
+            color: #b8a088;
+            background: rgba(200, 180, 160, 0.15);
+            padding: 1px 10px;
+            border-radius: 20px;
+            margin-top: 4px;
+            letter-spacing: 1px;
+            font-family: 'Georgia', serif;
+        }
+        .name-item .name-location,
+        .name-item .name-coords {
+            font-size: 11px;
+            color: #a08570;
+            margin-top: 3px;
+            letter-spacing: 0.5px;
+        }
+        .name-item .star {
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            opacity: 0.4;
+            transition: opacity 0.2s;
+        }
+        .name-item .star.active {
+            opacity: 1;
+            color: #e6b800;
+        }
+        .name-item .name-pinyin {
+            font-size: 12px;
+            color: #a89484;
+            margin-top: 2px;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #c9b09b;
+            font-size: 18px;
+            letter-spacing: 6px;
+            font-family: '华文楷体', 'KaiTi', serif;
+            opacity: 0.5;
+        }
+        .empty-state .empty-icon {
+            font-size: 54px;
+            display: block;
+            margin-bottom: 12px;
+            opacity: 0.6;
+        }
+        .footer-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(200, 180, 160, 0.2);
+        }
+        .set-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+            align-items: center;
+            justify-content: center;
+            margin-top: 12px;
+        }
+        .set-group label {
+            font-size: 14px;
+            color: #6b5340;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .set-group input[type="number"] {
+            width: 64px;
+            padding: 4px 6px;
+            border: 1px solid #d6c6b8;
+            border-radius: 20px;
+            background: rgba(255, 252, 248, 0.7);
+            font-size: 14px;
+            color: #4a3525;
+            text-align: center;
+            outline: none;
+            font-family: inherit;
+        }
+        .set-group input[type="number"]:focus {
+            border-color: #b08870;
+        }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: #3d2b1e;
+            color: #f5ede4;
+            padding: 10px 30px;
+            border-radius: 40px;
+            font-size: 14px;
+            letter-spacing: 2px;
+            font-family: '华文楷体', 'KaiTi', serif;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+            opacity: 0;
+            transition: all 0.4s ease;
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 999;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ===== 弹窗淡入淡出动画 ===== */
+        .dev-modal,
+        .update-modal,
+        .collect-modal {
+            display: flex;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        .dev-modal.active,
+        .update-modal.active,
+        .collect-modal.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* 弹窗内容盒子的缩放动画 */
+        .dev-box,
+        .update-box,
+        .collect-box {
+            transform: scale(0.92) translateY(12px);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+            opacity: 0;
+            background: #fffcf5;
+            border-radius: 32px;
+            border: 1px solid rgba(200, 170, 140, 0.3);
+            box-shadow: 0 12px 40px rgba(90, 62, 43, 0.2);
+            max-width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 36px;
+        }
+        .active .dev-box,
+        .active .update-box,
+        .active .collect-box {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        /* 各弹窗的独特尺寸调整 */
+        .dev-box {
+            padding: 40px 50px;
+            text-align: center;
+            max-width: 90%;
+        }
+        .update-box {
+            width: 92%;
+            max-width: 600px;
+            max-height: 80vh;
+            padding: 36px;
+        }
+        .collect-box {
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            padding: 30px;
+        }
+        .collect-box.dict-box {
+            max-width: 700px;
+        }
+
+        .dev-box h3,
+        .update-box h3,
+        .collect-box h3 {
+            font-size: 26px;
+            color: #5a3e2b;
+            letter-spacing: 4px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .dev-name-text {
+            font-size: 22px;
+            color: #7a5d48;
+            letter-spacing: 3px;
+            margin-bottom: 24px;
+            white-space: pre-line;
+            line-height: 1.8;
+            text-align: center;
+        }
+        .dev-close-btn {
+            padding: 8px 30px;
+            border: 1px solid #c9b09b;
+            background: transparent;
+            border-radius: 30px;
+            font-family: inherit;
+            color: #6b5340;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .dev-close-btn:hover {
+            background: rgba(200, 180, 160, 0.15);
+        }
+        .update-content {
+            color: #4a3525;
+            line-height: 1.8;
+            font-size: 15px;
+            letter-spacing: 1px;
+            margin-bottom: 26px;
+            white-space: pre-line;
+        }
+        .update-close {
+            display: block;
+            margin: 0 auto;
+            padding: 8px 36px;
+            border: 1px solid #c9b09b;
+            background: transparent;
+            border-radius: 30px;
+            font-family: inherit;
+            color: #6b5340;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .update-close:hover {
+            background: rgba(200, 180, 160, 0.15);
+        }
+
+        .collect-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin: 16px 0;
+        }
+        .collect-item {
+            background: rgba(235, 220, 208, 0.25);
+            padding: 8px;
+            text-align: center;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #4a3525;
+        }
+        .collect-item .collect-del {
+            color: #999;
+            font-size: 12px;
+            cursor: pointer;
+            display: block;
+            margin-top: 2px;
+        }
+        .collect-empty {
+            text-align: center;
+            color: #a08570;
+            padding: 30px 0;
+        }
+        .collect-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .watermark {
+            position: absolute;
+            right: 30px;
+            bottom: 20px;
+            font-size: 12px;
+            color: #d4c5b2;
+            letter-spacing: 4px;
+            opacity: 0.3;
+            pointer-events: none;
+            font-family: '华文楷体', 'KaiTi', serif;
+        }
+
+        /* ===== 深色主题 ===== */
+        html.dark {
+            --bg-main: #1c1a18;
+            --bg-card: #282420;
+            --bg-item: #36312c;
+            --text-main: #f8f3ed;
+            --text-sub: #d9cbc0;
+            --text-light: #b8a898;
+            --border-color: rgba(145, 130, 115, 0.35);
+        }
+        html.dark body {
+            background: var(--bg-main);
+            background-image: none;
+        }
+        html.dark .container {
+            background: var(--bg-card);
+        }
+        html.dark .controls {
+            background: rgba(50, 46, 42, 0.4);
+        }
+        html.dark .name-item {
+            background: var(--bg-item);
+        }
+        html.dark .dev-box,
+        html.dark .update-box,
+        html.dark .collect-box {
+            background: var(--bg-card);
+        }
+        html.dark h1,
+        html.dark h3,
+        html.dark .name-text {
+            color: var(--text-main);
+        }
+        html.dark .control-group label,
+        html.dark .set-group label,
+        html.dark .dev-name-text {
+            color: var(--text-sub);
+        }
+        html.dark .update-content {
+            color: #f0e6dd !important;
+            font-weight: 500;
+        }
+        html.dark .stats,
+        html.dark .empty-state,
+        html.dark .name-length-tag,
+        html.dark .collect-empty,
+        html.dark .name-location,
+        html.dark .name-coords {
+            color: var(--text-light);
+        }
+        html.dark .control-group input,
+        html.dark .control-group select,
+        html.dark .set-group input[type="number"] {
+            background: #3a3530;
+            color: #f8f3ed;
+            border-color: rgba(145, 130, 115, 0.4);
+        }
+        html.dark .btn-secondary {
+            border-color: rgba(145, 130, 115, 0.45);
+            color: var(--text-sub);
+        }
+        html.dark .btn-secondary:hover {
+            background: rgba(70, 64, 58, 0.6);
+        }
+        html.dark .name-pinyin {
+            color: #c2b09c !important;
+        }
+        html.dark .collect-item {
+            color: #d9cbc0;
+            background: rgba(60, 54, 48, 0.5);
+        }
+        html.dark .collect-item .collect-del {
+            color: #a09080;
+        }
+        html.dark .dev-modal,
+        html.dark .update-modal,
+        html.dark .collect-modal {
+            background: rgba(0, 0, 0, 0.65);
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 700px) {
+            .container {
+                padding: 28px 18px 32px;
+                border-radius: 32px;
+            }
+            .header h1 {
+                font-size: 30px;
+                letter-spacing: 8px;
+            }
+            .header h1::after {
+                display: none;
+            }
+            .header .subtitle {
+                font-size: 13px;
+                letter-spacing: 6px;
+            }
+            .controls {
+                padding: 14px 18px;
+                border-radius: 40px;
+                gap: 12px 16px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .control-group {
+                justify-content: center;
+            }
+            .btn {
+                padding: 7px 24px;
+                font-size: 15px;
+                letter-spacing: 2px;
+            }
+            .name-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 12px;
+            }
+            .name-item .name-text {
+                font-size: 18px;
+                letter-spacing: 4px;
+            }
+            .container::before,
+            .container::after {
+                width: 40px;
+                height: 40px;
+            }
+            .container::before {
+                top: 10px;
+                left: 10px;
+            }
+            .container::after {
+                bottom: 10px;
+                right: 10px;
+            }
+            .toast {
+                font-size: 12px;
+                padding: 8px 20px;
+                white-space: normal;
+                max-width: 90%;
+                bottom: 20px;
+            }
+            .dev-box {
+                padding: 30px 24px;
+                width: 90%;
+            }
+            .update-box {
+                padding: 24px;
+            }
+            .set-group {
+                gap: 8px 14px;
+            }
+            .set-group input[type="number"] {
+                width: 54px;
+                font-size: 13px;
+            }
+            .watermark {
+                display: none;
+            }
+            .collect-box {
+                padding: 20px;
+            }
+        }
+        @media (max-width: 420px) {
+            .container {
+                padding: 20px 12px 24px;
+            }
+            .header h1 {
+                font-size: 24px;
+                letter-spacing: 4px;
+            }
+            .control-group label {
+                font-size: 13px;
+            }
+            .control-group input[type="number"] {
+                width: 54px;
+                font-size: 14px;
+            }
+            .control-group select {
+                font-size: 13px;
+                padding: 5px 28px 5px 12px;
+            }
+            .name-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 10px;
+            }
+            .name-item .name-text {
+                font-size: 16px;
+                letter-spacing: 3px;
+            }
+            .name-item {
+                padding: 10px 6px 8px;
+            }
+            .btn {
+                padding: 6px 18px;
+                font-size: 14px;
+            }
+            .footer-actions {
+                gap: 10px;
+            }
+            .footer-actions .btn-secondary {
+                padding: 5px 16px;
+                font-size: 13px;
+            }
+            .collect-box {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ====== Toast ====== -->
+    <div id="toast" class="toast"></div>
+
+    <!-- ====== 更新日志弹窗 ====== -->
+    <div class="update-modal" id="updateModal">
+        <div class="update-box">
+            <h3>📜 更新日志</h3>
+            <div class="update-content" id="updateText">
+                V2.0_RELEASE 2026-7-24
+                1. 新增明暗双主题切换，浅色/古风暗色自由切换，设置自动本地保存
+                2. 新增地名收藏系统，每个地名卡片右上角星星可收藏，独立收藏面板统一管理
+                3. 新增词库管理，可查看/删除自定义词，支持清空自定义词
+                4. 新增导出TXT文件功能，批量导出当前所有地名保存到本地
+                5. 新增「生成去重」勾选框，开启后不会产出重复地名
+                6. 更新弹窗新增「今日不再提示」按钮，当天刷新页面不会重复弹出更新公告
+                7. 新增本地持久存储：自动记忆上次选择的生成数量、地名长度、主题模式、收藏列表、坐标范围
+                8. 优化底部功能栏，拓展多个实用功能按钮，布局适配手机端
+                9. 修复部分移动端显示细微错位问题
+                10. 优化卡片交互视觉，收藏星星有高亮区分状态
+                11. 保留原有全部基础功能：地名随机生成、批量复制、单击单条复制、开发者弹窗、清空功能
+                12. 新增坐标范围自定义、拼音显示、导入词库、全局去重、复制完整信息
+                13. 新增了*说明*按钮，部分提示在此可以查看
+                14. 新增了*历史记录*功能，可记录50条生成记录
+                15. 优化了网页动效
+
+                感谢各位使用五洲铁路模组服务器地名生成器！
+
+                —— 豆包 & DeepSeek & 陈之自信 敬上
+
+                『历史更新』
+                V1.1 2026-7-24
+                1. 调整了最大生成数至50
+                2. 调整了网站启动后默认选择二字模式
+                3. Bug修复
+                4. 新增开发者弹窗按钮
+            </div>
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                <button class="btn btn-secondary" id="updateIgnore">今日不再提示</button>
+                <button class="update-close" id="updateClose">确认关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== 开发者弹窗 ====== -->
+    <div class="dev-modal" id="devModal">
+        <div class="dev-box">
+            <h3>👤 开发者信息</h3>
+            <div class="dev-name-text">
+                开发者：Deepseek·豆包·陈之自信
+                版本：V2.0_RELEASE
+                反馈：3064450669@qq.com
+                © 五洲铁路模组服务器 2026
+            </div>
+            <button class="btn btn-secondary" id="openUpdateBtn" style="margin-bottom:16px;">
+                <span class="btn-icon">📜</span> 查看更新日志
+            </button>
+            <button class="dev-close-btn" id="devClose">关闭</button>
+        </div>
+    </div>
+
+    <!-- ====== 收藏弹窗 ====== -->
+    <div class="collect-modal" id="collectModal">
+        <div class="collect-box">
+            <h3>⭐ 我的收藏地名</h3>
+            <div class="collect-empty" id="collectEmpty">暂无收藏，点击地名星星添加</div>
+            <div class="collect-list" id="collectList"></div>
+            <div class="collect-buttons">
+                <button class="btn btn-secondary" id="collectCopyAll">复制全部收藏</button>
+                <button class="btn btn-secondary" id="collectClearAll">清空收藏</button>
+                <button class="btn" id="collectClose">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== 说明弹窗 ====== -->
+    <div class="update-modal" id="helpModal">
+        <div class="update-box">
+            <h3>📖 导入词库说明</h3>
+            <div class="update-content">
+                “导入词库”功能的具体要求如下：
+
+                1. 文件格式与编码
+                - 格式：必须是 .txt 文本文件。
+                - 编码：请务必保存为 UTF-8 编码（否则中文会显示为乱码，无法识别）。
+
+                2. 内容要求（重点）
+                - 词条类型：该功能专门用于扩充地名开头的前缀/修饰词词库（即代码中的 PREFIX_SINGLE 数组）。
+                - 字符长度：请使用单个汉字作为词条（例如：清、雅、韵、灵）。如果导入多字词（如“清风”），系统也会接受，但在生成两字地名时会被拆解为“清”+“风”的组合逻辑，建议保持单字以确保生成效果自然。
+
+                3. 分隔与排版方式
+                识别非常灵活，支持换行、空格、英文逗号 , 或中文逗号 ， 来分隔不同的字。
+                示例（以下任一格式均可）：
+                - 按行分隔：
+                  曦
+                  岚
+                  岫
+                - 逗号分隔：
+                  曦, 岚, 岫, 嶂, 壑
+
+                4. 生效机制
+                - 导入的词汇会追加到现有词库末尾，不会覆盖原有词库。
+                - 如果导入的字与已有字重复，不会自动去重（可能会略微增加相同字出现的概率，但开启“生成去重”功能仍能保证最终地名不重复）。
+                - 导入成功后，页面底部会弹出提示，显示成功导入的个数。
+            </div>
+            <button class="update-close" id="helpClose">关闭</button>
+        </div>
+    </div>
+
+    <!-- ====== 历史记录弹窗 ====== -->
+    <div class="collect-modal" id="historyModal">
+        <div class="collect-box">
+            <h3>📜 历史记录</h3>
+            <div class="collect-empty" id="historyEmpty">暂无历史记录</div>
+            <div class="collect-list" id="historyList" style="display:none;"></div>
+            <div class="collect-buttons">
+                <button class="btn btn-secondary" id="historyClearAll">清空全部历史</button>
+                <button class="btn" id="historyClose">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== 词库管理弹窗 ====== -->
+    <div class="collect-modal" id="dictModal">
+        <div class="collect-box" style="max-width:700px;">
+            <h3>📚 词库管理</h3>
+            <div style="display:flex;gap:12px;justify-content:center;margin-bottom:12px;flex-wrap:wrap;">
+                <span id="dictStats" style="color:#6b5340;">共 0 个词</span>
+                <button class="btn btn-secondary" id="dictClearCustom" style="padding:4px 16px;font-size:13px;">清空自定义</button>
+            </div>
+            <div id="dictWordList" style="max-height:400px;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;padding:8px 0;"></div>
+            <div class="collect-buttons">
+                <button class="btn" id="dictClose">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== 主容器 ====== -->
+    <div class="container">
+        <span class="watermark">· 五洲 ·</span>
+
+        <!-- 头部 -->
+        <div class="header">
+            <span class="header-icon">🏯</span>
+            <h1>五洲铁路模组服务器地名生成器</h1>
+            <div class="subtitle">— 五 洲 共 力 · 四 海 同 心 —</div>
+            <div class="divider-line"></div>
+        </div>
+
+        <!-- 控制区 -->
+        <div class="controls">
+            <div class="control-group">
+                <button class="btn btn-secondary" id="importDictBtn" style="padding:6px 14px;font-size:14px;">📂 导入词库</button>
+                <button class="btn btn-secondary" id="helpBtn" style="padding:6px 24px;font-size:14px;">
+                <span class="btn-icon">❓</span> 词库说明
+            </button>
+                <input type="file" id="dictFileInput" accept=".txt" style="display:none;">
+            </div>
+            <div class="control-group">
+                <label for="countInput">生成</label>
+                <input type="number" id="countInput" value="8" min="1" max="50" />
+                <label for="typeSelect">· 长度</label>
+                <select id="typeSelect">
+                    <option value="2" selected>两字</option>
+                    <option value="3">三字</option>
+                    <option value="4">四字</option>
+                    <option value="0">全部</option>
+                </select>
+            </div>
+            <button class="btn" id="generateBtn">
+                <span class="btn-icon">✦</span> 生成
+            </button>
+            <button class="btn btn-secondary" id="themeBtn" style="padding:6px 24px;font-size:14px;">
+                <span class="btn-icon">🌓</span> 明暗切换
+            </button>
+            <button class="btn btn-secondary" id="devBtn">
+                <span class="btn-icon">👤</span> 开发者信息
+            </button>
+                            <button class="btn btn-secondary" id="dictManageBtn" style="padding:6px 24px;font-size:14px;">
+                    <span class="btn-icon">📚</span> 词库管理
+                </button>
+        </div>
+
+        <!-- 统计 -->
+        <div class="stats" id="statsInfo">点击「生成」</div>
+
+        <!-- 结果展示 -->
+        <div class="result-area" id="resultArea">
+            <div class="empty-state" id="emptyState">
+                <span class="empty-icon">🌸</span>
+                轻 点 生 成 · 地 名 自 来
+            </div>
+            <div class="name-grid" id="nameGrid" style="display:none;"></div>
+        </div>
+
+        <!-- 底部功能栏 -->
+        <div class="footer-actions">
+            <button class="btn btn-secondary" id="copyAllFull" style="padding:6px 24px;font-size:14px;">
+                <span class="btn-icon">📋</span>复制完整信息
+            </button>
+            <button class="btn btn-secondary" id="clearBtn" style="padding:6px 24px;font-size:14px;">
+                <span class="btn-icon">✕</span> 清空
+            </button>
+            <button class="btn btn-secondary" id="exportBtn" style="padding:6px 24px;font-size:14px;">
+                <span class="btn-icon">💾</span> 导出TXT
+            </button>
+            <button class="btn btn-secondary" id="collectOpenBtn" style="padding:6px 24px;font-size:14px;">
+                <span class="btn-icon">⭐</span> 收藏列表
+            </button>
+            <button class="btn btn-secondary" id="historyBtn" style="padding:6px 24px;font-size:14px;">
+                <span class="btn-icon">📜</span> 历史记录
+            </button>
+            <button class="btn btn-secondary" id="globalUniqueBtn" style="padding:6px 24px;font-size:14px;">
+                <span class="btn-icon">🔂</span> 全局去重
+            </button>
+        </div>
+
+        <!-- 设置区 -->
+        <div class="set-group">
+            <label><input type="checkbox" id="uniqueCheck"> 生成去重</label>
+            <label><input type="checkbox" id="pinyinSwitch"> 拼音</label>
+            <label>X: <input type="number" id="xMin" value="-9999"> ~ <input type="number" id="xMax" value="9999"></label>
+            <label>Z: <input type="number" id="zMin" value="-9999"> ~ <input type="number" id="zMax" value="9999"></label>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        //  1. 词 库
+        // ================================================================
+        const PREFIX_SINGLE = [
+            '清', '雅', '韵', '秀', '灵', '幽', '静', '翠', '碧', '苍',
+            '皓', '明', '和', '安', '宁', '逸', '致', '妙', '玄', '虚',
+            '幻', '梦', '云', '雾', '烟', '霞', '虹', '露', '霜', '雪',
+            '梅', '兰', '竹', '菊', '松', '柏', '柳', '桃', '杏', '梨',
+            '枫', '荷', '莲', '桂', '棠', '薇', '萱', '芷', '若', '蓉',
+            '芙', '蕖', '荻', '芦', '蒲', '藤', '萝', '蔓', '枝', '叶',
+            '花', '香', '芳', '菲', '芬', '馥', '郁', '馨', '暖', '寒',
+            '凉', '温', '润', '泽', '沛', '潇', '洒', '飘', '飞', '扬',
+            '舞', '翩', '跹', '婉', '约', '柔', '美', '丽', '艳', '娇',
+            '媚', '妩', '娟', '妍', '娴', '淑', '慧', '敏', '捷', '睿',
+            '智', '仁', '义', '礼', '信', '德', '善', '良', '慈', '悲',
+            '悯', '怀', '念', '思', '忆', '无', '空', '寂', '禅', '悟',
+            '觉', '醒', '风', '雨', '雷', '电', '冰', '寒', '暑', '春',
+            '夏', '秋', '冬', '晨', '暮', '夕', '夜', '晓', '曙', '曦',
+            '晖', '岚', '岫', '嶂', '壑', '涧', '汀', '渚', '洲', '屿',
+            '阜', '隰', '坂', '垄', '畦', '陌', '阡', '津', '渡', '浦',
+            '湾', '港', '澳', '碛', '磴', '硐', '硖', '崃', '崤', '嵯',
+            '峨', '峥', '嵘', '崔', '嵬', '嶙', '峋', '崎', '岖', '迤',
+            '逦', '蜿', '蜒', '蟠', '踞', '镇', '守', '护', '卫', '御',
+            '防', '固', '坚', '牢', '稳', '定', '平', '康', '泰', '丰',
+            '盈', '裕', '足', '富', '贵', '荣', '华', '显', '赫', '盛',
+            '昌', '兴', '旺', '隆', '熙', '睦', '谐', '协', '同', '共',
+            '享', '分', '合', '聚', '散', '离', '别', '逢', '遇', '交',
+            '往', '来', '去', '行', '止', '居', '停', '宿', '歇', '眠',
+            '卧', '坐', '立', '倚', '凭', '望', '眺', '瞰', '观', '赏',
+            '览', '游', '玩', '嬉', '乐', '悦', '欣', '喜', '欢', '爱',
+            '恋', '慕', '羡', '仰', '敬', '尊', '崇', '拜', '谒', '访',
+            '问', '询', '答', '对', '谈', '论', '议', '评', '品', '尝',
+            '饮', '食', '住', '衣', '冠', '带', '佩', '饰', '装', '扮',
+            '梳', '洗', '沐', '浴', '洁', '净', '爽', '畅', '舒', '适',
+            '宜', '怡', '缓', '徐', '悠', '闲', '暇', '余', '满', '盈',
+            '溢', '泛', '漫', '弥', '散', '布', '列', '排', '陈', '设',
+            '置', '安', '放', '存', '储', '积', '聚', '汇', '集', '合',
+            '并', '连', '接', '通', '达', '至', '到', '临', '莅', '顾',
+            '眷', '垂', '惠', '赐', '恩', '泽', '福', '祉', '祥', '瑞',
+            '吉', '庆', '贺', '祝', '颂', '歌', '舞', '奏', '演', '唱',
+            '吟', '咏', '诵', '读', '写', '画', '描', '绘', '染', '渲',
+            '泼', '洒', '挥', '展', '舒', '卷', '收', '放', '开', '闭',
+            '启', '封', '藏', '隐', '现', '显', '露', '呈', '献', '奉',
+            '贡', '纳', '受', '承', '担', '负', '荷', '载', '运', '转',
+            '进', '退', '止', '息', '生', '死', '存', '亡', '兴', '衰',
+            '荣', '枯', '成', '败', '得', '失', '是', '非', '善', '恶',
+            '美', '丑', '真', '假', '实', '有', '无', '多', '少', '大',
+            '小', '长', '短', '高', '低', '深', '浅', '宽', '窄', '厚',
+            '薄', '轻', '重', '缓', '急', '快', '慢', '迟', '早', '先',
+            '后', '左', '右', '前', '后', '上', '下', '内', '外', '中',
+            '间', '旁', '侧', '隅', '角'
+        ];
+        const SUFFIX_SINGLE = [
+            '山', '水', '江', '河', '湖', '海', '溪', '泉', '涧', '潭',
+            '池', '塘', '泽', '湾', '港', '岸', '汀', '洲', '渚', '岛',
+            '屿', '峰', '岭', '岳', '峦', '崖', '岩', '石', '洞', '穴',
+            '谷', '峡', '壑', '沟', '坡', '岗', '丘', '陵', '原', '野',
+            '田', '园', '林', '森', '亭', '台', '楼', '阁', '轩', '榭',
+            '廊', '桥', '城', '关', '镇', '村', '庄', '寨', '堡', '驿',
+            '站', '铺', '坊', '市', '集', '街', '巷', '弄', '院', '宅',
+            '府', '第', '堂', '室', '居', '庐', '舍', '斋', '庵', '观',
+            '庙', '寺', '宫', '殿', '苑', '圃', '景', '境', '界', '天',
+            '地', '日', '月', '星', '辰', '云', '风', '雨', '雪', '霜',
+            '露', '雾', '烟', '霞', '虹', '光', '影', '色'
+        ];
+        const PAIR_WORDS = [
+            '清风', '明月', '白云', '碧水', '青山', '翠竹', '红梅', '金桂',
+            '玉兰', '紫薇', '丹枫', '雪莲', '烟雨', '云雾', '霞光', '虹霓',
+            '霜雪', '冰凌', '寒梅', '暖阳', '春色', '秋韵', '夏荷', '冬雪',
+            '晨钟', '暮鼓', '晓风', '夕照', '星河', '月影', '花香', '鸟语',
+            '竹韵', '松涛', '泉声', '溪流', '湖光', '山色', '林壑', '峰峦',
+            '云海', '雾凇', '雪原', '冰峰', '翠谷', '幽涧', '碧潭', '清溪',
+            '秀峰', '灵岩', '仙境', '桃源', '蓬莱', '昆仑', '天山', '峨眉',
+            '青城', '武当', '嵩山', '衡山', '华山', '恒山', '泰山', '黄山',
+            '庐山', '雁荡', '武夷', '龙虎', '三清', '齐云', '鹤鸣', '普陀',
+            '九华', '五台', '琅琊', '会稽', '云梦', '潇湘', '洞庭', '鄱阳',
+            '太湖', '洪泽', '巢湖', '滇池', '洱海', '泸沽', '镜泊', '千岛',
+            '普陀', '峨眉', '九华', '五台', '青城', '武当', '龙虎', '齐云',
+            '三清', '鹤鸣', '鸡足', '梵净', '普贤', '文殊', '观音', '地藏',
+            '紫气', '祥云', '瑞雪', '甘露', '和风', '细雨', '薄雾', '轻烟',
+            '晚霞', '朝露', '晨曦', '暮霭', '晴空', '碧野', '苍茫', '浩渺'
+        ];
+        const PAIR_SUFFIX = [
+            '山水', '江河', '湖海', '溪泉', '峰岭', '岳峦', '崖岩', '洞穴',
+            '峡谷', '壑沟', '坡岗', '丘陵', '原野', '田园', '园林', '亭台',
+            '楼阁', '轩榭', '廊桥', '城关', '村镇', '庄寨', '堡驿', '站铺',
+            '坊市', '街巷', '弄院', '宅府', '第堂', '室居', '庐舍', '斋庵',
+            '观庙', '寺宫', '殿苑', '圃景', '境界', '天地', '日月', '星辰',
+            '云风', '雨雪', '霜露', '雾烟', '霞虹', '光影', '烟波', '风月',
+            '云水', '山月', '松风', '竹雨', '梅雪', '兰烟', '荷风', '桂月',
+            '柳岸', '桃溪', '杏林', '梨云', '枫岭', '松涛', '竹海', '梅岭',
+            '兰谷', '菊径', '荷塘', '桂园', '薇苑', '萱庭', '芷岸', '若溪',
+            '蓉浦', '芙洲', '蕖泽', '荻渚', '芦汀', '蒲湾', '藤架', '萝径',
+            '蔓篱', '枝巢', '叶舟', '花坞', '香径', '芳洲', '菲岸', '芬谷',
+            '馥园', '郁林', '馨苑', '暖阁', '寒亭', '凉轩', '温榭', '润廊',
+            '泽桥', '沛居', '潇舍', '洒斋', '飘堂', '飞扬', '舞榭', '翩台',
+            '跹阁', '婉约', '柔美', '丽景', '艳阳', '娇春', '媚夏', '妩秋',
+            '娟冬', '妍晨', '娴暮', '淑夕', '慧夜', '敏捷', '睿智'
+        ];
+        const LOCATION_LIST = [
+            '临江渡口', '河畔集镇', '滨湖小城', '沿海港口', '山谷村镇', '山腰驿站',
+            '高山城关', '岭间村落', '平原大镇', '田间小村', '官道枢纽', '交叉集镇',
+            '林海据点', '林间驿站', '幽谷小镇', '溪畔村落', '边塞重镇', '边关驿站',
+            '内陆商都', '丘陵乡落', '湖心岛屿', '河畔半岛', '峡谷隘口', '古道驿站'
+        ];
+        const PINYIN_MAP = {
+            清: 'qīng', 雅: 'yǎ', 韵: 'yùn', 秀: 'xiù', 灵: 'líng', 幽: 'yōu', 静: 'jìng', 翠: 'cuì', 碧: 'bì', 苍: 'cāng',
+            皓: 'hào', 明: 'míng', 和: 'hé', 安: 'ān', 宁: 'níng', 逸: 'yì', 致: 'zhì', 妙: 'miào', 玄: 'xuán', 虚: 'xū',
+            幻: 'huàn', 梦: 'mèng', 云: 'yún', 雾: 'wù', 烟: 'yān', 霞: 'xiá', 虹: 'hóng', 露: 'lù', 霜: 'shuāng', 雪: 'xuě',
+            梅: 'méi', 兰: 'lán', 竹: 'zhú', 菊: 'jú', 松: 'sōng', 柏: 'bǎi', 柳: 'liǔ', 桃: 'táo', 杏: 'xìng', 梨: 'lí',
+            枫: 'fēng', 荷: 'hé', 莲: 'lián', 桂: 'guì', 棠: 'táng', 薇: 'wēi', 萱: 'xuān', 芷: 'zhǐ', 若: 'ruò', 蓉: 'róng',
+            芙: 'fú', 蕖: 'qú', 荻: 'dí', 芦: 'lú', 蒲: 'pú', 藤: 'téng', 萝: 'luó', 蔓: 'màn', 枝: 'zhī', 叶: 'yè',
+            花: 'huā', 香: 'xiāng', 芳: 'fāng', 菲: 'fēi', 芬: 'fēn', 馥: 'fù', 郁: 'yù', 馨: 'xīn', 暖: 'nuǎn', 寒: 'hán',
+            凉: 'liáng', 温: 'wēn', 润: 'rùn', 泽: 'zé', 沛: 'pèi', 潇: 'xiāo', 洒: 'sǎ', 飘: 'piāo', 飞: 'fēi', 扬: 'yáng',
+            舞: 'wǔ', 翩: 'piān', 跹: 'xiān', 婉: 'wǎn', 约: 'yuē', 柔: 'róu', 美: 'měi', 丽: 'lì', 艳: 'yàn', 娇: 'jiāo',
+            媚: 'mèi', 妩: 'wǔ', 娟: 'juān', 妍: 'yán', 娴: 'xián', 淑: 'shū', 慧: 'huì', 敏: 'mǐn', 捷: 'jié', 睿: 'ruì',
+            智: 'zhì', 仁: 'rén', 义: 'yì', 礼: 'lǐ', 信: 'xìn', 德: 'dé', 善: 'shàn', 良: 'liáng', 慈: 'cí', 悲: 'bēi',
+            悯: 'mǐn', 怀: 'huái', 念: 'niàn', 思: 'sī', 忆: 'yì', 无: 'wú', 空: 'kōng', 寂: 'jì', 禅: 'chán', 悟: 'wù',
+            觉: 'jué', 醒: 'xǐng', 风: 'fēng', 雨: 'yǔ', 雷: 'léi', 电: 'diàn', 冰: 'bīng', 暑: 'shǔ', 春: 'chūn', 夏: 'xià',
+            秋: 'qiū', 冬: 'dōng', 晨: 'chén', 暮: 'mù', 夕: 'xī', 夜: 'yè', 晓: 'xiǎo', 曙: 'shǔ', 曦: 'xī', 晖: 'huī',
+            岚: 'lán', 岫: 'xiù', 嶂: 'zhàng', 壑: 'hè', 涧: 'jiàn', 汀: 'tīng', 渚: 'zhǔ', 洲: 'zhōu', 屿: 'yǔ', 阜: 'fù',
+            隰: 'xí', 坂: 'bǎn', 垄: 'lǒng', 畦: 'qí', 陌: 'mò', 阡: 'qiān', 津: 'jīn', 渡: 'dù', 浦: 'pǔ', 湾: 'wān',
+            港: 'gǎng', 澳: 'ào', 碛: 'qì', 磴: 'dèng', 硐: 'dòng', 硖: 'xiá', 崃: 'lái', 崤: 'xiáo', 嵯: 'cuó', 峨: 'é',
+            峥: 'zhēng', 嵘: 'róng', 崔: 'cuī', 嵬: 'wéi', 嶙: 'lín', 峋: 'xún', 崎: 'qí', 岖: 'qū', 迤: 'yǐ', 逦: 'lǐ',
+            蜿: 'wān', 蜒: 'yán', 蟠: 'pán', 踞: 'jù', 镇: 'zhèn', 守: 'shǒu', 护: 'hù', 卫: 'wèi', 御: 'yù', 防: 'fáng',
+            固: 'gù', 坚: 'jiān', 牢: 'láo', 稳: 'wěn', 定: 'dìng', 平: 'píng', 康: 'kāng', 泰: 'tài', 丰: 'fēng', 盈: 'yíng',
+            裕: 'yù', 足: 'zú', 富: 'fù', 贵: 'guì', 荣: 'róng', 华: 'huá', 显: 'xiǎn', 赫: 'hè', 盛: 'shèng', 昌: 'chāng',
+            兴: 'xīng', 旺: 'wàng', 隆: 'lóng', 熙: 'xī', 睦: 'mù', 谐: 'xié', 协: 'xié', 同: 'tóng', 共: 'gòng', 享: 'xiǎng',
+            分: 'fēn', 合: 'hé', 聚: 'jù', 散: 'sàn', 离: 'lí', 别: 'bié', 逢: 'féng', 遇: 'yù', 交: 'jiāo', 往: 'wǎng',
+            来: 'lái', 去: 'qù', 行: 'xíng', 止: 'zhǐ', 居: 'jū', 停: 'tíng', 宿: 'sù', 歇: 'xiē', 眠: 'mián', 卧: 'wò',
+            坐: 'zuò', 立: 'lì', 倚: 'yǐ', 凭: 'píng', 望: 'wàng', 眺: 'tiào', 瞰: 'kàn', 观: 'guān', 赏: 'shǎng', 览: 'lǎn',
+            游: 'yóu', 玩: 'wán', 嬉: 'xī', 乐: 'lè', 悦: 'yuè', 欣: 'xīn', 喜: 'xǐ', 欢: 'huān', 爱: 'ài', 恋: 'liàn',
+            慕: 'mù', 羡: 'xiàn', 仰: 'yǎng', 敬: 'jìng', 尊: 'zūn', 崇: 'chóng', 拜: 'bài', 谒: 'yè', 访: 'fǎng', 问: 'wèn',
+            询: 'xún', 答: 'dá', 对: 'duì', 谈: 'tán', 论: 'lùn', 议: 'yì', 评: 'píng', 品: 'pǐn', 尝: 'cháng', 饮: 'yǐn',
+            食: 'shí', 住: 'zhù', 衣: 'yī', 冠: 'guān', 带: 'dài', 佩: 'pèi', 饰: 'shì', 装: 'zhuāng', 扮: 'bàn', 梳: 'shū',
+            洗: 'xǐ', 沐: 'mù', 浴: 'yù', 洁: 'jié', 净: 'jìng', 爽: 'shuǎng', 畅: 'chàng', 舒: 'shū', 适: 'shì', 宜: 'yí',
+            怡: 'yí', 缓: 'huǎn', 徐: 'xú', 悠: 'yōu', 闲: 'xián', 暇: 'xiá', 余: 'yú', 满: 'mǎn', 溢: 'yì', 泛: 'fàn',
+            漫: 'màn', 弥: 'mí', 散: 'sàn', 布: 'bù', 列: 'liè', 排: 'pái', 陈: 'chén', 设: 'shè', 置: 'zhì', 安: 'ān',
+            放: 'fàng', 存: 'cún', 储: 'chǔ', 积: 'jī', 聚: 'jù', 汇: 'huì', 集: 'jí', 合: 'hé', 并: 'bìng', 连: 'lián',
+            接: 'jiē', 通: 'tōng', 达: 'dá', 至: 'zhì', 到: 'dào', 临: 'lín', 莅: 'lì', 顾: 'gù', 眷: 'juàn', 垂: 'chuí',
+            惠: 'huì', 赐: 'cì', 恩: 'ēn', 泽: 'zé', 福: 'fú', 祉: 'zhǐ', 祥: 'xiáng', 瑞: 'ruì', 吉: 'jí', 庆: 'qìng',
+            贺: 'hè', 祝: 'zhù', 颂: 'sòng', 歌: 'gē', 舞: 'wǔ', 奏: 'zòu', 演: 'yǎn', 唱: 'chàng', 吟: 'yín', 咏: 'yǒng',
+            诵: 'sòng', 读: 'dú', 写: 'xiě', 画: 'huà', 描: 'miáo', 绘: 'huì', 染: 'rǎn', 渲: 'xuàn', 泼: 'pō', 洒: 'sǎ',
+            挥: 'huī', 展: 'zhǎn', 舒: 'shū', 卷: 'juǎn', 收: 'shōu', 放: 'fàng', 开: 'kāi', 闭: 'bì', 启: 'qǐ', 封: 'fēng',
+            藏: 'cáng', 隐: 'yǐn', 现: 'xiàn', 显: 'xiǎn', 露: 'lù', 呈: 'chéng', 献: 'xiàn', 奉: 'fèng', 贡: 'gòng', 纳: 'nà',
+            受: 'shòu', 承: 'chéng', 担: 'dān', 负: 'fù', 荷: 'hé', 载: 'zài', 运: 'yùn', 转: 'zhuǎn', 进: 'jìn', 退: 'tuì',
+            止: 'zhǐ', 息: 'xī', 生: 'shēng', 死: 'sǐ', 存: 'cún', 亡: 'wáng', 兴: 'xīng', 衰: 'shuāi', 荣: 'róng', 枯: 'kū',
+            成: 'chéng', 败: 'bài', 得: 'dé', 失: 'shī', 是: 'shì', 非: 'fēi', 善: 'shàn', 恶: 'è', 美: 'měi', 丑: 'chǒu',
+            真: 'zhēn', 假: 'jiǎ', 实: 'shí', 有: 'yǒu', 无: 'wú', 多: 'duō', 少: 'shǎo', 大: 'dà', 小: 'xiǎo', 长: 'cháng',
+            短: 'duǎn', 高: 'gāo', 低: 'dī', 深: 'shēn', 浅: 'qiǎn', 宽: 'kuān', 窄: 'zhǎi', 厚: 'hòu', 薄: 'bó', 轻: 'qīng',
+            重: 'zhòng', 缓: 'huǎn', 急: 'jí', 快: 'kuài', 慢: 'màn', 迟: 'chí', 早: 'zǎo', 先: 'xiān', 后: 'hòu', 左: 'zuǒ',
+            右: 'yòu', 前: 'qián', 后: 'hòu', 上: 'shàng', 下: 'xià', 内: 'nèi', 外: 'wài', 中: 'zhōng', 间: 'jiān', 旁: 'páng',
+            侧: 'cè', 隅: 'yú', 角: 'jiǎo', 山: 'shān', 水: 'shuǐ', 江: 'jiāng', 河: 'hé', 湖: 'hú', 海: 'hǎi', 溪: 'xī',
+            泉: 'quán', 涧: 'jiàn', 潭: 'tán', 池: 'chí', 塘: 'táng', 泽: 'zé', 湾: 'wān', 港: 'gǎng', 岸: 'àn', 汀: 'tīng',
+            洲: 'zhōu', 渚: 'zhǔ', 岛: 'dǎo', 屿: 'yǔ', 峰: 'fēng', 岭: 'lǐng', 岳: 'yuè', 峦: 'luán', 崖: 'yá', 岩: 'yán',
+            石: 'shí', 洞: 'dòng', 穴: 'xué', 谷: 'gǔ', 峡: 'xiá', 壑: 'hè', 沟: 'gōu', 坡: 'pō', 岗: 'gǎng', 丘: 'qiū',
+            陵: 'líng', 原: 'yuán', 野: 'yě', 田: 'tián', 园: 'yuán', 林: 'lín', 森: 'sēn', 亭: 'tíng', 台: 'tái', 楼: 'lóu',
+            阁: 'gé', 轩: 'xuān', 榭: 'xiè', 廊: 'láng', 桥: 'qiáo', 城: 'chéng', 关: 'guān', 镇: 'zhèn', 村: 'cūn', 庄: 'zhuāng',
+            寨: 'zhài', 堡: 'bǎo', 驿: 'yì', 站: 'zhàn', 铺: 'pù', 坊: 'fāng', 市: 'shì', 集: 'jí', 街: 'jiē', 巷: 'xiàng',
+            弄: 'lòng', 院: 'yuàn', 宅: 'zhái', 府: 'fǔ', 第: 'dì', 堂: 'táng', 室: 'shì', 居: 'jū', 庐: 'lú', 舍: 'shè',
+            斋: 'zhāi', 庵: 'ān', 观: 'guàn', 庙: 'miào', 寺: 'sì', 宫: 'gōng', 殿: 'diàn', 苑: 'yuàn', 圃: 'pǔ', 景: 'jǐng',
+            境: 'jìng', 界: 'jiè', 天: 'tiān', 地: 'dì', 日: 'rì', 月: 'yuè', 星: 'xīng', 辰: 'chén', 光: 'guāng', 影: 'yǐng',
+            色: 'sè'
+        };
+
+        // ================================================================
+        //  2. 工 具 函 数
+        // ================================================================
+        function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+        function getPinyinStr(name) {
+            let res = '';
+            for (const c of name) {
+                res += (PINYIN_MAP[c] || c) + ' ';
+            }
+            return res.trim();
+        }
+
+        function getRandomXZ() {
+            const xMin = parseInt(document.getElementById('xMin').value) || -9999;
+            const xMax = parseInt(document.getElementById('xMax').value) || 9999;
+            const zMin = parseInt(document.getElementById('zMin').value) || -9999;
+            const zMax = parseInt(document.getElementById('zMax').value) || 9999;
+            const x1 = Math.min(xMin, xMax),
+                x2 = Math.max(xMin, xMax);
+            const z1 = Math.min(zMin, zMax),
+                z2 = Math.max(zMin, zMax);
+            const x = Math.floor(Math.random() * (x2 - x1 + 1)) + x1;
+            const z = Math.floor(Math.random() * (z2 - z1 + 1)) + z1;
+            return `X: ${x}, Z: ${z}`;
+        }
+
+        // ================================================================
+        //  3. 存 储 工 具
+        // ================================================================
+        const storage = {
+            get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
+            set(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+        };
+
+        // ================================================================
+        //  4. 配 置 & 收 藏 & 自 定 义 词 库
+        // ================================================================
+        let config = storage.get('wzConfig') || {
+            count: 8,
+            type: 2,
+            dark: false,
+            noUpdateToday: false,
+            xMin: -9999,
+            xMax: 9999,
+            zMin: -9999,
+            zMax: 9999
+        };
+        let collectList = storage.get('wzCollect') || [];
+        let customPrefixes = storage.get('wzCustomPrefixes') || [];
+
+        function saveConfig() {
+            config.count = parseInt(countInput.value) || 8;
+            config.type = parseInt(typeSelect.value) || 0;
+            config.xMin = parseInt(document.getElementById('xMin').value) || -9999;
+            config.xMax = parseInt(document.getElementById('xMax').value) || 9999;
+            config.zMin = parseInt(document.getElementById('zMin').value) || -9999;
+            config.zMax = parseInt(document.getElementById('zMax').value) || 9999;
+            storage.set('wzConfig', config);
+        }
+
+        function getAllPrefixes() {
+            return PREFIX_SINGLE.concat(customPrefixes);
+        }
+
+        function generateName(type) {
+            const prefixes = getAllPrefixes();
+            switch (type) {
+                case 2:
+                    return pick(prefixes) + pick(SUFFIX_SINGLE);
+                case 3: {
+                    const mode = Math.random();
+                    if (mode < 0.45) return pick(prefixes) + pick(SUFFIX_SINGLE) + pick(SUFFIX_SINGLE);
+                    if (mode < 0.80) return pick(prefixes) + pick(prefixes) + pick(SUFFIX_SINGLE);
+                    return pick(prefixes) + pick(SUFFIX_SINGLE) + pick(prefixes);
+                }
+                case 4:
+                    return pick(PAIR_WORDS) + pick(PAIR_SUFFIX);
+                default: {
+                    const t = Math.floor(Math.random() * 3) + 2;
+                    return generateName(t);
+                }
+            }
+        }
+
+        // ================================================================
+        //  5. DOM 引 用
+        // ================================================================
+        const countInput = document.getElementById('countInput');
+        const typeSelect = document.getElementById('typeSelect');
+        const generateBtn = document.getElementById('generateBtn');
+        // copyBtn 已移除
+        const clearBtn = document.getElementById('clearBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        const themeBtn = document.getElementById('themeBtn');
+        const copyAllFull = document.getElementById('copyAllFull');
+        const globalUniqueBtn = document.getElementById('globalUniqueBtn');
+        const uniqueCheck = document.getElementById('uniqueCheck');
+        const pinyinSwitch = document.getElementById('pinyinSwitch');
+        const importDictBtn = document.getElementById('importDictBtn');
+        const dictFileInput = document.getElementById('dictFileInput');
+        const dictManageBtn = document.getElementById('dictManageBtn');
+        const dictModal = document.getElementById('dictModal');
+        const dictClose = document.getElementById('dictClose');
+        const dictWordList = document.getElementById('dictWordList');
+        const dictStats = document.getElementById('dictStats');
+        const dictClearCustom = document.getElementById('dictClearCustom');
+        const nameGrid = document.getElementById('nameGrid');
+        const emptyState = document.getElementById('emptyState');
+        const statsInfo = document.getElementById('statsInfo');
+        const toast = document.getElementById('toast');
+        const devBtn = document.getElementById('devBtn');
+        const devModal = document.getElementById('devModal');
+        const devClose = document.getElementById('devClose');
+        const openUpdateBtn = document.getElementById('openUpdateBtn');
+        const updateModal = document.getElementById('updateModal');
+        const updateClose = document.getElementById('updateClose');
+        const updateIgnore = document.getElementById('updateIgnore');
+        const collectOpenBtn = document.getElementById('collectOpenBtn');
+        const collectModal = document.getElementById('collectModal');
+        const collectClose = document.getElementById('collectClose');
+        const collectListDom = document.getElementById('collectList');
+        const collectEmpty = document.getElementById('collectEmpty');
+        const collectCopyAll = document.getElementById('collectCopyAll');
+        const collectClearAll = document.getElementById('collectClearAll');
+        const helpBtn = document.getElementById('helpBtn');
+        const helpModal = document.getElementById('helpModal');
+        const helpClose = document.getElementById('helpClose');
+        const historyBtn = document.getElementById('historyBtn');
+        const historyModal = document.getElementById('historyModal');
+        const historyClose = document.getElementById('historyClose');
+        const historyClearAll = document.getElementById('historyClearAll');
+        const historyList = document.getElementById('historyList');
+        const historyEmpty = document.getElementById('historyEmpty');
+
+        let currentNames = [];
+
+        // ================================================================
+        //  6. 弹窗控制辅助函数
+        // ================================================================
+        function showModal(modal) {
+            modal.classList.add('active');
+        }
+
+        function hideModal(modal) {
+            modal.classList.remove('active');
+        }
+
+        // ================================================================
+        //  7. Toast
+        // ================================================================
+        function showToast(msg, duration = 1800) {
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._hideTimer);
+            toast._hideTimer = setTimeout(() => toast.classList.remove('show'), duration);
+        }
+
+        // ================================================================
+        //  8. 渲 染 核 心
+        // ================================================================
+        function render(names) {
+            currentNames = names || [];
+            if (!currentNames.length) {
+                nameGrid.style.display = 'none';
+                emptyState.style.display = 'block';
+                statsInfo.textContent = '暂无地名，点击「生成」';
+                return;
+            }
+            emptyState.style.display = 'none';
+            nameGrid.style.display = 'grid';
+
+            const lenMap = {};
+            currentNames.forEach(n => { const l = n.length;
+                lenMap[l] = (lenMap[l] || 0) + 1; });
+            const parts = [];
+            if (lenMap[2]) parts.push(`两字 ${lenMap[2]} 个`);
+            if (lenMap[3]) parts.push(`三字 ${lenMap[3]} 个`);
+            if (lenMap[4]) parts.push(`四字 ${lenMap[4]} 个`);
+            statsInfo.textContent = `共 ${currentNames.length} 个 · ${parts.join(' · ')}`;
+
+            const showPinyin = pinyinSwitch.checked;
+            nameGrid.innerHTML = currentNames.map(name => {
+                const lenTag = name.length === 2 ? '两字' : name.length === 3 ? '三字' : '四字';
+                const isStar = collectList.includes(name);
+                const location = pick(LOCATION_LIST);
+                const coords = getRandomXZ();
+                const pinyinHtml = showPinyin ? `<div class="name-pinyin">${getPinyinStr(name)}</div>` : '';
+                return `
+                        <div class="name-item">
+                            <span class="star ${isStar?'active':''}" data-name="${name}">⭐</span>
+                            <div class="name-text">${name}</div>
+                            ${pinyinHtml}
+                            <div class="name-length-tag">${lenTag}</div>
+                            <div class="name-location">📍 ${location}</div>
+                            <div class="name-coords">🗺️ ${coords}</div>
+                        </div>
+                    `;
+            }).join('');
+
+            nameGrid.querySelectorAll('.star').forEach(star => {
+                star.onclick = function(e) {
+                    e.stopPropagation();
+                    const n = this.dataset.name;
+                    if (collectList.includes(n)) {
+                        collectList = collectList.filter(x => x !== n);
+                        this.classList.remove('active');
+                        showToast(`取消收藏「${n}」`);
+                    } else {
+                        collectList.push(n);
+                        this.classList.add('active');
+                        showToast(`已收藏「${n}」`);
+                    }
+                    storage.set('wzCollect', collectList);
+                };
+            });
+
+            nameGrid.querySelectorAll('.name-item').forEach(item => {
+                item.onclick = function(e) {
+                    if (e.target.closest('.star')) return;
+                    const textEl = this.querySelector('.name-text');
+                    if (!textEl) return;
+                    const name = textEl.textContent.trim();
+                    navigator.clipboard.writeText(name).then(() => showToast(`📌 已复制「${name}」`, 1200))
+                        .catch(() => {
+                            const ta = document.createElement('textarea');
+                            ta.value = name;
+                            document.body.appendChild(ta);
+                            ta.select();
+                            document.execCommand('copy');
+                            ta.remove();
+                            showToast(`📌 已复制「${name}」`, 1200);
+                        });
+                };
+            });
+        }
+
+        // ================================================================
+        //  9. 历 史 记 录 函 数
+        // ================================================================
+        const HISTORY_KEY = 'wzHistory';
+        const MAX_HISTORY = 50;
+
+        function getHistory() {
+            return storage.get(HISTORY_KEY) || [];
+        }
+
+        function saveHistory(names) {
+            if (!names || !names.length) return;
+            let history = getHistory();
+            const currentStr = names.join('|||');
+            if (history.length > 0) {
+                const last = history[0];
+                if (last.names.join('|||') === currentStr) {
+                    last.timestamp = Date.now();
+                    storage.set(HISTORY_KEY, history);
+                    return;
+                }
+            }
+            history.unshift({ names: names.slice(), timestamp: Date.now() });
+            if (history.length > MAX_HISTORY) history = history.slice(0, MAX_HISTORY);
+            storage.set(HISTORY_KEY, history);
+        }
+
+        // ================================================================
+        //  10. 生 成 批 量
+        // ================================================================
+        function generateBatch() {
+            const count = Math.min(Math.max(parseInt(countInput.value) || 8, 1), 50);
+            const type = parseInt(typeSelect.value) || 0;
+            const names = [];
+            if (uniqueCheck.checked) {
+                const set = new Set();
+                let attempts = 0;
+                while (set.size < count && attempts < 2000) {
+                    set.add(generateName(type));
+                    attempts++;
+                }
+                names.push(...set);
+            } else {
+                for (let i = 0; i < count; i++) {
+                    names.push(generateName(type));
+                }
+            }
+            render(names);
+            saveHistory(names);
+            saveConfig();
+        }
+
+        // ================================================================
+        //  11. 收 藏 面 板
+        // ================================================================
+        function renderCollectPanel() {
+            if (!collectList.length) {
+                collectEmpty.style.display = 'block';
+                collectListDom.style.display = 'none';
+                return;
+            }
+            collectEmpty.style.display = 'none';
+            collectListDom.style.display = 'grid';
+            collectListDom.innerHTML = collectList.map((name, idx) => `
+                    <div class="collect-item">
+                        ${name}
+                        <span class="collect-del" data-del="${idx}">移除</span>
+                    </div>
+                `).join('');
+            collectListDom.querySelectorAll('.collect-del').forEach(el => {
+                el.onclick = function() {
+                    const idx = parseInt(this.dataset.del);
+                    collectList.splice(idx, 1);
+                    storage.set('wzCollect', collectList);
+                    renderCollectPanel();
+                    if (currentNames.length) {
+                        nameGrid.querySelectorAll('.star').forEach(s => {
+                            const n = s.dataset.name;
+                            if (collectList.includes(n)) s.classList.add('active');
+                            else s.classList.remove('active');
+                        });
+                    }
+                };
+            });
+        }
+
+        // ================================================================
+        //  12. 词 库 管 理 面 板
+        // ================================================================
+        function renderDictPanel() {
+            const allWords = getAllPrefixes();
+            dictStats.textContent = `共 ${allWords.length} 个词（默认 ${PREFIX_SINGLE.length}，自定义 ${customPrefixes.length}）`;
+            dictWordList.innerHTML = allWords.map((word, idx) => {
+                const isCustom = idx >= PREFIX_SINGLE.length;
+                const realIdx = isCustom ? idx - PREFIX_SINGLE.length : idx;
+                return `
+                        <div style="background:rgba(235,220,208,0.2);padding:6px 8px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-size:14px;">
+                            <span>${word}</span>
+                            ${isCustom ? `<span class="dict-del" data-idx="${realIdx}" style="cursor:pointer;color:#b88;font-size:12px;">✕</span>` : `<span style="color:#999;font-size:11px;">默认</span>`}
+                        </div>
+                    `;
+            }).join('');
+
+            dictWordList.querySelectorAll('.dict-del').forEach(el => {
+                el.onclick = function(e) {
+                    e.stopPropagation();
+                    const idx = parseInt(this.dataset.idx);
+                    customPrefixes.splice(idx, 1);
+                    storage.set('wzCustomPrefixes', customPrefixes);
+                    renderDictPanel();
+                    showToast('已删除该词');
+                };
+            });
+        }
+
+        // ================================================================
+        //  13. 历 史 记 录 面 板 渲 染
+        // ================================================================
+        function renderHistoryPanel() {
+            const history = getHistory();
+            if (!history.length) {
+                historyEmpty.style.display = 'block';
+                historyList.style.display = 'none';
+                return;
+            }
+            historyEmpty.style.display = 'none';
+            historyList.style.display = 'grid';
+            historyList.innerHTML = history.map((item, idx) => {
+                const time = new Date(item.timestamp).toLocaleString('zh-CN');
+                const count = item.names.length;
+                const preview = item.names.slice(0, 3).join('、') + (count > 3 ? ` …等${count}个` : '');
+                return `
+                        <div class="collect-item" style="cursor:pointer;text-align:left;padding:10px 14px;" data-idx="${idx}">
+                            <div style="font-weight:bold;">📌 ${preview}</div>
+                            <div style="font-size:12px;color:#a08570;margin-top:4px;">
+                                ${count} 个地名 · ${time}
+                            </div>
+                        </div>
+                    `;
+            }).join('');
+            historyList.querySelectorAll('.collect-item').forEach(el => {
+                el.onclick = function() {
+                    const idx = parseInt(this.dataset.idx);
+                    const history = getHistory();
+                    if (history[idx]) {
+                        const names = history[idx].names;
+                        render(names);
+                        showToast(`✅ 已恢复历史记录（${names.length} 个地名）`);
+                        hideModal(historyModal);
+                    }
+                };
+            });
+        }
+
+        function clearHistory() {
+            storage.set(HISTORY_KEY, []);
+            renderHistoryPanel();
+            showToast('🗑️ 历史已清空');
+        }
+
+        // ================================================================
+        //  14. 事 件 绑 定
+        // ================================================================
+        generateBtn.addEventListener('click', generateBatch);
+
+        countInput.addEventListener('change', function() {
+            let v = parseInt(this.value) || 8;
+            v = Math.min(Math.max(v, 1), 50);
+            this.value = v;
+            saveConfig();
+        });
+        countInput.addEventListener('keydown', e => { if (e.key === 'Enter') generateBatch(); });
+
+        typeSelect.addEventListener('change', saveConfig);
+        typeSelect.addEventListener('keydown', e => { if (e.key === 'Enter') generateBatch(); });
+
+        // 清空
+        clearBtn.addEventListener('click', function() { render([]);
+            showToast('已清空', 1000); });
+
+        // 明暗切换
+        themeBtn.addEventListener('click', function() {
+            config.dark = !config.dark;
+            document.documentElement.classList.toggle('dark', config.dark);
+            saveConfig();
+            showToast(config.dark ? '🌙 已切换至暗色' : '☀️ 已切换至浅色');
+        });
+
+        // 导出TXT
+        exportBtn.addEventListener('click', function() {
+            if (!currentNames.length) { showToast('暂无地名，无法导出'); return; }
+            const lines = [];
+            nameGrid.querySelectorAll('.name-item').forEach(item => {
+                const name = item.querySelector('.name-text')?.textContent || '';
+                const loc = item.querySelector('.name-location')?.textContent?.replace('📍 ', '') || '';
+                const coord = item.querySelector('.name-coords')?.textContent?.replace('🗺️ ', '') || '';
+                lines.push(`${name} | ${loc} | ${coord}`);
+            });
+            const blob = new Blob([lines.join('\r\n')], { type: 'text/plain;charset=utf-8' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = '五洲地名列表.txt';
+            a.click();
+            URL.revokeObjectURL(a.href);
+            showToast('✅ 已导出TXT文件');
+        });
+
+        // 复制完整信息
+        copyAllFull.addEventListener('click', function() {
+            if (!currentNames.length) { showToast('暂无生成内容'); return; }
+            const lines = [];
+            nameGrid.querySelectorAll('.name-item').forEach(item => {
+                const name = item.querySelector('.name-text')?.textContent || '';
+                const loc = item.querySelector('.name-location')?.textContent?.replace('📍 ', '') || '';
+                const coord = item.querySelector('.name-coords')?.textContent?.replace('🗺️ ', '') || '';
+                lines.push(`${name} | ${loc} | ${coord}`);
+            });
+            const text = lines.join('\n');
+            navigator.clipboard.writeText(text).then(() => showToast(`✅ 已复制 ${lines.length} 条完整信息`))
+                .catch(() => {
+                    const ta = document.createElement('textarea');
+                    ta.value = text;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    ta.remove();
+                    showToast(`✅ 已复制 ${lines.length} 条完整信息`);
+                });
+        });
+
+        // 全局去重
+        globalUniqueBtn.addEventListener('click', function() {
+            if (!currentNames.length) { showToast('暂无生成内容'); return; }
+            const unique = Array.from(new Set(currentNames));
+            render(unique);
+            showToast(`🔂 去重完成，剩余 ${unique.length} 个不重复地名`);
+        });
+
+        // 拼音开关
+        pinyinSwitch.addEventListener('change', function() {
+            if (currentNames.length) render(currentNames);
+        });
+
+        // 坐标范围变更保存
+        ['xMin', 'xMax', 'zMin', 'zMax'].forEach(id => {
+            document.getElementById(id).addEventListener('change', saveConfig);
+        });
+
+        // 导入词库
+        importDictBtn.addEventListener('click', () => dictFileInput.click());
+        dictFileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const text = ev.target.result;
+                const arr = text.split(/[\n\r,，\s]+/).filter(s => s.length > 0);
+                customPrefixes.push(...arr);
+                storage.set('wzCustomPrefixes', customPrefixes);
+                showToast(`✅ 成功导入 ${arr.length} 个自定义单字词！`);
+                dictFileInput.value = '';
+            };
+            reader.readAsText(file);
+        });
+
+        // 词库管理
+        dictManageBtn.addEventListener('click', function() {
+            renderDictPanel();
+            showModal(dictModal);
+        });
+        dictClose.addEventListener('click', () => { hideModal(dictModal); });
+        dictModal.addEventListener('click', (e) => { if (e.target === dictModal) hideModal(dictModal); });
+        dictClearCustom.addEventListener('click', function() {
+            if (customPrefixes.length === 0) { showToast('没有自定义词可清空'); return; }
+            if (confirm('确定清空所有自定义前缀吗？')) {
+                customPrefixes = [];
+                storage.set('wzCustomPrefixes', customPrefixes);
+                renderDictPanel();
+                showToast('已清空自定义词库');
+            }
+        });
+
+        // 开发者
+        devBtn.addEventListener('click', () => { showModal(devModal); });
+        devClose.addEventListener('click', () => { hideModal(devModal); });
+        devModal.addEventListener('click', (e) => { if (e.target === devModal) hideModal(devModal); });
+
+        openUpdateBtn.addEventListener('click', () => {
+            hideModal(devModal);
+            showModal(updateModal);
+        });
+
+        updateClose.addEventListener('click', () => { hideModal(updateModal); });
+        updateModal.addEventListener('click', (e) => { if (e.target === updateModal) hideModal(updateModal); });
+
+        updateIgnore.addEventListener('click', function() {
+            config.noUpdateToday = true;
+            storage.set('updateDate', new Date().toDateString());
+            saveConfig();
+            hideModal(updateModal);
+            showToast('今日不再弹出更新');
+        });
+
+        // 收藏面板
+        collectOpenBtn.addEventListener('click', function() {
+            renderCollectPanel();
+            showModal(collectModal);
+        });
+        collectClose.addEventListener('click', () => { hideModal(collectModal); });
+        collectModal.addEventListener('click', (e) => { if (e.target === collectModal) hideModal(collectModal); });
+
+        collectCopyAll.addEventListener('click', function() {
+            if (!collectList.length) { showToast('暂无收藏'); return; }
+            navigator.clipboard.writeText(collectList.join(' ')).then(() => showToast('✅ 已复制全部收藏'));
+        });
+        collectClearAll.addEventListener('click', function() {
+            collectList = [];
+            storage.set('wzCollect', collectList);
+            renderCollectPanel();
+            if (currentNames.length) {
+                nameGrid.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+            }
+            showToast('🗑️ 收藏已清空');
+        });
+
+        // 说明弹窗
+        helpBtn.addEventListener('click', () => { showModal(helpModal); });
+        helpClose.addEventListener('click', () => { hideModal(helpModal); });
+        helpModal.addEventListener('click', (e) => { if (e.target === helpModal) hideModal(helpModal); });
+
+        // 历史记录
+        historyBtn.addEventListener('click', function() {
+            renderHistoryPanel();
+            showModal(historyModal);
+        });
+        historyClose.addEventListener('click', () => { hideModal(historyModal); });
+        historyModal.addEventListener('click', (e) => { if (e.target === historyModal) hideModal(historyModal); });
+        historyClearAll.addEventListener('click', clearHistory);
+
+        // ================================================================
+        //  15. 初 始 化
+        // ================================================================
+        window.addEventListener('DOMContentLoaded', function() {
+            countInput.value = config.count || 8;
+            typeSelect.value = config.type || 2;
+            document.getElementById('xMin').value = config.xMin ?? -9999;
+            document.getElementById('xMax').value = config.xMax ?? 9999;
+            document.getElementById('zMin').value = config.zMin ?? -9999;
+            document.getElementById('zMax').value = config.zMax ?? 9999;
+            if (config.dark) document.documentElement.classList.add('dark');
+
+            const updateDate = storage.get('updateDate');
+            if (config.noUpdateToday && updateDate === new Date().toDateString()) {
+                // 不显示更新弹窗
+            } else {
+                showModal(updateModal);
+            }
+
+            generateBatch();
+            console.log('🏯 五洲铁路模组服务器地名生成器 已启动 · 五洲共力 · 四海同心');
+            console.log(`📚 词库规模: 前缀 ${PREFIX_SINGLE.length} 个 · 后缀 ${SUFFIX_SINGLE.length} 个 · 双字词 ${PAIR_WORDS.length} 个 · 双字后缀 ${PAIR_SUFFIX.length} 个 · 自定义 ${customPrefixes.length} 个`);
+            console.log(`⭐ 收藏数: ${collectList.length}`);
+        });
+    </script>
+</body>
+</html>
