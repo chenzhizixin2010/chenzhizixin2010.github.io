@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>五洲铁路模组服务器地名生成器 V3.0_BETA3</title>
+    <title>五洲铁路模组服务器地名生成器 V3.0_RC1</title>
     <style>
         /* ========== 全局重置 & 字体 ========== */
         * {
@@ -14,7 +14,7 @@
         :root {
             --font-family: 'Georgia', '华文楷体', 'KaiTi', 'SimSun', serif;
             --bg-body: #f7f2ea;
-            --bg-container: rgba(255, 252, 245, 0.85);
+            --bg-container: rgba(255, 252, 245, 0.88);
             --text-main: #5a3e2b;
             --text-sub: #6b5340;
             --text-light: #a08570;
@@ -39,7 +39,7 @@
         }
         html.dark {
             --bg-body: #1c1a18;
-            --bg-container: #282420;
+            --bg-container: rgba(40, 36, 32, 0.92);
             --text-main: #f8f3ed;
             --text-sub: #d9cbc0;
             --text-light: #b8a898;
@@ -97,12 +97,12 @@
         }
         .container {
             width: 100%;
-            max-width: 1020px;
+            max-width: 1160px;
             background: var(--bg-container);
-            backdrop-filter: blur(6px);
+            backdrop-filter: blur(8px);
             border-radius: 48px 48px 36px 36px;
             box-shadow: 0 20px 60px var(--shadow-color), 0 8px 24px rgba(120, 80, 50, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-            padding: 40px 44px 50px;
+            padding: 40px 48px 50px;
             border: 1px solid rgba(200, 170, 140, 0.25);
             position: relative;
             transition: all 0.3s ease;
@@ -383,7 +383,7 @@
         }
         .name-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 16px 18px;
             justify-items: center;
         }
@@ -420,6 +420,15 @@
             font-family: var(--font-family);
             line-height: 1.3;
         }
+        .name-item .name-en {
+            font-size: 12px;
+            color: var(--text-light);
+            letter-spacing: 2px;
+            margin-top: 4px;
+            font-family: 'Georgia', 'Arial', sans-serif;
+            opacity: 0.7;
+            font-weight: 400;
+        }
         .name-item .name-meaning {
             font-size: 12px;
             color: var(--text-light);
@@ -431,17 +440,6 @@
             letter-spacing: 0.5px;
             min-height: 20px;
             border-left: 2px solid rgba(200, 180, 160, 0.2);
-        }
-        .name-item .name-length-tag {
-            display: inline-block;
-            font-size: 10px;
-            color: var(--text-light);
-            background: rgba(200, 180, 160, 0.12);
-            padding: 1px 10px;
-            border-radius: 20px;
-            margin-top: 4px;
-            letter-spacing: 1px;
-            font-family: 'Georgia', serif;
         }
         .name-item .name-location,
         .name-item .name-coords {
@@ -699,7 +697,7 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* ===== 弹窗通用 ===== */
+        /* ===== 弹窗通用 - 按钮固定底部 ===== */
         .dev-modal,
         .update-modal,
         .collect-modal,
@@ -735,10 +733,12 @@
             border-radius: 32px;
             border: 1px solid rgba(200, 170, 140, 0.3);
             box-shadow: 0 12px 40px rgba(90, 62, 43, 0.2);
-            max-width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            padding: 36px;
+            max-width: 92%;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding: 0;
         }
         .active .dev-box,
         .active .update-box,
@@ -747,31 +747,39 @@
             transform: scale(1) translateY(0);
             opacity: 1;
         }
-        .dev-box {
-            padding: 40px 50px;
+        /* 弹窗内容滚动区 */
+        .modal-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 36px 36px 20px 36px;
+        }
+        /* 弹窗底部按钮区 */
+        .modal-footer {
+            flex-shrink: 0;
+            padding: 14px 36px 28px 36px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: var(--modal-bg);
+            border-radius: 0 0 32px 32px;
+        }
+        .modal-footer .btn,
+        .modal-footer .btn-secondary,
+        .modal-footer .update-close,
+        .modal-footer .dev-close-btn {
+            min-height: 38px;
+            padding: 6px 28px;
+            font-size: 14px;
+        }
+        .dev-box .modal-scroll {
             text-align: center;
-            max-width: 90%;
         }
-        .update-box {
-            width: 92%;
-            max-width: 600px;
-            max-height: 80vh;
-            padding: 36px;
+        .dev-box .modal-footer {
+            justify-content: center;
         }
-        .collect-box {
-            width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
-            padding: 30px;
-        }
-        .collect-box.dict-box {
-            max-width: 700px;
-        }
-        .settings-box {
-            width: 90%;
-            max-width: 520px;
-            padding: 32px 36px;
-        }
+
         .dev-box h3,
         .update-box h3,
         .collect-box h3,
@@ -792,7 +800,6 @@
             text-align: center;
         }
         .dev-close-btn {
-            padding: 8px 30px;
             border: 1px solid var(--btn-secondary-border);
             background: transparent;
             border-radius: 30px;
@@ -810,13 +817,9 @@
             line-height: 1.8;
             font-size: 15px;
             letter-spacing: 1px;
-            margin-bottom: 26px;
             white-space: pre-line;
         }
         .update-close {
-            display: block;
-            margin: 0 auto;
-            padding: 8px 36px;
             border: 1px solid var(--btn-secondary-border);
             background: transparent;
             border-radius: 30px;
@@ -866,7 +869,6 @@
             display: flex;
             gap: 10px;
             justify-content: center;
-            margin-top: 16px;
             flex-wrap: wrap;
         }
 
@@ -958,6 +960,7 @@
             color: var(--text-sub);
             line-height: 1.8;
             border: 1px solid var(--border-color);
+            width: 100%;
         }
         .settings-dev-info .dev-label {
             font-weight: bold;
@@ -987,6 +990,35 @@
         .settings-select:focus {
             border-color: #b08870;
         }
+        .settings-github-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 20px;
+            border-radius: 30px;
+            background: #24292e;
+            color: #fff;
+            border: none;
+            font-size: 13px;
+            font-family: var(--font-family);
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+        }
+        .settings-github-btn:hover {
+            background: #1a1e22;
+        }
+        .settings-github-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+        html.dark .settings-github-btn {
+            background: #3d444d;
+        }
+        html.dark .settings-github-btn:hover {
+            background: #2d343d;
+        }
 
         .watermark {
             position: absolute;
@@ -1005,6 +1037,7 @@
             .container {
                 padding: 28px 20px 32px;
                 border-radius: 32px;
+                max-width: 100%;
             }
             .header h1 {
                 font-size: 32px;
@@ -1093,21 +1126,23 @@
                 max-width: 90%;
                 bottom: 20px;
             }
-            .dev-box {
-                padding: 30px 24px;
-                width: 90%;
+            .modal-scroll {
+                padding: 24px 20px 16px 20px;
             }
-            .update-box {
-                padding: 24px;
+            .modal-footer {
+                padding: 12px 20px 20px 20px;
             }
             .settings-box {
-                padding: 24px 20px;
+                max-width: 95%;
+            }
+            .collect-box {
+                max-width: 95%;
+            }
+            .update-box {
+                max-width: 95%;
             }
             .watermark {
                 display: none;
-            }
-            .collect-box {
-                padding: 20px;
             }
             .search-wrapper input {
                 width: 70px;
@@ -1145,11 +1180,20 @@
             .settings-item input[type="range"] {
                 width: 100%;
             }
+            .modal-footer .btn,
+            .modal-footer .btn-secondary,
+            .modal-footer .update-close,
+            .modal-footer .dev-close-btn {
+                min-height: 34px;
+                padding: 4px 18px;
+                font-size: 13px;
+            }
         }
         @media (max-width: 440px) {
             .container {
                 padding: 16px 10px 20px;
                 border-radius: 24px;
+                max-width: 100%;
             }
             .header h1 {
                 font-size: 22px;
@@ -1184,6 +1228,9 @@
             .name-item .name-meaning {
                 font-size: 10px;
                 padding: 2px 6px;
+            }
+            .name-item .name-en {
+                font-size: 10px;
             }
             .btn {
                 padding: 5px 14px;
@@ -1228,7 +1275,7 @@
                 padding: 2px 2px 2px 6px;
             }
             .collect-box {
-                padding: 16px;
+                padding: 0;
             }
             .collect-list {
                 grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
@@ -1272,7 +1319,8 @@
                 width: 100%;
             }
             .settings-box {
-                padding: 20px 16px;
+                padding: 0;
+                max-width: 98%;
             }
             .header-img {
                 max-height: 60px;
@@ -1285,6 +1333,23 @@
                 min-width: 80px;
                 font-size: 12px;
             }
+            .modal-scroll {
+                padding: 18px 14px 12px 14px;
+            }
+            .modal-footer {
+                padding: 10px 14px 16px 14px;
+            }
+            .modal-footer .btn,
+            .modal-footer .btn-secondary,
+            .modal-footer .update-close,
+            .modal-footer .dev-close-btn {
+                min-height: 30px;
+                padding: 3px 14px;
+                font-size: 12px;
+            }
+            .update-box .modal-scroll {
+                padding: 18px 14px 12px 14px;
+            }
         }
     </style>
 </head>
@@ -1295,58 +1360,62 @@
     <!-- ====== 更新日志弹窗 ====== -->
     <div class="update-modal" id="updateModal">
         <div class="update-box">
-            <h3>📜 更新日志 · V3.0_BETA3</h3>
-            <div class="update-content" id="updateText">
-                V3.0_BETA3 2026-07-25
+            <div class="modal-scroll">
+                <h3>📜 更新日志 · V3.0_RC1</h3>
+                <div class="update-content">
+                    V3.0_RC1 2026-07-25
 
-                🎉 本次更新：
-                1. 标题上方新增品牌形象图片
-                2. 开发者信息整合至设置面板，界面更简洁
-                3. 新增自定义背景功能（上传图片 / 调色盘选色）
-                4. 新增字体自定义功能（上传字体文件 / 内置字体选择：MC像素体、MI SANS）
-                5. 收藏夹新增「恢复删除」功能，误删可找回
-                6. 优化更新日志弹窗底部按钮布局
-                7. 底部新增版本号与版权信息
-                8. 版本号更新至 V3.0_BETA3
+                    🎉 本次更新：
+                    1. 字体新增「汉仪文黑85W」和「微软黑体」
+                    2. 设置面板布局调整：动画控制移至开发者信息下方
+                    3. 新增「GitHub历史版本仓库」按钮，链接至项目存档
+                    4. 地名卡片新增英文音译（大写拼音），并增加独立开关
+                    5. 移除地名下方的「两字」「三字」标签，界面更简洁
+                    6. 版本号更新至 V3.0_RC1
+                    7. 电脑端容器覆盖范围扩大，视觉更饱满
+                    8. 所有弹窗按钮固定底部，无需滚动即可操作
 
-                ✂️ 功能保留：
-                - 风格选择（古风雅韵、山水自然、边塞雄浑、江南婉约、仙侠奇幻）
-                - 地名寓意解释 · 接龙模式 · 随机种子系统
-                - 导出 TXT / JSON / CSV（支持自定义文件名）
-                - 卡片入场动画 · 每日推荐 · 实时搜索
-                - 收藏 / 历史 / 词库管理
+                    ✂️ 功能保留：
+                    - 风格选择（古风雅韵、山水自然、边塞雄浑、江南婉约、仙侠奇幻）
+                    - 地名寓意解释 · 接龙模式 · 随机种子系统
+                    - 导出 TXT / JSON / CSV（支持自定义文件名）
+                    - 卡片入场动画 · 每日推荐 · 实时搜索
+                    - 收藏 / 历史 / 词库管理 · 自定义背景与字体
 
-                📖 使用提示：
-                - 风格 + 种子可实现可复现的命名方案
-                - 接龙模式适合生成关联地名序列
-                - 每日推荐是灵感来源
+                    📖 使用提示：
+                    - 风格 + 种子可实现可复现的命名方案
+                    - 接龙模式 + 英文音译适合国际化场景
+                    - 每日推荐是灵感来源
 
-                感谢各位使用五洲铁路模组服务器地名生成器！
+                    感谢各位使用五洲铁路模组服务器地名生成器！
 
-                —— 豆包 & DeepSeek & 陈之自信 敬上
+                    —— 豆包 & DeepSeek & 陈之自信 敬上
+                </div>
             </div>
-            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:4px;">
-                <button class="btn btn-secondary" id="updateIgnore" style="min-height:34px;padding:5px 20px;">今日不再提示</button>
-                <button class="update-close" id="updateClose" style="min-height:34px;padding:5px 28px;">确认关闭</button>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="updateIgnore">今日不再提示</button>
+                <button class="update-close" id="updateClose">确认关闭</button>
             </div>
         </div>
     </div>
 
-    <!-- ====== 开发者弹窗（已废弃，但保留作为重定向） ====== -->
+    <!-- ====== 开发者弹窗（已废弃，保留作为重定向） ====== -->
     <div class="dev-modal" id="devModal">
         <div class="dev-box">
-            <h3>👤 开发者信息</h3>
-            <div class="dev-name-text">
-                开发者：Deepseek · 豆包 · 陈之自信
-                版本：V3.0_BETA3（2026-07-25）
-                反馈：3064450669@qq.com 或 WRMSPNG@hotmail.com
-                © 五洲铁路模组服务器 2026
-            </div>
-            <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:6px;">
+            <div class="modal-scroll">
+                <h3>👤 开发者信息</h3>
+                <div class="dev-name-text">
+                    开发者：Deepseek · 豆包 · 陈之自信
+                    版本：V3.0_RC1（2026-07-25）
+                    反馈：3064450669@qq.com 或 WRMSPNG@hotmail.com
+                    © 五洲铁路模组服务器 2026
+                </div>
                 <button class="btn btn-secondary" id="openUpdateBtn" style="min-height:38px;padding:6px 28px;font-size:14px;">
                     <span class="btn-icon">📜</span> 查看更新日志
                 </button>
-                <button class="dev-close-btn" id="devClose" style="min-height:38px;padding:6px 28px;font-size:14px;">关闭</button>
+            </div>
+            <div class="modal-footer">
+                <button class="dev-close-btn" id="devClose">关闭</button>
             </div>
         </div>
     </div>
@@ -1354,13 +1423,17 @@
     <!-- ====== 收藏弹窗 ====== -->
     <div class="collect-modal" id="collectModal">
         <div class="collect-box">
-            <h3>⭐ 我的收藏地名</h3>
-            <div class="collect-empty" id="collectEmpty">暂无收藏，点击地名星星添加</div>
-            <div class="collect-list" id="collectList"></div>
-            <div class="collect-buttons">
-                <button class="btn btn-secondary" id="collectCopyAll">复制全部收藏</button>
-                <button class="btn btn-secondary" id="collectRestoreBtn">🔄 恢复删除</button>
-                <button class="btn btn-secondary" id="collectClearAll">清空收藏</button>
+            <div class="modal-scroll">
+                <h3>⭐ 我的收藏地名</h3>
+                <div class="collect-empty" id="collectEmpty">暂无收藏，点击地名星星添加</div>
+                <div class="collect-list" id="collectList"></div>
+                <div class="collect-buttons">
+                    <button class="btn btn-secondary" id="collectCopyAll">复制全部收藏</button>
+                    <button class="btn btn-secondary" id="collectRestoreBtn">🔄 恢复删除</button>
+                    <button class="btn btn-secondary" id="collectClearAll">清空收藏</button>
+                </div>
+            </div>
+            <div class="modal-footer">
                 <button class="btn" id="collectClose">关闭</button>
             </div>
         </div>
@@ -1369,59 +1442,67 @@
     <!-- ====== 说明弹窗 ====== -->
     <div class="update-modal" id="helpModal">
         <div class="update-box">
-            <h3>📖 导入词库、种子说明</h3>
-            <div class="update-content">
-                “导入词库”功能的具体要求如下：
+            <div class="modal-scroll">
+                <h3>📖 导入词库、种子说明</h3>
+                <div class="update-content">
+                    “导入词库”功能的具体要求如下：
 
-                1. 文件格式与编码
-                - 格式：必须是 .txt 文本文件。
-                - 编码：请务必保存为 UTF-8 编码（否则中文会显示为乱码，无法识别）。
+                    1. 文件格式与编码
+                    - 格式：必须是 .txt 文本文件。
+                    - 编码：请务必保存为 UTF-8 编码（否则中文会显示为乱码，无法识别）。
 
-                2. 内容要求（重点）
-                - 词条类型：该功能专门用于扩充地名开头的前缀/修饰词词库（即代码中的 PREFIX_SINGLE 数组）。
-                - 字符长度：请使用单个汉字作为词条（例如：清、雅、韵、灵）。如果导入多字词（如“清风”），系统也会接受，但在生成两字地名时会被拆解为“清”+“风”的组合逻辑，建议保持单字以确保生成效果自然。
+                    2. 内容要求（重点）
+                    - 词条类型：该功能专门用于扩充地名开头的前缀/修饰词词库（即代码中的 PREFIX_SINGLE 数组）。
+                    - 字符长度：请使用单个汉字作为词条（例如：清、雅、韵、灵）。如果导入多字词（如“清风”），系统也会接受，但在生成两字地名时会被拆解为“清”+“风”的组合逻辑，建议保持单字以确保生成效果自然。
 
-                3. 分隔与排版方式
-                识别非常灵活，支持换行、空格、英文逗号 , 或中文逗号 ， 来分隔不同的字。
-                示例（以下任一格式均可）：
-                - 按行分隔：
-                  曦
-                  岚
-                  岫
-                - 逗号分隔：
-                  曦, 岚, 岫, 嶂, 壑
+                    3. 分隔与排版方式
+                    识别非常灵活，支持换行、空格、英文逗号 , 或中文逗号 ， 来分隔不同的字。
+                    示例（以下任一格式均可）：
+                    - 按行分隔：
+                      曦
+                      岚
+                      岫
+                    - 逗号分隔：
+                      曦, 岚, 岫, 嶂, 壑
 
-                4. 生效机制
-                - 导入的词汇会追加到现有词库末尾，不会覆盖原有词库。
-                - 如果导入的字与已有字重复，不会自动去重（可能会略微增加相同字出现的概率，但开启“生成去重”功能仍能保证最终地名不重复）。
-                - 导入成功后，页面底部会弹出提示，显示成功导入的个数。
-                
-                *种子*功能说明：
-                
-                “种子”可以理解为一个 “配方编号” 或 “地图种子”。
+                    4. 生效机制
+                    - 导入的词汇会追加到现有词库末尾，不会覆盖原有词库。
+                    - 如果导入的字与已有字重复，不会自动去重（可能会略微增加相同字出现的概率，但开启“生成去重”功能仍能保证最终地名不重复）。
+                    - 导入成功后，页面底部会弹出提示，显示成功导入的个数。
+                    
+                    *种子*功能说明：
+                    
+                    “种子”可以理解为一个 “配方编号” 或 “地图种子”。
 
-在编程里，电脑生成的“随机”其实是用数学公式算出来的伪随机。这个公式的起点值就是“种子”。
+                    在编程里，电脑生成的“随机”其实是用数学公式算出来的伪随机。这个公式的起点值就是“种子”。
 
-在这个工具里具体是：
+                    在这个工具里具体是：
 
-1. 留空（随机）：系统用当前时间做种子，每次点击“生成”都会得到完全不同的地名。
-2. 输入固定值（如 “2026” 或 “五洲”）：只要种子一样，无论何时、何地、点多少次“生成”，产出的地名列表顺序和内容都完全一样。
+                    1. 留空（随机）：系统用当前时间做种子，每次点击“生成”都会得到完全不同的地名。
+                    2. 输入固定值（如 “2026” 或 “五洲”）：只要种子一样，无论何时、何地、点多少次“生成”，产出的地名列表顺序和内容都完全一样。
 
-有什么用？
-非常适合服务器协作。比如多个管理员需要统一某个区域的命名方案，只要大家输入同一个种子（比如 wuzhou666），各自生成的地名就会一模一样，省去来回对表的麻烦。点击种子框旁边的 “重置” 按钮，可以清空种子恢复完全随机状态。
+                    有什么用？
+                    非常适合服务器协作。比如多个管理员需要统一某个区域的命名方案，只要大家输入同一个种子（比如 wuzhou666），各自生成的地名就会一模一样，省去来回对表的麻烦。点击种子框旁边的 “重置” 按钮，可以清空种子恢复完全随机状态。
+                </div>
             </div>
-            <button class="update-close" id="helpClose">关闭</button>
+            <div class="modal-footer">
+                <button class="update-close" id="helpClose">关闭</button>
+            </div>
         </div>
     </div>
 
     <!-- ====== 历史记录弹窗 ====== -->
     <div class="collect-modal" id="historyModal">
         <div class="collect-box">
-            <h3>📜 历史记录</h3>
-            <div class="collect-empty" id="historyEmpty">暂无历史记录</div>
-            <div class="collect-list" id="historyList" style="display:none;"></div>
-            <div class="collect-buttons">
-                <button class="btn btn-secondary" id="historyClearAll">清空全部历史</button>
+            <div class="modal-scroll">
+                <h3>📜 历史记录</h3>
+                <div class="collect-empty" id="historyEmpty">暂无历史记录</div>
+                <div class="collect-list" id="historyList" style="display:none;"></div>
+                <div class="collect-buttons">
+                    <button class="btn btn-secondary" id="historyClearAll">清空全部历史</button>
+                </div>
+            </div>
+            <div class="modal-footer">
                 <button class="btn" id="historyClose">关闭</button>
             </div>
         </div>
@@ -1430,13 +1511,15 @@
     <!-- ====== 词库管理弹窗 ====== -->
     <div class="collect-modal" id="dictModal">
         <div class="collect-box" style="max-width:700px;">
-            <h3>📚 词库管理</h3>
-            <div style="display:flex;gap:12px;justify-content:center;margin-bottom:12px;flex-wrap:wrap;">
-                <span id="dictStats" style="color:var(--text-sub);">共 0 个词</span>
-                <button class="btn btn-secondary" id="dictClearCustom" style="padding:4px 16px;font-size:13px;">清空自定义</button>
+            <div class="modal-scroll">
+                <h3>📚 词库管理</h3>
+                <div style="display:flex;gap:12px;justify-content:center;margin-bottom:12px;flex-wrap:wrap;">
+                    <span id="dictStats" style="color:var(--text-sub);">共 0 个词</span>
+                    <button class="btn btn-secondary" id="dictClearCustom" style="padding:4px 16px;font-size:13px;">清空自定义</button>
+                </div>
+                <div id="dictWordList" style="max-height:400px;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;padding:8px 0;"></div>
             </div>
-            <div id="dictWordList" style="max-height:400px;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;padding:8px 0;"></div>
-            <div class="collect-buttons">
+            <div class="modal-footer">
                 <button class="btn" id="dictClose">关闭</button>
             </div>
         </div>
@@ -1445,79 +1528,88 @@
     <!-- ====== 设置弹窗 ====== -->
     <div class="settings-modal" id="settingsModal">
         <div class="settings-box">
-            <h3>⚙️ 设置</h3>
+            <div class="modal-scroll">
+                <h3>⚙️ 设置</h3>
 
-            <!-- 动画 -->
-            <div class="settings-item">
-                <label>🎬 动画速率</label>
-                <div style="display:flex;align-items:center;gap:10px;">
-                    <input type="range" id="animSpeed" min="0.2" max="2.0" step="0.1" value="1.0" style="width:140px;" />
-                    <span class="range-value" id="animSpeedDisplay">1.0×</span>
+                <!-- 明暗主题 -->
+                <div class="settings-item">
+                    <label>🌓 明暗主题</label>
+                    <button class="btn btn-secondary" id="themeBtnSettings" style="min-height:34px;padding:4px 20px;font-size:13px;">
+                        <span class="btn-icon">🌓</span> 切换
+                    </button>
                 </div>
-            </div>
-            <div class="settings-item">
-                <label>✨ 入场动画</label>
-                <input type="checkbox" id="animToggle" checked />
-            </div>
 
-            <!-- 明暗主题 -->
-            <div class="settings-item">
-                <label>🌓 明暗主题</label>
-                <button class="btn btn-secondary" id="themeBtnSettings" style="min-height:34px;padding:4px 20px;font-size:13px;">
-                    <span class="btn-icon">🌓</span> 切换
-                </button>
-            </div>
-
-            <!-- 开发者信息 -->
-            <div class="settings-item" style="flex-direction:column;align-items:stretch;padding:12px 0;">
-                <label style="font-weight:bold;font-size:15px;">👤 开发者信息</label>
-                <div class="settings-dev-info">
-                    <div><span class="dev-label">开发者：</span>Deepseek · 豆包 · 陈之自信</div>
-                    <div><span class="dev-label">版本：</span>V3.0_BETA3（2026-07-25）</div>
-                    <div><span class="dev-label">反馈：</span><a href="mailto:3064450669@qq.com">3064450669@qq.com</a> 或 <a href="mailto:WRMSPNG@hotmail.com">WRMSPNG@hotmail.com</a></div>
-                    <div style="margin-top:4px;font-size:12px;opacity:0.6;">© 五洲铁路模组服务器 2026</div>
-                </div>
-                <button class="btn btn-secondary" id="openUpdateBtn2" style="align-self:center;min-height:34px;padding:4px 24px;font-size:13px;margin-top:4px;">
-                    <span class="btn-icon">📜</span> 查看更新日志
-                </button>
-            </div>
-
-            <!-- 自定义背景 -->
-            <div class="settings-item" style="flex-direction:column;align-items:stretch;padding:12px 0;">
-                <label style="font-weight:bold;font-size:15px;">🖼️ 自定义背景</label>
-                <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:4px;">
-                    <div class="file-input-wrap">
-                        <input type="file" id="bgImageInput" accept="image/*" style="font-size:12px;color:var(--text-sub);font-family:inherit;max-width:160px;" />
-                        <span class="file-name" id="bgFileName">未选择</span>
-                        <button class="btn btn-secondary btn-sm" id="bgClearBtn" style="min-height:26px;padding:2px 12px;font-size:11px;">清除</button>
+                <!-- 开发者信息 -->
+                <div class="settings-item" style="flex-direction:column;align-items:stretch;padding:12px 0;">
+                    <label style="font-weight:bold;font-size:15px;">👤 开发者信息</label>
+                    <div class="settings-dev-info">
+                        <div><span class="dev-label">开发者：</span>Deepseek · 豆包 · 陈之自信</div>
+                        <div><span class="dev-label">版本：</span>V3.0_RC1（2026-07-25）</div>
+                        <div><span class="dev-label">反馈：</span><a href="mailto:3064450669@qq.com">3064450669@qq.com</a> 或 <a href="mailto:WRMSPNG@hotmail.com">WRMSPNG@hotmail.com</a></div>
+                        <div style="margin-top:4px;font-size:12px;opacity:0.6;">© 五洲铁路模组服务器 2026</div>
                     </div>
-                    <div class="color-picker-wrap">
-                        <input type="color" id="bgColorPicker" value="#f7f2ea" />
-                        <span style="font-size:12px;color:var(--text-light);">纯色</span>
+                    <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:4px;">
+                        <button class="btn btn-secondary" id="openUpdateBtn2" style="min-height:34px;padding:4px 24px;font-size:13px;">
+                            <span class="btn-icon">📜</span> 查看更新日志
+                        </button>
+                        <a href="https://github.com/chenzhizixin2010/WRMSPNG_HISTORYBUILDING/tree/main" target="_blank" rel="noopener" class="settings-github-btn" style="display:inline-flex;align-items:center;gap:6px;padding:5px 18px;border-radius:30px;background:#24292e;color:#fff;border:none;font-size:13px;font-family:var(--font-family);cursor:pointer;text-decoration:none;transition:background 0.2s;">
+                            <svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                            GitHub 历史版本仓库
+                        </a>
                     </div>
                 </div>
-            </div>
 
-            <!-- 字体设置 -->
-            <div class="settings-item" style="flex-direction:column;align-items:stretch;padding:12px 0;border-bottom:none;">
-                <label style="font-weight:bold;font-size:15px;">🔤 字体设置</label>
-                <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:4px;">
-                    <select id="fontSelect" class="settings-select">
-                        <option value="default">默认（系统）</option>
-                        <option value="mc">MC像素体</option>
-                        <option value="mi">MI SANS</option>
-                        <option value="custom">自定义字体</option>
-                    </select>
-                    <div class="file-input-wrap">
-                        <input type="file" id="fontFileInput" accept=".ttf,.otf,.woff,.woff2" style="font-size:12px;color:var(--text-sub);font-family:inherit;max-width:160px;" />
-                        <span class="file-name" id="fontFileName">未选择</span>
-                        <button class="btn btn-secondary btn-sm" id="fontClearBtn" style="min-height:26px;padding:2px 12px;font-size:11px;">清除</button>
+                <!-- 动画速率 -->
+                <div class="settings-item">
+                    <label>🎬 动画速率</label>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <input type="range" id="animSpeed" min="0.2" max="2.0" step="0.1" value="1.0" style="width:140px;" />
+                        <span class="range-value" id="animSpeedDisplay">1.0×</span>
                     </div>
                 </div>
-                <div style="font-size:12px;color:var(--text-light);opacity:0.6;margin-top:4px;">选择内置字体或上传 .ttf/.otf/.woff 文件</div>
-            </div>
+                <div class="settings-item">
+                    <label>✨ 入场动画</label>
+                    <input type="checkbox" id="animToggle" checked />
+                </div>
 
-            <div style="display:flex;justify-content:center;margin-top:18px;">
+                <!-- 自定义背景 -->
+                <div class="settings-item" style="flex-direction:column;align-items:stretch;padding:12px 0;">
+                    <label style="font-weight:bold;font-size:15px;">🖼️ 自定义背景</label>
+                    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:4px;">
+                        <div class="file-input-wrap">
+                            <input type="file" id="bgImageInput" accept="image/*" style="font-size:12px;color:var(--text-sub);font-family:inherit;max-width:160px;" />
+                            <span class="file-name" id="bgFileName">未选择</span>
+                            <button class="btn btn-secondary btn-sm" id="bgClearBtn" style="min-height:26px;padding:2px 12px;font-size:11px;">清除</button>
+                        </div>
+                        <div class="color-picker-wrap">
+                            <input type="color" id="bgColorPicker" value="#f7f2ea" />
+                            <span style="font-size:12px;color:var(--text-light);">纯色</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 字体设置 -->
+                <div class="settings-item" style="flex-direction:column;align-items:stretch;padding:12px 0;border-bottom:none;">
+                    <label style="font-weight:bold;font-size:15px;">🔤 字体设置</label>
+                    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:4px;">
+                        <select id="fontSelect" class="settings-select">
+                            <option value="default">默认（系统）</option>
+                            <option value="mc">MC像素体</option>
+                            <option value="mi">MI SANS</option>
+                            <option value="hywh">汉仪文黑85W</option>
+                            <option value="msyh">微软黑体</option>
+                            <option value="custom">自定义字体</option>
+                        </select>
+                        <div class="file-input-wrap">
+                            <input type="file" id="fontFileInput" accept=".ttf,.otf,.woff,.woff2" style="font-size:12px;color:var(--text-sub);font-family:inherit;max-width:160px;" />
+                            <span class="file-name" id="fontFileName">未选择</span>
+                            <button class="btn btn-secondary btn-sm" id="fontClearBtn" style="min-height:26px;padding:2px 12px;font-size:11px;">清除</button>
+                        </div>
+                    </div>
+                    <div style="font-size:12px;color:var(--text-light);opacity:0.6;margin-top:4px;">选择内置字体或上传 .ttf/.otf/.woff 文件</div>
+                </div>
+            </div>
+            <div class="modal-footer">
                 <button class="btn" id="settingsClose" style="min-height:38px;padding:6px 32px;font-size:14px;">关闭</button>
             </div>
         </div>
@@ -1530,7 +1622,7 @@
         <!-- 头部 -->
         <div class="header">
             <img class="header-img" src="https://pic1.imgdb.cn/i/033vPhrLk7PoHOs4qjTP8C.png" alt="五洲铁路模组服务器" />
-            <h1>五洲铁路模组服务器地名生成器 <span class="version-tag">V3.0_BETA3</span></h1>
+            <h1>五洲铁路模组服务器地名生成器 <span class="version-tag">V3.0_RC1</span></h1>
             <div class="subtitle">— 五 洲 共 力 · 四 海 同 心 —</div>
             <div class="divider-line"></div>
             <div class="daily-recommend-header">
@@ -1637,6 +1729,7 @@
         <div class="set-group">
             <label><input type="checkbox" id="uniqueCheck"> 生成去重</label>
             <label><input type="checkbox" id="chainSwitch"> 🔗 接龙模式</label>
+            <label><input type="checkbox" id="enSwitch"> 🔤 英文音译</label>
             <div class="coord-group">
                 <label class="coord-label">X: <input type="number" id="xMin" value="-9999"> ~ <input type="number" id="xMax" value="9999"></label>
                 <label class="coord-label">Z: <input type="number" id="zMin" value="-9999"> ~ <input type="number" id="zMax" value="9999"></label>
@@ -1653,13 +1746,13 @@
             <a href="https://space.bilibili.com/3546698959816732" target="_blank" rel="noopener">五洲社</a>
         </div>
         <div class="footer-legal">
-            V3.0_BETA3 · © 五洲铁路模组服务器 2026
+            V3.0_RC1 · © 五洲铁路模组服务器 2026
         </div>
     </div>
 
     <script>
         // ================================================================
-        //  词库（V3.0_BETA3 扩展，总数 820+）
+        //  词库（V3.0_RC1 扩展，总数 820+）
         // ================================================================
         const PREFIX_SINGLE = [
             '清', '雅', '韵', '秀', '灵', '幽', '静', '翠', '碧', '苍', '皓', '明', '和', '安', '宁', '逸', '致', '妙', '玄',
@@ -1821,6 +1914,76 @@
             '内陆商都', '丘陵乡落', '湖心岛屿', '河畔半岛', '峡谷隘口', '古道驿站'
         ];
 
+        // ---- 拼音映射（用于英文音译） ----
+        const PINYIN_MAP = {
+            清: 'qing', 雅: 'ya', 韵: 'yun', 秀: 'xiu', 灵: 'ling', 幽: 'you', 静: 'jing', 翠: 'cui', 碧: 'bi', 苍: 'cang',
+            皓: 'hao', 明: 'ming', 和: 'he', 安: 'an', 宁: 'ning', 逸: 'yi', 致: 'zhi', 妙: 'miao', 玄: 'xuan', 虚: 'xu',
+            幻: 'huan', 梦: 'meng', 云: 'yun', 雾: 'wu', 烟: 'yan', 霞: 'xia', 虹: 'hong', 露: 'lu', 霜: 'shuang', 雪: 'xue',
+            梅: 'mei', 兰: 'lan', 竹: 'zhu', 菊: 'ju', 松: 'song', 柏: 'bai', 柳: 'liu', 桃: 'tao', 杏: 'xing', 梨: 'li',
+            枫: 'feng', 荷: 'he', 莲: 'lian', 桂: 'gui', 棠: 'tang', 薇: 'wei', 萱: 'xuan', 芷: 'zhi', 若: 'ruo', 蓉: 'rong',
+            芙: 'fu', 蕖: 'qu', 荻: 'di', 芦: 'lu', 蒲: 'pu', 藤: 'teng', 萝: 'luo', 蔓: 'man', 枝: 'zhi', 叶: 'ye',
+            花: 'hua', 香: 'xiang', 芳: 'fang', 菲: 'fei', 芬: 'fen', 馥: 'fu', 郁: 'yu', 馨: 'xin', 暖: 'nuan', 寒: 'han',
+            凉: 'liang', 温: 'wen', 润: 'run', 泽: 'ze', 沛: 'pei', 潇: 'xiao', 洒: 'sa', 飘: 'piao', 飞: 'fei', 扬: 'yang',
+            舞: 'wu', 翩: 'pian', 跹: 'xian', 婉: 'wan', 约: 'yue', 柔: 'rou', 美: 'mei', 丽: 'li', 艳: 'yan', 娇: 'jiao',
+            媚: 'mei', 妩: 'wu', 娟: 'juan', 妍: 'yan', 娴: 'xian', 淑: 'shu', 慧: 'hui', 敏: 'min', 捷: 'jie', 睿: 'rui',
+            智: 'zhi', 仁: 'ren', 义: 'yi', 礼: 'li', 信: 'xin', 德: 'de', 善: 'shan', 良: 'liang', 慈: 'ci', 悲: 'bei',
+            悯: 'min', 怀: 'huai', 念: 'nian', 思: 'si', 忆: 'yi', 无: 'wu', 空: 'kong', 寂: 'ji', 禅: 'chan', 悟: 'wu',
+            觉: 'jue', 醒: 'xing', 风: 'feng', 雨: 'yu', 雷: 'lei', 电: 'dian', 冰: 'bing', 暑: 'shu', 春: 'chun', 夏: 'xia',
+            秋: 'qiu', 冬: 'dong', 晨: 'chen', 暮: 'mu', 夕: 'xi', 夜: 'ye', 晓: 'xiao', 曙: 'shu', 曦: 'xi', 晖: 'hui',
+            岚: 'lan', 岫: 'xiu', 嶂: 'zhang', 壑: 'he', 涧: 'jian', 汀: 'ting', 渚: 'zhu', 洲: 'zhou', 屿: 'yu', 阜: 'fu',
+            隰: 'xi', 坂: 'ban', 垄: 'long', 畦: 'qi', 陌: 'mo', 阡: 'qian', 津: 'jin', 渡: 'du', 浦: 'pu', 湾: 'wan',
+            港: 'gang', 澳: 'ao', 碛: 'qi', 磴: 'deng', 硐: 'dong', 硖: 'xia', 崃: 'lai', 崤: 'xiao', 嵯: 'cuo', 峨: 'e',
+            峥: 'zheng', 嵘: 'rong', 崔: 'cui', 嵬: 'wei', 嶙: 'lin', 峋: 'xun', 崎: 'qi', 岖: 'qu', 迤: 'yi', 逦: 'li',
+            蜿: 'wan', 蜒: 'yan', 蟠: 'pan', 踞: 'ju', 镇: 'zhen', 守: 'shou', 护: 'hu', 卫: 'wei', 御: 'yu', 防: 'fang',
+            固: 'gu', 坚: 'jian', 牢: 'lao', 稳: 'wen', 定: 'ding', 平: 'ping', 康: 'kang', 泰: 'tai', 丰: 'feng', 盈: 'ying',
+            裕: 'yu', 足: 'zu', 富: 'fu', 贵: 'gui', 荣: 'rong', 华: 'hua', 显: 'xian', 赫: 'he', 盛: 'sheng', 昌: 'chang',
+            兴: 'xing', 旺: 'wang', 隆: 'long', 熙: 'xi', 睦: 'mu', 谐: 'xie', 协: 'xie', 同: 'tong', 共: 'gong', 享: 'xiang',
+            分: 'fen', 合: 'he', 聚: 'ju', 散: 'san', 离: 'li', 别: 'bie', 逢: 'feng', 遇: 'yu', 交: 'jiao', 往: 'wang',
+            来: 'lai', 去: 'qu', 行: 'xing', 止: 'zhi', 居: 'ju', 停: 'ting', 宿: 'su', 歇: 'xie', 眠: 'mian', 卧: 'wo',
+            坐: 'zuo', 立: 'li', 倚: 'yi', 凭: 'ping', 望: 'wang', 眺: 'tiao', 瞰: 'kan', 观: 'guan', 赏: 'shang', 览: 'lan',
+            游: 'you', 玩: 'wan', 嬉: 'xi', 乐: 'le', 悦: 'yue', 欣: 'xin', 喜: 'xi', 欢: 'huan', 爱: 'ai', 恋: 'lian',
+            慕: 'mu', 羡: 'xian', 仰: 'yang', 敬: 'jing', 尊: 'zun', 崇: 'chong', 拜: 'bai', 谒: 'ye', 访: 'fang', 问: 'wen',
+            询: 'xun', 答: 'da', 对: 'dui', 谈: 'tan', 论: 'lun', 议: 'yi', 评: 'ping', 品: 'pin', 尝: 'chang', 饮: 'yin',
+            食: 'shi', 住: 'zhu', 衣: 'yi', 冠: 'guan', 带: 'dai', 佩: 'pei', 饰: 'shi', 装: 'zhuang', 扮: 'ban', 梳: 'shu',
+            洗: 'xi', 沐: 'mu', 浴: 'yu', 洁: 'jie', 净: 'jing', 爽: 'shuang', 畅: 'chang', 舒: 'shu', 适: 'shi', 宜: 'yi',
+            怡: 'yi', 缓: 'huan', 徐: 'xu', 悠: 'you', 闲: 'xian', 暇: 'xia', 余: 'yu', 满: 'man', 溢: 'yi', 泛: 'fan',
+            漫: 'man', 弥: 'mi', 散: 'san', 布: 'bu', 列: 'lie', 排: 'pai', 陈: 'chen', 设: 'she', 置: 'zhi', 安: 'an',
+            放: 'fang', 存: 'cun', 储: 'chu', 积: 'ji', 聚: 'ju', 汇: 'hui', 集: 'ji', 合: 'he', 并: 'bing', 连: 'lian',
+            接: 'jie', 通: 'tong', 达: 'da', 至: 'zhi', 到: 'dao', 临: 'lin', 莅: 'li', 顾: 'gu', 眷: 'juan', 垂: 'chui',
+            惠: 'hui', 赐: 'ci', 恩: 'en', 福: 'fu', 祉: 'zhi', 祥: 'xiang', 瑞: 'rui', 吉: 'ji', 庆: 'qing', 贺: 'he',
+            祝: 'zhu', 颂: 'song', 歌: 'ge', 舞: 'wu', 奏: 'zou', 演: 'yan', 唱: 'chang', 吟: 'yin', 咏: 'yong', 诵: 'song',
+            读: 'du', 写: 'xie', 画: 'hua', 描: 'miao', 绘: 'hui', 染: 'ran', 渲: 'xuan', 泼: 'po', 挥: 'hui', 展: 'zhan',
+            舒: 'shu', 卷: 'juan', 收: 'shou', 放: 'fang', 开: 'kai', 闭: 'bi', 启: 'qi', 封: 'feng', 藏: 'cang', 隐: 'yin',
+            现: 'xian', 呈: 'cheng', 献: 'xian', 奉: 'feng', 贡: 'gong', 纳: 'na', 受: 'shou', 承: 'cheng', 担: 'dan', 负: 'fu',
+            荷: 'he', 载: 'zai', 运: 'yun', 转: 'zhuan', 进: 'jin', 退: 'tui', 息: 'xi', 生: 'sheng', 死: 'si', 存: 'cun',
+            亡: 'wang', 衰: 'shuai', 枯: 'ku', 成: 'cheng', 败: 'bai', 得: 'de', 失: 'shi', 是: 'shi', 非: 'fei', 善: 'shan',
+            恶: 'e', 美: 'mei', 丑: 'chou', 真: 'zhen', 假: 'jia', 实: 'shi', 有: 'you', 无: 'wu', 多: 'duo', 少: 'shao',
+            大: 'da', 小: 'xiao', 长: 'chang', 短: 'duan', 高: 'gao', 低: 'di', 深: 'shen', 浅: 'qian', 宽: 'kuan', 窄: 'zhai',
+            厚: 'hou', 薄: 'bo', 轻: 'qing', 重: 'zhong', 缓: 'huan', 急: 'ji', 快: 'kuai', 慢: 'man', 迟: 'chi', 早: 'zao',
+            先: 'xian', 后: 'hou', 左: 'zuo', 右: 'you', 前: 'qian', 后: 'hou', 上: 'shang', 下: 'xia', 内: 'nei', 外: 'wai',
+            中: 'zhong', 间: 'jian', 旁: 'pang', 侧: 'ce', 隅: 'yu', 角: 'jiao',
+            山: 'shan', 水: 'shui', 江: 'jiang', 河: 'he', 湖: 'hu', 海: 'hai', 溪: 'xi', 泉: 'quan', 涧: 'jian', 潭: 'tan',
+            池: 'chi', 塘: 'tang', 湾: 'wan', 港: 'gang', 岸: 'an', 汀: 'ting', 洲: 'zhou', 渚: 'zhu', 岛: 'dao', 屿: 'yu',
+            峰: 'feng', 岭: 'ling', 岳: 'yue', 峦: 'luan', 崖: 'ya', 岩: 'yan', 石: 'shi', 洞: 'dong', 穴: 'xue', 谷: 'gu',
+            峡: 'xia', 壑: 'he', 沟: 'gou', 坡: 'po', 岗: 'gang', 丘: 'qiu', 陵: 'ling', 原: 'yuan', 野: 'ye', 田: 'tian',
+            园: 'yuan', 林: 'lin', 森: 'sen', 亭: 'ting', 台: 'tai', 楼: 'lou', 阁: 'ge', 轩: 'xuan', 榭: 'xie', 廊: 'lang',
+            桥: 'qiao', 城: 'cheng', 关: 'guan', 镇: 'zhen', 村: 'cun', 庄: 'zhuang', 寨: 'zhai', 堡: 'bao', 驿: 'yi', 站: 'zhan',
+            铺: 'pu', 坊: 'fang', 市: 'shi', 集: 'ji', 街: 'jie', 巷: 'xiang', 弄: 'long', 院: 'yuan', 宅: 'zhai', 府: 'fu',
+            第: 'di', 堂: 'tang', 室: 'shi', 居: 'ju', 庐: 'lu', 舍: 'she', 斋: 'zhai', 庵: 'an', 观: 'guan', 庙: 'miao',
+            寺: 'si', 宫: 'gong', 殿: 'dian', 苑: 'yuan', 圃: 'pu', 景: 'jing', 境: 'jing', 界: 'jie', 天: 'tian', 地: 'di',
+            日: 'ri', 月: 'yue', 星: 'xing', 辰: 'chen', 光: 'guang', 影: 'ying', 色: 'se',
+            沚: 'zhi', 沣: 'feng', 沔: 'mian', 沘: 'bi', 汾: 'fen', 沂: 'yi', 沭: 'shu', 沱: 'tuo', 沲: 'tuo', 沴: 'li',
+            沵: 'mi', 沶: 'yi', 沷: 'fa', 沺: 'tian', 治: 'zhi', 沼: 'zhao', 沽: 'gu', 沾: 'zhan', 沿: 'yan', 泂: 'jiong',
+            泃: 'ju', 泅: 'qiu', 泆: 'yi', 泇: 'jia', 泈: 'zhong', 泋: 'hui', 泍: 'ben', 泎: 'ze', 泏: 'chu', 泐: 'le',
+            泑: 'you', 泒: 'gu', 泔: 'gan', 泖: 'mao', 泘: 'hu', 泙: 'ping', 泚: 'ci', 泜: 'zhi', 泝: 'su', 泞: 'ning',
+            泟: 'cheng', 泠: 'ling', 泡: 'pao', 波: 'bo', 泣: 'qi', 泤: 'si', 泥: 'ni', 泦: 'ju', 泧: 'yue', 注: 'zhu',
+            泩: 'sheng', 泭: 'fu', 泮: 'pan', 泯: 'min', 泰: 'tai', 泱: 'yang', 泲: 'ji', 泳: 'yong', 泴: 'guan', 泵: 'beng',
+            泶: 'xue', 泷: 'long', 泸: 'lu', 泹: 'dan', 泺: 'luo', 泻: 'xie', 泼: 'po', 泽: 'ze', 泾: 'jing', 洁: 'jie',
+            洄: 'hui', 洅: 'zai', 洆: 'cheng', 洇: 'yin', 洈: 'wei', 洉: 'hou', 洊: 'jian', 洋: 'yang', 洌: 'lie', 洎: 'ji',
+            洏: 'er', 洐: 'xing', 洑: 'fu', 洒: 'sa', 洓: 'qi'
+        };
+
+        // ---- 字义映射 ----
         const MEANING_MAP = {
             清: '清澈纯净',
             雅: '高雅端庄',
@@ -2403,6 +2566,15 @@
 
         function getStyleName(styleKey) { return STYLE_NAMES[styleKey] || '全部'; }
 
+        // ---- 生成英文音译 ----
+        function getEnName(name) {
+            if (!name) return '';
+            const chars = name.split('');
+            let pinyin = chars.map(c => (PINYIN_MAP[c] || c).toUpperCase()).join('');
+            return pinyin;
+        }
+
+        // ---- 生成寓意解释 ----
         function generateMeaning(name) {
             if (!name || !name.length) return '寓意深远';
             const chars = name.split('');
@@ -2577,6 +2749,7 @@
             zMax: 9999,
             chain: false,
             unique: false,
+            en: false,
             animSpeed: 1.0,
             animEnabled: true,
             bgColor: '#f7f2ea',
@@ -2621,6 +2794,7 @@
             config.zMax = parseInt(document.getElementById('zMax').value) || 9999;
             config.chain = document.getElementById('chainSwitch').checked;
             config.unique = document.getElementById('uniqueCheck').checked;
+            config.en = document.getElementById('enSwitch').checked;
             config.animSpeed = parseFloat(document.getElementById('animSpeed').value) || 1.0;
             config.animEnabled = document.getElementById('animToggle').checked;
             config.bgColor = document.getElementById('bgColorPicker').value;
@@ -2647,6 +2821,7 @@
         const globalUniqueBtn = document.getElementById('globalUniqueBtn');
         const uniqueCheck = document.getElementById('uniqueCheck');
         const chainSwitch = document.getElementById('chainSwitch');
+        const enSwitch = document.getElementById('enSwitch');
         const importDictBtn = document.getElementById('importDictBtn');
         const dictFileInput = document.getElementById('dictFileInput');
         const dictManageBtn = document.getElementById('dictManageBtn');
@@ -2785,8 +2960,9 @@
             const animEnabled = config.animEnabled !== false;
             const duration = 0.45 / speed;
             const noAnimClass = animEnabled ? '' : 'no-animation';
+            const showEn = document.getElementById('enSwitch').checked;
+
             nameGrid.innerHTML = filtered.map((name, idx) => {
-                const lenTag = name.length === 2 ? '两字' : name.length === 3 ? '三字' : '四字';
                 const isStar = collectList.includes(name);
                 const location = pick(LOCATION_LIST);
                 const coords = getRandomXZ();
@@ -2796,24 +2972,26 @@
                 const animStyle = animEnabled ?
                     `animation: cardIn ${duration}s ease forwards; animation-delay: ${delay}s;` :
                     '';
+                const enName = showEn ? getEnName(name) : '';
+                const enHtml = enName ? `<div class="name-en">${enName}</div>` : '';
                 return `
                         <div class="name-item ${noAnimClass}" style="${animStyle}">
                             ${styleTag}
                             <span class="star ${isStar?'active':''}" data-name="${name}">⭐</span>
                             <div class="name-text">${name}</div>
+                            ${enHtml}
                             <div class="name-meaning">📖 ${meaning}</div>
-                            <div class="name-length-tag">${lenTag}</div>
                             <div class="name-location">📍 ${location}</div>
                             <div class="name-coords">🗺️ ${coords}</div>
                         </div>
                     `;
             }).join('');
+
             nameGrid.querySelectorAll('.star').forEach(star => {
                 star.onclick = function(e) {
                     e.stopPropagation();
                     const n = this.dataset.name;
                     if (collectList.includes(n)) {
-                        // 删除时存入回收站
                         deletedCollect.push(n);
                         if (deletedCollect.length > 100) deletedCollect = deletedCollect.slice(-100);
                         collectList = collectList.filter(x => x !== n);
@@ -2829,6 +3007,7 @@
                     saveConfig();
                 };
             });
+
             nameGrid.querySelectorAll('.name-item').forEach(item => {
                 item.onclick = function(e) {
                     if (e.target.closest('.star')) return;
@@ -3018,6 +3197,10 @@
                 root.style.setProperty('--font-family', "'Minecraft', 'Minecraftia', 'Courier New', monospace");
             } else if (fontVal === 'mi') {
                 root.style.setProperty('--font-family', "'MiSans', 'PingFang SC', 'Microsoft YaHei', sans-serif");
+            } else if (fontVal === 'hywh') {
+                root.style.setProperty('--font-family', "'汉仪文黑85W', 'HYWenHei-85W', 'PingFang SC', 'Microsoft YaHei', sans-serif");
+            } else if (fontVal === 'msyh') {
+                root.style.setProperty('--font-family', "'微软黑体', 'Microsoft YaHei', 'PingFang SC', sans-serif");
             } else if (fontVal === 'custom' && config.customFont) {
                 root.style.setProperty('--font-family', `'CustomFont', 'Georgia', '华文楷体', serif`);
             }
@@ -3072,17 +3255,19 @@
                 const loc = item.querySelector('.name-location')?.textContent?.replace('📍 ', '') || '';
                 const coord = item.querySelector('.name-coords')?.textContent?.replace('🗺️ ', '') || '';
                 const meaning = item.querySelector('.name-meaning')?.textContent?.replace('📖 ', '') || '';
-                items.push({ name, location: loc, coords: coord, meaning });
+                const en = item.querySelector('.name-en')?.textContent || '';
+                items.push({ name, en, location: loc, coords: coord, meaning });
             });
             let content = '';
             let ext = format;
             if (format === 'txt') {
-                content = items.map(it => `${it.name} | ${it.location} | ${it.coords} | ${it.meaning}`).join('\r\n');
+                content = items.map(it => `${it.name}${it.en ? ' | ' + it.en : ''} | ${it.location} | ${it.coords} | ${it.meaning}`)
+                    .join('\r\n');
             } else if (format === 'json') {
                 content = JSON.stringify(items, null, 2);
             } else if (format === 'csv') {
-                content = '地名,位置,坐标,寓意\n' + items.map(it =>
-                    `"${it.name}","${it.location}","${it.coords}","${it.meaning}"`).join('\n');
+                content = '地名,音译,位置,坐标,寓意\n' + items.map(it =>
+                    `"${it.name}","${it.en || ''}","${it.location}","${it.coords}","${it.meaning}"`).join('\n');
             }
             let fileName = prompt('请输入文件名（不含扩展名）：', '五洲地名列表');
             if (fileName === null) return;
@@ -3102,10 +3287,11 @@
             const lines = [];
             nameGrid.querySelectorAll('.name-item').forEach(item => {
                 const name = item.querySelector('.name-text')?.textContent || '';
+                const en = item.querySelector('.name-en')?.textContent || '';
                 const loc = item.querySelector('.name-location')?.textContent?.replace('📍 ', '') || '';
                 const coord = item.querySelector('.name-coords')?.textContent?.replace('🗺️ ', '') || '';
                 const meaning = item.querySelector('.name-meaning')?.textContent?.replace('📖 ', '') || '';
-                lines.push(`${name} | ${loc} | ${coord} | ${meaning}`);
+                lines.push(`${name}${en ? ' | ' + en : ''} | ${loc} | ${coord} | ${meaning}`);
             });
             navigator.clipboard.writeText(lines.join('\n')).then(() => showToast(`✅ 已复制 ${lines.length} 条完整信息`))
                 .catch(() => {
@@ -3129,6 +3315,11 @@
 
         chainSwitch.addEventListener('change', saveConfig);
         uniqueCheck.addEventListener('change', saveConfig);
+        enSwitch.addEventListener('change', function() {
+            saveConfig();
+            if (currentNames.length) render(currentNames);
+        });
+
         ['xMin', 'xMax', 'zMin', 'zMax'].forEach(id => {
             document.getElementById(id).addEventListener('change', saveConfig);
         });
@@ -3191,7 +3382,6 @@
         // 开发者（已废弃，打开设置）
         document.getElementById('devBtn')?.addEventListener('click', function() {
             showModal(settingsModal);
-            // 滚动到开发者信息区域
             setTimeout(() => {
                 const devInfo = document.querySelector('.settings-dev-info');
                 if (devInfo) devInfo.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -3215,7 +3405,6 @@
         collectClearAll.addEventListener('click', function() {
             if (collectList.length === 0 && deletedCollect.length === 0) { showToast('没有可清空的内容'); return; }
             if (confirm('确定清空全部收藏（包括回收站）吗？')) {
-                // 清空前先全部移入回收站
                 collectList.forEach(name => { if (!deletedCollect.includes(name)) deletedCollect.push(name); });
                 collectList = [];
                 storage.set('wzCollect', collectList);
@@ -3230,7 +3419,6 @@
         });
         collectRestoreBtn.addEventListener('click', function() {
             if (!deletedCollect.length) { showToast('回收站为空'); return; }
-            // 恢复所有
             const count = deletedCollect.length;
             deletedCollect.forEach(name => {
                 if (!collectList.includes(name)) collectList.push(name);
@@ -3384,7 +3572,6 @@
                 config.fontFamily = 'custom';
                 fontFileName.textContent = file.name;
                 fontSelect.value = 'custom';
-                // 动态加载字体
                 const fontName = 'CustomFont';
                 const fontFace = new FontFace(fontName, `url(${dataUrl})`);
                 fontFace.load().then(function(loadedFace) {
@@ -3425,18 +3612,16 @@
             if (config.dark) document.documentElement.classList.add('dark');
             chainSwitch.checked = config.chain || false;
             uniqueCheck.checked = config.unique || false;
+            enSwitch.checked = config.en || false;
             animSpeedInput.value = config.animSpeed || 1.0;
             animSpeedDisplay.textContent = (config.animSpeed || 1.0).toFixed(1) + '×';
             animToggle.checked = config.animEnabled !== false;
             bgColorPicker.value = config.bgColor || '#f7f2ea';
             fontSelect.value = config.fontFamily || 'default';
 
-            // 应用背景
             applyBackground();
-            // 应用字体
             applyFont();
 
-            // 如果有自定义字体数据，加载
             if (config.customFont && config.fontFamily === 'custom') {
                 try {
                     const fontFace = new FontFace('CustomFont', `url(${config.customFont})`);
@@ -3455,12 +3640,13 @@
             }
 
             generateBatch();
-            console.log('🏯 五洲铁路模组服务器地名生成器 V3.0_BETA3 已启动');
+            console.log('🏯 五洲铁路模组服务器地名生成器 V3.0_RC1 已启动');
             console.log(
                 `📚 词库规模: 前缀 ${PREFIX_SINGLE.length} 个 · 后缀 ${SUFFIX_SINGLE.length} 个 · 双字词 ${PAIR_WORDS.length} 个 · 双字后缀 ${PAIR_SUFFIX.length} 个 · 自定义 ${customPrefixes.length} 个`
                 );
             console.log(`⭐ 收藏数: ${collectList.length}, 回收站: ${deletedCollect.length}`);
             console.log(`⚙️ 动画速率: ${config.animSpeed || 1.0}x, 动画: ${config.animEnabled !== false ? '开启' : '关闭'}`);
+            console.log(`🔤 英文音译: ${config.en ? '开启' : '关闭'}`);
         });
     </script>
 </body>
