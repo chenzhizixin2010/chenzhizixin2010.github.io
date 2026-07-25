@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>五洲铁路模组服务器地名生成器</title>
+    <title>五洲铁路模组服务器地名生成器 V3.0_BETA3</title>
     <style>
         /* ========== 全局重置 & 字体 ========== */
         * {
@@ -11,26 +11,97 @@
             padding: 0;
             box-sizing: border-box;
         }
+        :root {
+            --font-family: 'Georgia', '华文楷体', 'KaiTi', 'SimSun', serif;
+            --bg-body: #f7f2ea;
+            --bg-container: rgba(255, 252, 245, 0.85);
+            --text-main: #5a3e2b;
+            --text-sub: #6b5340;
+            --text-light: #a08570;
+            --border-color: rgba(200, 180, 160, 0.2);
+            --shadow-color: rgba(120, 80, 50, 0.18);
+            --card-bg: rgba(255, 252, 245, 0.6);
+            --card-hover: rgba(255, 252, 245, 0.92);
+            --btn-bg: #8b6b54;
+            --btn-hover: #7a5d48;
+            --btn-text: #fcf6ef;
+            --btn-secondary-border: #c9b09b;
+            --btn-secondary-text: #7a5d48;
+            --modal-bg: #fffcf5;
+            --toast-bg: #3d2b1e;
+            --toast-text: #f5ede4;
+            --daily-bg: rgba(200, 180, 160, 0.12);
+            --daily-border: rgba(200, 180, 160, 0.15);
+            --coord-color: #a08570;
+            --watermark-color: #d4c5b2;
+            --settings-item-border: rgba(200, 180, 160, 0.12);
+            --range-accent: #8b6b54;
+        }
+        html.dark {
+            --bg-body: #1c1a18;
+            --bg-container: #282420;
+            --text-main: #f8f3ed;
+            --text-sub: #d9cbc0;
+            --text-light: #b8a898;
+            --border-color: rgba(145, 130, 115, 0.35);
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --card-bg: #36312c;
+            --card-hover: #3f3a34;
+            --btn-bg: #7a5d48;
+            --btn-hover: #6b4f3c;
+            --btn-text: #f8f3ed;
+            --btn-secondary-border: rgba(145, 130, 115, 0.45);
+            --btn-secondary-text: #d9cbc0;
+            --modal-bg: #282420;
+            --toast-bg: #3d2b1e;
+            --toast-text: #f5ede4;
+            --daily-bg: rgba(60, 54, 48, 0.3);
+            --daily-border: rgba(145, 130, 115, 0.2);
+            --coord-color: #b8a898;
+            --watermark-color: #5a5048;
+            --settings-item-border: rgba(145, 130, 115, 0.2);
+            --range-accent: #b8a088;
+        }
         body {
             min-height: 100vh;
-            background: #f7f2ea;
+            background: var(--bg-body);
             background-image:
                 radial-gradient(ellipse at 20% 50%, rgba(200, 170, 140, 0.08) 0%, transparent 60%),
                 radial-gradient(ellipse at 80% 50%, rgba(200, 170, 140, 0.08) 0%, transparent 60%),
                 url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4c5b2' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            font-family: 'Georgia', '华文楷体', 'KaiTi', 'SimSun', serif;
+            font-family: var(--font-family);
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 30px 20px;
+            transition: background 0.3s ease, background-image 0.3s ease;
+            background-color: var(--bg-body);
+        }
+        /* 自定义背景覆盖 */
+        body.custom-bg-img {
+            background-image: var(--custom-bg-image, none) !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            background-attachment: fixed !important;
+        }
+        body.custom-bg-color {
+            background: var(--custom-bg-color, #f7f2ea) !important;
+        }
+        body.custom-bg-img.custom-bg-color {
+            background: var(--custom-bg-image), var(--custom-bg-color) !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            background-attachment: fixed !important;
         }
         .container {
             width: 100%;
-            max-width: 960px;
-            background: rgba(255, 252, 245, 0.85);
+            max-width: 1020px;
+            background: var(--bg-container);
             backdrop-filter: blur(6px);
             border-radius: 48px 48px 36px 36px;
-            box-shadow: 0 20px 60px rgba(120, 80, 50, 0.18), 0 8px 24px rgba(120, 80, 50, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 60px var(--shadow-color), 0 8px 24px rgba(120, 80, 50, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
             padding: 40px 44px 50px;
             border: 1px solid rgba(200, 170, 140, 0.25);
             position: relative;
@@ -62,22 +133,25 @@
         }
         .header {
             text-align: center;
-            margin-bottom: 28px;
+            margin-bottom: 20px;
             position: relative;
         }
-        .header-icon {
-            font-size: 38px;
+        .header-img {
+            max-width: 100%;
+            height: auto;
+            max-height: 120px;
+            object-fit: contain;
             display: block;
-            margin-bottom: 4px;
-            letter-spacing: 6px;
+            margin: 0 auto 8px;
+            border-radius: 12px;
         }
         .header h1 {
             font-size: 42px;
             font-weight: 400;
-            color: #5a3e2b;
+            color: var(--text-main);
             letter-spacing: 12px;
             text-shadow: 0 2px 4px rgba(90, 62, 43, 0.06);
-            font-family: '华文楷体', 'KaiTi', 'Georgia', serif;
+            font-family: var(--font-family);
             position: relative;
             display: inline-block;
         }
@@ -92,51 +166,81 @@
         }
         .header .subtitle {
             font-size: 15px;
-            color: #a08570;
+            color: var(--text-light);
             letter-spacing: 10px;
             margin-top: 2px;
-            font-family: '华文楷体', 'KaiTi', serif;
+            font-family: var(--font-family);
             opacity: 0.7;
         }
         .header .divider-line {
             width: 120px;
             height: 2px;
             background: linear-gradient(90deg, transparent, #c9b09b, transparent);
-            margin: 12px auto 0;
+            margin: 10px auto 0;
             border-radius: 2px;
         }
+        .header .version-tag {
+            display: inline-block;
+            font-size: 12px;
+            color: var(--text-light);
+            background: rgba(200, 180, 160, 0.15);
+            padding: 2px 14px;
+            border-radius: 20px;
+            letter-spacing: 2px;
+            margin-left: 10px;
+            vertical-align: middle;
+            font-family: 'Georgia', serif;
+        }
+        .header .daily-recommend-header {
+            margin-top: 10px;
+            display: inline-block;
+            font-size: 14px;
+            color: var(--text-sub);
+            background: var(--daily-bg);
+            padding: 4px 24px;
+            border-radius: 30px;
+            border: 1px solid var(--daily-border);
+            letter-spacing: 1px;
+        }
+        .header .daily-recommend-header .rec-name {
+            font-weight: bold;
+            color: var(--text-main);
+            letter-spacing: 2px;
+        }
+
+        /* ===== 控制区 ===== */
         .controls {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: center;
-            gap: 18px 28px;
+            gap: 10px 14px;
             background: rgba(235, 220, 208, 0.25);
-            padding: 18px 30px;
+            padding: 12px 20px;
             border-radius: 60px;
-            border: 1px solid rgba(200, 180, 160, 0.2);
-            margin-bottom: 32px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 18px;
             backdrop-filter: blur(2px);
         }
         .control-group {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px 10px;
             flex-wrap: wrap;
         }
         .control-group label {
-            font-size: 15px;
-            color: #6b5340;
-            letter-spacing: 2px;
+            font-size: 14px;
+            color: var(--text-sub);
+            letter-spacing: 1px;
             font-weight: 400;
         }
         .control-group input[type="number"] {
-            width: 66px;
-            padding: 6px 4px 6px 12px;
+            width: 58px;
+            padding: 5px 4px 5px 10px;
             border: 1px solid #d6c6b8;
             border-radius: 30px;
             background: rgba(255, 252, 248, 0.7);
-            font-size: 16px;
+            font-size: 15px;
             color: #4a3525;
             font-family: inherit;
             outline: none;
@@ -147,15 +251,12 @@
             border-color: #b08870;
             box-shadow: 0 0 0 3px rgba(176, 136, 112, 0.12);
         }
-        .control-group input[type="number"]::-webkit-inner-spin-button {
-            opacity: 0.5;
-        }
         .control-group select {
-            padding: 6px 18px 6px 16px;
+            padding: 5px 16px 5px 14px;
             border: 1px solid #d6c6b8;
             border-radius: 30px;
             background: rgba(255, 252, 248, 0.7);
-            font-size: 15px;
+            font-size: 14px;
             color: #4a3525;
             font-family: inherit;
             outline: none;
@@ -164,30 +265,54 @@
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23907a68' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 14px center;
-            padding-right: 36px;
+            background-position: right 12px center;
+            padding-right: 32px;
         }
         .control-group select:focus {
             border-color: #b08870;
             box-shadow: 0 0 0 3px rgba(176, 136, 112, 0.12);
         }
+        .control-group input[type="text"] {
+            width: 80px;
+            padding: 5px 8px;
+            border: 1px solid #d6c6b8;
+            border-radius: 30px;
+            background: rgba(255, 252, 248, 0.7);
+            font-size: 14px;
+            color: #4a3525;
+            font-family: inherit;
+            outline: none;
+            text-align: center;
+            transition: border-color 0.25s;
+        }
+        .control-group input[type="text"]:focus {
+            border-color: #b08870;
+            box-shadow: 0 0 0 3px rgba(176, 136, 112, 0.12);
+        }
+
         .btn {
-            padding: 8px 32px;
+            padding: 7px 24px;
             border: none;
             border-radius: 40px;
-            font-size: 17px;
-            font-family: '华文楷体', 'KaiTi', 'Georgia', serif;
-            letter-spacing: 4px;
+            font-size: 15px;
+            font-family: var(--font-family);
+            letter-spacing: 2px;
             cursor: pointer;
             transition: all 0.25s ease;
-            background: #8b6b54;
-            color: #fcf6ef;
+            background: var(--btn-bg);
+            color: var(--btn-text);
             box-shadow: 0 4px 14px rgba(139, 107, 84, 0.25);
             position: relative;
             overflow: hidden;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            min-height: 38px;
         }
         .btn:hover {
-            background: #7a5d48;
+            background: var(--btn-hover);
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(139, 107, 84, 0.30);
         }
@@ -197,10 +322,12 @@
         }
         .btn-secondary {
             background: transparent;
-            color: #7a5d48;
+            color: var(--btn-secondary-text);
             box-shadow: none;
-            border: 1px solid #c9b09b;
-            padding: 7px 28px;
+            border: 1px solid var(--btn-secondary-border);
+            padding: 5px 16px;
+            font-size: 13px;
+            min-height: 34px;
         }
         .btn-secondary:hover {
             background: rgba(200, 180, 160, 0.15);
@@ -210,60 +337,106 @@
         .btn-secondary:active {
             transform: translateY(0px);
         }
+        .btn-sm {
+            padding: 4px 14px;
+            font-size: 12px;
+            min-height: 30px;
+            letter-spacing: 1px;
+        }
         .btn-icon {
-            margin-right: 4px;
-            font-size: 18px;
+            margin-right: 2px;
+            font-size: 15px;
             vertical-align: middle;
         }
+
+        /* ===== 统计区 ===== */
         .stats {
-            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
             font-size: 14px;
-            color: #a08570;
-            letter-spacing: 2px;
-            margin-bottom: 16px;
-            opacity: 0.7;
-            min-height: 24px;
+            color: var(--text-light);
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+            min-height: 28px;
+            padding: 0 4px;
         }
+        .stats .stat-left {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 18px;
+            align-items: center;
+        }
+        .stats .stat-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        /* ===== 结果区 ===== */
         .result-area {
-            min-height: 260px;
-            padding: 8px 4px;
+            min-height: 240px;
+            padding: 4px 2px;
         }
         .name-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 16px 20px;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 16px 18px;
             justify-items: center;
         }
         .name-item {
-            background: rgba(255, 252, 245, 0.6);
+            background: var(--card-bg);
             border-radius: 20px;
-            padding: 14px 10px 12px;
+            padding: 14px 12px 12px;
             width: 100%;
             text-align: center;
             border: 1px solid rgba(200, 180, 160, 0.15);
-            transition: all 0.25s ease;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             cursor: default;
             position: relative;
             box-shadow: 0 2px 8px rgba(120, 80, 50, 0.04);
+            opacity: 0;
+            transform: translateY(20px) scale(0.96);
+            animation: cardIn 0.45s ease forwards;
+        }
+        .name-item.no-animation {
+            animation: none !important;
+            opacity: 1 !important;
+            transform: none !important;
         }
         .name-item:hover {
-            background: rgba(255, 252, 245, 0.9);
+            background: var(--card-hover);
             border-color: rgba(176, 136, 112, 0.30);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(120, 80, 50, 0.08);
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 12px 32px rgba(120, 80, 50, 0.10);
         }
         .name-item .name-text {
-            font-size: 22px;
-            color: #3d2b1e;
+            font-size: 24px;
+            color: var(--text-main);
             letter-spacing: 6px;
-            font-family: '华文楷体', 'KaiTi', 'Georgia', serif;
-            line-height: 1.4;
+            font-family: var(--font-family);
+            line-height: 1.3;
+        }
+        .name-item .name-meaning {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 6px;
+            padding: 4px 10px;
+            background: rgba(200, 180, 160, 0.08);
+            border-radius: 12px;
+            line-height: 1.5;
+            letter-spacing: 0.5px;
+            min-height: 20px;
+            border-left: 2px solid rgba(200, 180, 160, 0.2);
         }
         .name-item .name-length-tag {
             display: inline-block;
             font-size: 10px;
-            color: #b8a088;
-            background: rgba(200, 180, 160, 0.15);
+            color: var(--text-light);
+            background: rgba(200, 180, 160, 0.12);
             padding: 1px 10px;
             border-radius: 20px;
             margin-top: 4px;
@@ -273,8 +446,8 @@
         .name-item .name-location,
         .name-item .name-coords {
             font-size: 11px;
-            color: #a08570;
-            margin-top: 3px;
+            color: var(--text-light);
+            margin-top: 2px;
             letter-spacing: 0.5px;
         }
         .name-item .star {
@@ -283,29 +456,45 @@
             right: 8px;
             font-size: 16px;
             cursor: pointer;
-            opacity: 0.4;
-            transition: opacity 0.2s;
+            opacity: 0.3;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+        .name-item .star:hover {
+            transform: scale(1.2);
         }
         .name-item .star.active {
             opacity: 1;
             color: #e6b800;
         }
-        .name-item .name-pinyin {
-            font-size: 12px;
-            color: #a89484;
-            margin-top: 2px;
+        .name-item .name-style-tag {
+            position: absolute;
+            top: 6px;
+            left: 8px;
+            font-size: 10px;
+            color: var(--text-light);
+            background: rgba(200, 180, 160, 0.1);
+            padding: 0 8px;
+            border-radius: 12px;
             letter-spacing: 1px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
+        @keyframes cardIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            color: #c9b09b;
+            color: var(--text-light);
             font-size: 18px;
             letter-spacing: 6px;
-            font-family: '华文楷体', 'KaiTi', serif;
+            font-family: var(--font-family);
             opacity: 0.5;
         }
         .empty-state .empty-icon {
@@ -314,39 +503,122 @@
             margin-bottom: 12px;
             opacity: 0.6;
         }
-        .footer-actions {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 14px;
-            margin-top: 28px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(200, 180, 160, 0.2);
-        }
-        .set-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px 20px;
-            align-items: center;
-            justify-content: center;
-            margin-top: 12px;
-        }
-        .set-group label {
-            font-size: 14px;
-            color: #6b5340;
-            letter-spacing: 1px;
+        .search-wrapper {
             display: flex;
             align-items: center;
             gap: 6px;
+            background: rgba(255, 252, 248, 0.6);
+            border-radius: 30px;
+            padding: 2px 6px 2px 16px;
+            border: 1px solid var(--border-color);
+            transition: border-color 0.25s;
+        }
+        .search-wrapper:focus-within {
+            border-color: #b08870;
+            box-shadow: 0 0 0 3px rgba(176, 136, 112, 0.08);
+        }
+        .search-wrapper input {
+            border: none;
+            background: transparent;
+            padding: 5px 4px;
+            font-size: 13px;
+            color: var(--text-main);
+            font-family: inherit;
+            outline: none;
+            width: 100px;
+            min-width: 70px;
+        }
+        .search-wrapper input::placeholder {
+            color: var(--text-light);
+            opacity: 0.6;
+        }
+        .search-wrapper .search-clear {
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-light);
+            padding: 0 6px;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+        .search-wrapper .search-clear:hover {
+            opacity: 1;
+        }
+
+        /* ===== 底部功能栏 ===== */
+        .footer-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 8px 12px;
+            margin-top: 22px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+        .footer-actions .btn-secondary {
+            padding: 4px 14px;
+            font-size: 12px;
+            min-height: 30px;
+        }
+        .footer-actions .export-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(200, 180, 160, 0.06);
+            border-radius: 30px;
+            padding: 2px 4px 2px 12px;
+            border: 1px solid var(--border-color);
+        }
+        .footer-actions .export-group select {
+            border: none;
+            background: transparent;
+            font-size: 12px;
+            color: var(--text-sub);
+            font-family: inherit;
+            outline: none;
+            padding: 4px 6px;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23907a68' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 2px center;
+            padding-right: 18px;
+        }
+
+        /* ===== 设置区 ===== */
+        .set-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 18px;
+            align-items: center;
+            justify-content: center;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+        }
+        .set-group label {
+            font-size: 13px;
+            color: var(--text-sub);
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        .set-group input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--btn-bg);
+            cursor: pointer;
         }
         .set-group input[type="number"] {
-            width: 64px;
-            padding: 4px 6px;
+            width: 56px;
+            padding: 3px 4px 3px 8px;
             border: 1px solid #d6c6b8;
             border-radius: 20px;
             background: rgba(255, 252, 248, 0.7);
-            font-size: 14px;
-            color: #4a3525;
+            font-size: 13px;
+            color: var(--text-main);
             text-align: center;
             outline: none;
             font-family: inherit;
@@ -354,18 +626,67 @@
         .set-group input[type="number"]:focus {
             border-color: #b08870;
         }
+        .set-group .coord-group {
+            display: flex;
+            align-items: center;
+            gap: 4px 8px;
+            flex-wrap: nowrap;
+        }
+        .set-group .coord-label {
+            font-size: 12px;
+            color: var(--coord-color);
+            letter-spacing: 0;
+            white-space: nowrap;
+        }
+
+        /* ===== 底部了解我们 ===== */
+        .about-us {
+            margin-top: 28px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-light);
+            letter-spacing: 2px;
+        }
+        .about-us a {
+            color: var(--text-sub);
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(200, 180, 160, 0.3);
+            transition: color 0.2s, border-color 0.2s;
+            margin: 0 4px;
+        }
+        .about-us a:hover {
+            color: var(--text-main);
+            border-bottom-color: var(--text-sub);
+        }
+        .about-us .uid-label {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+        .footer-legal {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-light);
+            opacity: 0.5;
+            margin-top: 8px;
+            letter-spacing: 2px;
+            font-family: 'Georgia', serif;
+        }
+
+        /* ===== Toast ===== */
         .toast {
             position: fixed;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%) translateY(80px);
-            background: #3d2b1e;
-            color: #f5ede4;
+            background: var(--toast-bg);
+            color: var(--toast-text);
             padding: 10px 30px;
             border-radius: 40px;
             font-size: 14px;
             letter-spacing: 2px;
-            font-family: '华文楷体', 'KaiTi', serif;
+            font-family: var(--font-family);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
             opacity: 0;
             transition: all 0.4s ease;
@@ -378,10 +699,11 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* ===== 弹窗淡入淡出动画 ===== */
+        /* ===== 弹窗通用 ===== */
         .dev-modal,
         .update-modal,
-        .collect-modal {
+        .collect-modal,
+        .settings-modal {
             display: flex;
             opacity: 0;
             visibility: hidden;
@@ -396,20 +718,20 @@
         }
         .dev-modal.active,
         .update-modal.active,
-        .collect-modal.active {
+        .collect-modal.active,
+        .settings-modal.active {
             opacity: 1;
             visibility: visible;
             pointer-events: auto;
         }
-
-        /* 弹窗内容盒子的缩放动画 */
         .dev-box,
         .update-box,
-        .collect-box {
+        .collect-box,
+        .settings-box {
             transform: scale(0.92) translateY(12px);
             transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
             opacity: 0;
-            background: #fffcf5;
+            background: var(--modal-bg);
             border-radius: 32px;
             border: 1px solid rgba(200, 170, 140, 0.3);
             box-shadow: 0 12px 40px rgba(90, 62, 43, 0.2);
@@ -420,12 +742,11 @@
         }
         .active .dev-box,
         .active .update-box,
-        .active .collect-box {
+        .active .collect-box,
+        .active .settings-box {
             transform: scale(1) translateY(0);
             opacity: 1;
         }
-
-        /* 各弹窗的独特尺寸调整 */
         .dev-box {
             padding: 40px 50px;
             text-align: center;
@@ -446,19 +767,24 @@
         .collect-box.dict-box {
             max-width: 700px;
         }
-
+        .settings-box {
+            width: 90%;
+            max-width: 520px;
+            padding: 32px 36px;
+        }
         .dev-box h3,
         .update-box h3,
-        .collect-box h3 {
+        .collect-box h3,
+        .settings-box h3 {
             font-size: 26px;
-            color: #5a3e2b;
+            color: var(--text-main);
             letter-spacing: 4px;
             text-align: center;
             margin-bottom: 16px;
         }
         .dev-name-text {
             font-size: 22px;
-            color: #7a5d48;
+            color: var(--text-sub);
             letter-spacing: 3px;
             margin-bottom: 24px;
             white-space: pre-line;
@@ -467,19 +793,20 @@
         }
         .dev-close-btn {
             padding: 8px 30px;
-            border: 1px solid #c9b09b;
+            border: 1px solid var(--btn-secondary-border);
             background: transparent;
             border-radius: 30px;
             font-family: inherit;
-            color: #6b5340;
+            color: var(--text-sub);
             cursor: pointer;
             transition: 0.2s;
+            font-size: 14px;
         }
         .dev-close-btn:hover {
             background: rgba(200, 180, 160, 0.15);
         }
         .update-content {
-            color: #4a3525;
+            color: var(--text-main);
             line-height: 1.8;
             font-size: 15px;
             letter-spacing: 1px;
@@ -490,18 +817,18 @@
             display: block;
             margin: 0 auto;
             padding: 8px 36px;
-            border: 1px solid #c9b09b;
+            border: 1px solid var(--btn-secondary-border);
             background: transparent;
             border-radius: 30px;
             font-family: inherit;
-            color: #6b5340;
+            color: var(--text-sub);
             cursor: pointer;
             transition: 0.2s;
+            font-size: 14px;
         }
         .update-close:hover {
             background: rgba(200, 180, 160, 0.15);
         }
-
         .collect-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -514,7 +841,7 @@
             text-align: center;
             border-radius: 12px;
             font-size: 14px;
-            color: #4a3525;
+            color: var(--text-main);
         }
         .collect-item .collect-del {
             color: #999;
@@ -523,9 +850,16 @@
             display: block;
             margin-top: 2px;
         }
+        .collect-item .collect-restore {
+            color: #4a7a4a;
+            font-size: 12px;
+            cursor: pointer;
+            display: block;
+            margin-top: 2px;
+        }
         .collect-empty {
             text-align: center;
-            color: #a08570;
+            color: var(--text-light);
             padding: 30px 0;
         }
         .collect-buttons {
@@ -536,106 +870,144 @@
             flex-wrap: wrap;
         }
 
+        /* ===== 设置面板内样式 ===== */
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--settings-item-border);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+        .settings-item label {
+            font-size: 14px;
+            color: var(--text-main);
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .settings-item input[type="range"] {
+            width: 140px;
+            accent-color: var(--range-accent);
+            cursor: pointer;
+        }
+        .settings-item .range-value {
+            font-size: 14px;
+            color: var(--text-sub);
+            min-width: 36px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .settings-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--btn-bg);
+            cursor: pointer;
+        }
+        .settings-item .btn {
+            padding: 4px 20px;
+            font-size: 14px;
+            min-height: 34px;
+        }
+        .settings-item .color-picker-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .settings-item .color-picker-wrap input[type="color"] {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            padding: 2px;
+            background: transparent;
+        }
+        .settings-item .file-input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .settings-item .file-input-wrap input[type="file"] {
+            font-size: 12px;
+            color: var(--text-sub);
+            font-family: inherit;
+            max-width: 140px;
+        }
+        .settings-item .file-input-wrap .file-name {
+            font-size: 12px;
+            color: var(--text-light);
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .settings-dev-info {
+            background: rgba(200, 180, 160, 0.08);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin: 4px 0 8px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-sub);
+            line-height: 1.8;
+            border: 1px solid var(--border-color);
+        }
+        .settings-dev-info .dev-label {
+            font-weight: bold;
+            color: var(--text-main);
+            letter-spacing: 2px;
+        }
+        .settings-dev-info a {
+            color: var(--text-sub);
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(200, 180, 160, 0.3);
+        }
+        .settings-dev-info a:hover {
+            color: var(--text-main);
+        }
+        .settings-select {
+            padding: 4px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            background: rgba(255, 252, 248, 0.7);
+            font-size: 13px;
+            color: var(--text-main);
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
+            min-width: 120px;
+        }
+        .settings-select:focus {
+            border-color: #b08870;
+        }
+
         .watermark {
             position: absolute;
             right: 30px;
             bottom: 20px;
             font-size: 12px;
-            color: #d4c5b2;
+            color: var(--watermark-color);
             letter-spacing: 4px;
             opacity: 0.3;
             pointer-events: none;
-            font-family: '华文楷体', 'KaiTi', serif;
-        }
-
-        /* ===== 深色主题 ===== */
-        html.dark {
-            --bg-main: #1c1a18;
-            --bg-card: #282420;
-            --bg-item: #36312c;
-            --text-main: #f8f3ed;
-            --text-sub: #d9cbc0;
-            --text-light: #b8a898;
-            --border-color: rgba(145, 130, 115, 0.35);
-        }
-        html.dark body {
-            background: var(--bg-main);
-            background-image: none;
-        }
-        html.dark .container {
-            background: var(--bg-card);
-        }
-        html.dark .controls {
-            background: rgba(50, 46, 42, 0.4);
-        }
-        html.dark .name-item {
-            background: var(--bg-item);
-        }
-        html.dark .dev-box,
-        html.dark .update-box,
-        html.dark .collect-box {
-            background: var(--bg-card);
-        }
-        html.dark h1,
-        html.dark h3,
-        html.dark .name-text {
-            color: var(--text-main);
-        }
-        html.dark .control-group label,
-        html.dark .set-group label,
-        html.dark .dev-name-text {
-            color: var(--text-sub);
-        }
-        html.dark .update-content {
-            color: #f0e6dd !important;
-            font-weight: 500;
-        }
-        html.dark .stats,
-        html.dark .empty-state,
-        html.dark .name-length-tag,
-        html.dark .collect-empty,
-        html.dark .name-location,
-        html.dark .name-coords {
-            color: var(--text-light);
-        }
-        html.dark .control-group input,
-        html.dark .control-group select,
-        html.dark .set-group input[type="number"] {
-            background: #3a3530;
-            color: #f8f3ed;
-            border-color: rgba(145, 130, 115, 0.4);
-        }
-        html.dark .btn-secondary {
-            border-color: rgba(145, 130, 115, 0.45);
-            color: var(--text-sub);
-        }
-        html.dark .btn-secondary:hover {
-            background: rgba(70, 64, 58, 0.6);
-        }
-        html.dark .name-pinyin {
-            color: #c2b09c !important;
-        }
-        html.dark .collect-item {
-            color: #d9cbc0;
-            background: rgba(60, 54, 48, 0.5);
-        }
-        html.dark .collect-item .collect-del {
-            color: #a09080;
-        }
-        html.dark .dev-modal,
-        html.dark .update-modal,
-        html.dark .collect-modal {
-            background: rgba(0, 0, 0, 0.65);
+            font-family: var(--font-family);
         }
 
         /* ===== 响应式 ===== */
-        @media (max-width: 700px) {
+        @media (max-width: 820px) {
             .container {
-                padding: 28px 18px 32px;
+                padding: 28px 20px 32px;
                 border-radius: 32px;
             }
             .header h1 {
-                font-size: 30px;
+                font-size: 32px;
                 letter-spacing: 8px;
             }
             .header h1::after {
@@ -646,26 +1018,33 @@
                 letter-spacing: 6px;
             }
             .controls {
-                padding: 14px 18px;
+                padding: 12px 16px;
                 border-radius: 40px;
-                gap: 12px 16px;
+                gap: 10px 14px;
                 flex-direction: column;
                 align-items: stretch;
             }
             .control-group {
                 justify-content: center;
+                flex-wrap: wrap;
             }
             .btn {
-                padding: 7px 24px;
-                font-size: 15px;
+                padding: 6px 18px;
+                font-size: 14px;
                 letter-spacing: 2px;
+                min-height: 34px;
+            }
+            .btn-secondary {
+                padding: 4px 12px;
+                font-size: 12px;
+                min-height: 30px;
             }
             .name-grid {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
                 gap: 12px;
             }
             .name-item .name-text {
-                font-size: 18px;
+                font-size: 20px;
                 letter-spacing: 4px;
             }
             .container::before,
@@ -681,6 +1060,32 @@
                 bottom: 10px;
                 right: 10px;
             }
+            .stats {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+            }
+            .stats .stat-right {
+                justify-content: flex-start;
+            }
+            .footer-actions {
+                gap: 6px 8px;
+            }
+            .footer-actions .btn-secondary {
+                padding: 3px 10px;
+                font-size: 11px;
+                min-height: 26px;
+            }
+            .set-group {
+                gap: 6px 12px;
+            }
+            .set-group label {
+                font-size: 12px;
+            }
+            .set-group input[type="number"] {
+                width: 48px;
+                font-size: 12px;
+            }
             .toast {
                 font-size: 12px;
                 padding: 8px 20px;
@@ -695,12 +1100,8 @@
             .update-box {
                 padding: 24px;
             }
-            .set-group {
-                gap: 8px 14px;
-            }
-            .set-group input[type="number"] {
-                width: 54px;
-                font-size: 13px;
+            .settings-box {
+                padding: 24px 20px;
             }
             .watermark {
                 display: none;
@@ -708,50 +1109,181 @@
             .collect-box {
                 padding: 20px;
             }
+            .search-wrapper input {
+                width: 70px;
+                min-width: 50px;
+                font-size: 12px;
+            }
+            .control-group input[type="text"] {
+                width: 60px;
+                font-size: 12px;
+            }
+            .header .version-tag {
+                font-size: 10px;
+                margin-left: 4px;
+                padding: 1px 10px;
+            }
+            .set-group .coord-group {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .header .daily-recommend-header {
+                font-size: 13px;
+                padding: 3px 16px;
+            }
+            .header-img {
+                max-height: 80px;
+            }
+            .settings-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+            }
+            .settings-item .file-input-wrap {
+                flex-wrap: wrap;
+            }
+            .settings-item input[type="range"] {
+                width: 100%;
+            }
         }
-        @media (max-width: 420px) {
+        @media (max-width: 440px) {
             .container {
-                padding: 20px 12px 24px;
+                padding: 16px 10px 20px;
+                border-radius: 24px;
             }
             .header h1 {
-                font-size: 24px;
+                font-size: 22px;
+                letter-spacing: 4px;
+            }
+            .header .subtitle {
+                font-size: 11px;
                 letter-spacing: 4px;
             }
             .control-group label {
-                font-size: 13px;
+                font-size: 12px;
             }
             .control-group input[type="number"] {
-                width: 54px;
-                font-size: 14px;
+                width: 48px;
+                font-size: 13px;
             }
             .control-group select {
-                font-size: 13px;
-                padding: 5px 28px 5px 12px;
+                font-size: 12px;
+                padding: 4px 24px 4px 10px;
             }
             .name-grid {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
                 gap: 10px;
             }
             .name-item .name-text {
-                font-size: 16px;
+                font-size: 17px;
                 letter-spacing: 3px;
             }
             .name-item {
                 padding: 10px 6px 8px;
             }
+            .name-item .name-meaning {
+                font-size: 10px;
+                padding: 2px 6px;
+            }
             .btn {
-                padding: 6px 18px;
-                font-size: 14px;
+                padding: 5px 14px;
+                font-size: 13px;
+                letter-spacing: 1px;
+                min-height: 30px;
+            }
+            .btn-secondary {
+                padding: 3px 10px;
+                font-size: 11px;
+                min-height: 26px;
             }
             .footer-actions {
-                gap: 10px;
+                gap: 4px 6px;
+                padding-top: 12px;
+                margin-top: 16px;
             }
             .footer-actions .btn-secondary {
-                padding: 5px 16px;
-                font-size: 13px;
+                padding: 2px 8px;
+                font-size: 10px;
+                min-height: 24px;
+            }
+            .footer-actions .export-group {
+                padding: 1px 4px 1px 8px;
+            }
+            .footer-actions .export-group select {
+                font-size: 10px;
+                padding: 2px 14px 2px 4px;
+            }
+            .set-group {
+                gap: 4px 8px;
+                padding-top: 8px;
+                margin-top: 10px;
+            }
+            .set-group label {
+                font-size: 11px;
+                gap: 3px;
+            }
+            .set-group input[type="number"] {
+                width: 40px;
+                font-size: 11px;
+                padding: 2px 2px 2px 6px;
             }
             .collect-box {
-                padding: 20px;
+                padding: 16px;
+            }
+            .collect-list {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 6px;
+            }
+            .search-wrapper input {
+                width: 60px;
+                min-width: 40px;
+                font-size: 11px;
+            }
+            .control-group input[type="text"] {
+                width: 50px;
+                font-size: 11px;
+            }
+            .header .version-tag {
+                font-size: 9px;
+                padding: 1px 8px;
+            }
+            .about-us {
+                font-size: 11px;
+                letter-spacing: 1px;
+            }
+            .about-us a {
+                display: inline-block;
+                margin: 2px 0;
+            }
+            .set-group .coord-group {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .header .daily-recommend-header {
+                font-size: 12px;
+                padding: 2px 12px;
+            }
+            .settings-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+            }
+            .settings-item input[type="range"] {
+                width: 100%;
+            }
+            .settings-box {
+                padding: 20px 16px;
+            }
+            .header-img {
+                max-height: 60px;
+            }
+            .settings-item .file-input-wrap input[type="file"] {
+                max-width: 100px;
+                font-size: 11px;
+            }
+            .settings-select {
+                min-width: 80px;
+                font-size: 12px;
             }
         }
     </style>
@@ -763,57 +1295,59 @@
     <!-- ====== 更新日志弹窗 ====== -->
     <div class="update-modal" id="updateModal">
         <div class="update-box">
-            <h3>📜 更新日志</h3>
+            <h3>📜 更新日志 · V3.0_BETA3</h3>
             <div class="update-content" id="updateText">
-                V2.0_RELEASE 2026-7-24
-                1. 新增明暗双主题切换，浅色/古风暗色自由切换，设置自动本地保存
-                2. 新增地名收藏系统，每个地名卡片右上角星星可收藏，独立收藏面板统一管理
-                3. 新增词库管理，可查看/删除自定义词，支持清空自定义词
-                4. 新增导出TXT文件功能，批量导出当前所有地名保存到本地
-                5. 新增「生成去重」勾选框，开启后不会产出重复地名
-                6. 更新弹窗新增「今日不再提示」按钮，当天刷新页面不会重复弹出更新公告
-                7. 新增本地持久存储：自动记忆上次选择的生成数量、地名长度、主题模式、收藏列表、坐标范围
-                8. 优化底部功能栏，拓展多个实用功能按钮，布局适配手机端
-                9. 修复部分移动端显示细微错位问题
-                10. 优化卡片交互视觉，收藏星星有高亮区分状态
-                11. 保留原有全部基础功能：地名随机生成、批量复制、单击单条复制、开发者弹窗、清空功能
-                12. 新增坐标范围自定义、拼音显示、导入词库、全局去重、复制完整信息
-                13. 新增了*说明*按钮，部分提示在此可以查看
-                14. 新增了*历史记录*功能，可记录50条生成记录
-                15. 优化了网页动效
+                V3.0_BETA3 2026-07-25
+
+                🎉 本次更新：
+                1. 标题上方新增品牌形象图片
+                2. 开发者信息整合至设置面板，界面更简洁
+                3. 新增自定义背景功能（上传图片 / 调色盘选色）
+                4. 新增字体自定义功能（上传字体文件 / 内置字体选择：MC像素体、MI SANS）
+                5. 收藏夹新增「恢复删除」功能，误删可找回
+                6. 优化更新日志弹窗底部按钮布局
+                7. 底部新增版本号与版权信息
+                8. 版本号更新至 V3.0_BETA3
+
+                ✂️ 功能保留：
+                - 风格选择（古风雅韵、山水自然、边塞雄浑、江南婉约、仙侠奇幻）
+                - 地名寓意解释 · 接龙模式 · 随机种子系统
+                - 导出 TXT / JSON / CSV（支持自定义文件名）
+                - 卡片入场动画 · 每日推荐 · 实时搜索
+                - 收藏 / 历史 / 词库管理
+
+                📖 使用提示：
+                - 风格 + 种子可实现可复现的命名方案
+                - 接龙模式适合生成关联地名序列
+                - 每日推荐是灵感来源
 
                 感谢各位使用五洲铁路模组服务器地名生成器！
 
                 —— 豆包 & DeepSeek & 陈之自信 敬上
-
-                『历史更新』
-                V1.1 2026-7-24
-                1. 调整了最大生成数至50
-                2. 调整了网站启动后默认选择二字模式
-                3. Bug修复
-                4. 新增开发者弹窗按钮
             </div>
-            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-                <button class="btn btn-secondary" id="updateIgnore">今日不再提示</button>
-                <button class="update-close" id="updateClose">确认关闭</button>
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:4px;">
+                <button class="btn btn-secondary" id="updateIgnore" style="min-height:34px;padding:5px 20px;">今日不再提示</button>
+                <button class="update-close" id="updateClose" style="min-height:34px;padding:5px 28px;">确认关闭</button>
             </div>
         </div>
     </div>
 
-    <!-- ====== 开发者弹窗 ====== -->
+    <!-- ====== 开发者弹窗（已废弃，但保留作为重定向） ====== -->
     <div class="dev-modal" id="devModal">
         <div class="dev-box">
             <h3>👤 开发者信息</h3>
             <div class="dev-name-text">
-                开发者：Deepseek·豆包·陈之自信
-                版本：V2.0_RELEASE
-                反馈：3064450669@qq.com
+                开发者：Deepseek · 豆包 · 陈之自信
+                版本：V3.0_BETA3（2026-07-25）
+                反馈：3064450669@qq.com 或 WRMSPNG@hotmail.com
                 © 五洲铁路模组服务器 2026
             </div>
-            <button class="btn btn-secondary" id="openUpdateBtn" style="margin-bottom:16px;">
-                <span class="btn-icon">📜</span> 查看更新日志
-            </button>
-            <button class="dev-close-btn" id="devClose">关闭</button>
+            <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:6px;">
+                <button class="btn btn-secondary" id="openUpdateBtn" style="min-height:38px;padding:6px 28px;font-size:14px;">
+                    <span class="btn-icon">📜</span> 查看更新日志
+                </button>
+                <button class="dev-close-btn" id="devClose" style="min-height:38px;padding:6px 28px;font-size:14px;">关闭</button>
+            </div>
         </div>
     </div>
 
@@ -825,6 +1359,7 @@
             <div class="collect-list" id="collectList"></div>
             <div class="collect-buttons">
                 <button class="btn btn-secondary" id="collectCopyAll">复制全部收藏</button>
+                <button class="btn btn-secondary" id="collectRestoreBtn">🔄 恢复删除</button>
                 <button class="btn btn-secondary" id="collectClearAll">清空收藏</button>
                 <button class="btn" id="collectClose">关闭</button>
             </div>
@@ -834,7 +1369,7 @@
     <!-- ====== 说明弹窗 ====== -->
     <div class="update-modal" id="helpModal">
         <div class="update-box">
-            <h3>📖 导入词库说明</h3>
+            <h3>📖 导入词库、种子说明</h3>
             <div class="update-content">
                 “导入词库”功能的具体要求如下：
 
@@ -860,6 +1395,20 @@
                 - 导入的词汇会追加到现有词库末尾，不会覆盖原有词库。
                 - 如果导入的字与已有字重复，不会自动去重（可能会略微增加相同字出现的概率，但开启“生成去重”功能仍能保证最终地名不重复）。
                 - 导入成功后，页面底部会弹出提示，显示成功导入的个数。
+                
+                *种子*功能说明：
+                
+                “种子”可以理解为一个 “配方编号” 或 “地图种子”。
+
+在编程里，电脑生成的“随机”其实是用数学公式算出来的伪随机。这个公式的起点值就是“种子”。
+
+在这个工具里具体是：
+
+1. 留空（随机）：系统用当前时间做种子，每次点击“生成”都会得到完全不同的地名。
+2. 输入固定值（如 “2026” 或 “五洲”）：只要种子一样，无论何时、何地、点多少次“生成”，产出的地名列表顺序和内容都完全一样。
+
+有什么用？
+非常适合服务器协作。比如多个管理员需要统一某个区域的命名方案，只要大家输入同一个种子（比如 wuzhou666），各自生成的地名就会一模一样，省去来回对表的麻烦。点击种子框旁边的 “重置” 按钮，可以清空种子恢复完全随机状态。
             </div>
             <button class="update-close" id="helpClose">关闭</button>
         </div>
@@ -883,7 +1432,7 @@
         <div class="collect-box" style="max-width:700px;">
             <h3>📚 词库管理</h3>
             <div style="display:flex;gap:12px;justify-content:center;margin-bottom:12px;flex-wrap:wrap;">
-                <span id="dictStats" style="color:#6b5340;">共 0 个词</span>
+                <span id="dictStats" style="color:var(--text-sub);">共 0 个词</span>
                 <button class="btn btn-secondary" id="dictClearCustom" style="padding:4px 16px;font-size:13px;">清空自定义</button>
             </div>
             <div id="dictWordList" style="max-height:400px;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;padding:8px 0;"></div>
@@ -893,27 +1442,104 @@
         </div>
     </div>
 
+    <!-- ====== 设置弹窗 ====== -->
+    <div class="settings-modal" id="settingsModal">
+        <div class="settings-box">
+            <h3>⚙️ 设置</h3>
+
+            <!-- 动画 -->
+            <div class="settings-item">
+                <label>🎬 动画速率</label>
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <input type="range" id="animSpeed" min="0.2" max="2.0" step="0.1" value="1.0" style="width:140px;" />
+                    <span class="range-value" id="animSpeedDisplay">1.0×</span>
+                </div>
+            </div>
+            <div class="settings-item">
+                <label>✨ 入场动画</label>
+                <input type="checkbox" id="animToggle" checked />
+            </div>
+
+            <!-- 明暗主题 -->
+            <div class="settings-item">
+                <label>🌓 明暗主题</label>
+                <button class="btn btn-secondary" id="themeBtnSettings" style="min-height:34px;padding:4px 20px;font-size:13px;">
+                    <span class="btn-icon">🌓</span> 切换
+                </button>
+            </div>
+
+            <!-- 开发者信息 -->
+            <div class="settings-item" style="flex-direction:column;align-items:stretch;padding:12px 0;">
+                <label style="font-weight:bold;font-size:15px;">👤 开发者信息</label>
+                <div class="settings-dev-info">
+                    <div><span class="dev-label">开发者：</span>Deepseek · 豆包 · 陈之自信</div>
+                    <div><span class="dev-label">版本：</span>V3.0_BETA3（2026-07-25）</div>
+                    <div><span class="dev-label">反馈：</span><a href="mailto:3064450669@qq.com">3064450669@qq.com</a> 或 <a href="mailto:WRMSPNG@hotmail.com">WRMSPNG@hotmail.com</a></div>
+                    <div style="margin-top:4px;font-size:12px;opacity:0.6;">© 五洲铁路模组服务器 2026</div>
+                </div>
+                <button class="btn btn-secondary" id="openUpdateBtn2" style="align-self:center;min-height:34px;padding:4px 24px;font-size:13px;margin-top:4px;">
+                    <span class="btn-icon">📜</span> 查看更新日志
+                </button>
+            </div>
+
+            <!-- 自定义背景 -->
+            <div class="settings-item" style="flex-direction:column;align-items:stretch;padding:12px 0;">
+                <label style="font-weight:bold;font-size:15px;">🖼️ 自定义背景</label>
+                <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:4px;">
+                    <div class="file-input-wrap">
+                        <input type="file" id="bgImageInput" accept="image/*" style="font-size:12px;color:var(--text-sub);font-family:inherit;max-width:160px;" />
+                        <span class="file-name" id="bgFileName">未选择</span>
+                        <button class="btn btn-secondary btn-sm" id="bgClearBtn" style="min-height:26px;padding:2px 12px;font-size:11px;">清除</button>
+                    </div>
+                    <div class="color-picker-wrap">
+                        <input type="color" id="bgColorPicker" value="#f7f2ea" />
+                        <span style="font-size:12px;color:var(--text-light);">纯色</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 字体设置 -->
+            <div class="settings-item" style="flex-direction:column;align-items:stretch;padding:12px 0;border-bottom:none;">
+                <label style="font-weight:bold;font-size:15px;">🔤 字体设置</label>
+                <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:4px;">
+                    <select id="fontSelect" class="settings-select">
+                        <option value="default">默认（系统）</option>
+                        <option value="mc">MC像素体</option>
+                        <option value="mi">MI SANS</option>
+                        <option value="custom">自定义字体</option>
+                    </select>
+                    <div class="file-input-wrap">
+                        <input type="file" id="fontFileInput" accept=".ttf,.otf,.woff,.woff2" style="font-size:12px;color:var(--text-sub);font-family:inherit;max-width:160px;" />
+                        <span class="file-name" id="fontFileName">未选择</span>
+                        <button class="btn btn-secondary btn-sm" id="fontClearBtn" style="min-height:26px;padding:2px 12px;font-size:11px;">清除</button>
+                    </div>
+                </div>
+                <div style="font-size:12px;color:var(--text-light);opacity:0.6;margin-top:4px;">选择内置字体或上传 .ttf/.otf/.woff 文件</div>
+            </div>
+
+            <div style="display:flex;justify-content:center;margin-top:18px;">
+                <button class="btn" id="settingsClose" style="min-height:38px;padding:6px 32px;font-size:14px;">关闭</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ====== 主容器 ====== -->
-    <div class="container">
+    <div class="container" id="mainContainer">
         <span class="watermark">· 五洲 ·</span>
 
         <!-- 头部 -->
         <div class="header">
-            <span class="header-icon">🏯</span>
-            <h1>五洲铁路模组服务器地名生成器</h1>
+            <img class="header-img" src="https://pic1.imgdb.cn/i/033vPhrLk7PoHOs4qjTP8C.png" alt="五洲铁路模组服务器" />
+            <h1>五洲铁路模组服务器地名生成器 <span class="version-tag">V3.0_BETA3</span></h1>
             <div class="subtitle">— 五 洲 共 力 · 四 海 同 心 —</div>
             <div class="divider-line"></div>
+            <div class="daily-recommend-header">
+                🏮 今日推荐：<span class="rec-name" id="dailyRecName">—</span>
+            </div>
         </div>
 
         <!-- 控制区 -->
         <div class="controls">
-            <div class="control-group">
-                <button class="btn btn-secondary" id="importDictBtn" style="padding:6px 14px;font-size:14px;">📂 导入词库</button>
-                <button class="btn btn-secondary" id="helpBtn" style="padding:6px 24px;font-size:14px;">
-                <span class="btn-icon">❓</span> 词库说明
-            </button>
-                <input type="file" id="dictFileInput" accept=".txt" style="display:none;">
-            </div>
             <div class="control-group">
                 <label for="countInput">生成</label>
                 <input type="number" id="countInput" value="8" min="1" max="50" />
@@ -921,26 +1547,49 @@
                 <select id="typeSelect">
                     <option value="2" selected>两字</option>
                     <option value="3">三字</option>
-                    <option value="4">四字</option>
                     <option value="0">全部</option>
                 </select>
+                <label for="styleSelect">· 风格</label>
+                <select id="styleSelect">
+                    <option value="all">全部</option>
+                    <option value="classic">古风雅韵</option>
+                    <option value="nature">山水自然</option>
+                    <option value="frontier">边塞雄浑</option>
+                    <option value="jiangnan">江南婉约</option>
+                    <option value="fantasy">仙侠奇幻</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="seedInput">种子</label>
+                <input type="text" id="seedInput" placeholder="留空随机" style="width:70px;" />
+                <button class="btn btn-secondary btn-sm" id="resetSeedBtn" style="padding:2px 10px;font-size:12px;">重置</button>
             </div>
             <button class="btn" id="generateBtn">
                 <span class="btn-icon">✦</span> 生成
             </button>
-            <button class="btn btn-secondary" id="themeBtn" style="padding:6px 24px;font-size:14px;">
-                <span class="btn-icon">🌓</span> 明暗切换
+            <button class="btn btn-secondary btn-sm" id="settingsBtn" style="min-height:30px;">
+                <span class="btn-icon">⚙️</span> 设置
             </button>
-            <button class="btn btn-secondary" id="devBtn">
-                <span class="btn-icon">👤</span> 开发者信息
+            <button class="btn btn-secondary btn-sm" id="dictManageBtn" style="min-height:30px;">
+                <span class="btn-icon">📚</span> 词库
             </button>
-                            <button class="btn btn-secondary" id="dictManageBtn" style="padding:6px 24px;font-size:14px;">
-                    <span class="btn-icon">📚</span> 词库管理
-                </button>
+            <button class="btn btn-secondary btn-sm" id="importDictBtn" style="min-height:30px;">
+                📂 导入
+            </button>
+            <input type="file" id="dictFileInput" accept=".txt" style="display:none;">
+            <button class="btn btn-secondary btn-sm" id="helpBtn" style="min-height:30px;">
+                ❓ 说明
+            </button>
         </div>
 
-        <!-- 统计 -->
-        <div class="stats" id="statsInfo">点击「生成」</div>
+        <!-- 统计区 -->
+        <div class="stats">
+            <div class="stat-left">
+                <span id="statsInfo">点击「生成」</span>
+                <span id="searchResultCount" style="color:var(--text-light);font-size:13px;"></span>
+            </div>
+            <div class="stat-right"></div>
+        </div>
 
         <!-- 结果展示 -->
         <div class="result-area" id="resultArea">
@@ -953,213 +1602,790 @@
 
         <!-- 底部功能栏 -->
         <div class="footer-actions">
-            <button class="btn btn-secondary" id="copyAllFull" style="padding:6px 24px;font-size:14px;">
-                <span class="btn-icon">📋</span>复制完整信息
+            <button class="btn btn-secondary" id="copyAllFull">
+                <span class="btn-icon">📋</span>复制完整
             </button>
-            <button class="btn btn-secondary" id="clearBtn" style="padding:6px 24px;font-size:14px;">
+            <button class="btn btn-secondary" id="clearBtn">
                 <span class="btn-icon">✕</span> 清空
             </button>
-            <button class="btn btn-secondary" id="exportBtn" style="padding:6px 24px;font-size:14px;">
-                <span class="btn-icon">💾</span> 导出TXT
+            <div class="export-group">
+                <span style="font-size:12px;color:var(--text-light);">💾</span>
+                <select id="exportFormat">
+                    <option value="txt">TXT</option>
+                    <option value="json">JSON</option>
+                    <option value="csv">CSV</option>
+                </select>
+                <button class="btn btn-secondary" id="exportBtn" style="border:none;background:transparent;color:var(--text-sub);padding:2px 8px;font-size:12px;">导出</button>
+            </div>
+            <button class="btn btn-secondary" id="collectOpenBtn">
+                <span class="btn-icon">⭐</span> 收藏
             </button>
-            <button class="btn btn-secondary" id="collectOpenBtn" style="padding:6px 24px;font-size:14px;">
-                <span class="btn-icon">⭐</span> 收藏列表
+            <button class="btn btn-secondary" id="historyBtn">
+                <span class="btn-icon">📜</span> 历史
             </button>
-            <button class="btn btn-secondary" id="historyBtn" style="padding:6px 24px;font-size:14px;">
-                <span class="btn-icon">📜</span> 历史记录
+            <button class="btn btn-secondary" id="globalUniqueBtn">
+                <span class="btn-icon">🔂</span> 去重
             </button>
-            <button class="btn btn-secondary" id="globalUniqueBtn" style="padding:6px 24px;font-size:14px;">
-                <span class="btn-icon">🔂</span> 全局去重
-            </button>
+            <div class="search-wrapper">
+                <span style="font-size:13px;color:var(--text-light);">🔍</span>
+                <input type="text" id="searchInput" placeholder="搜索地名..." />
+                <span class="search-clear" id="searchClear">✕</span>
+            </div>
         </div>
 
         <!-- 设置区 -->
         <div class="set-group">
             <label><input type="checkbox" id="uniqueCheck"> 生成去重</label>
-            <label><input type="checkbox" id="pinyinSwitch"> 拼音</label>
-            <label>X: <input type="number" id="xMin" value="-9999"> ~ <input type="number" id="xMax" value="9999"></label>
-            <label>Z: <input type="number" id="zMin" value="-9999"> ~ <input type="number" id="zMax" value="9999"></label>
+            <label><input type="checkbox" id="chainSwitch"> 🔗 接龙模式</label>
+            <div class="coord-group">
+                <label class="coord-label">X: <input type="number" id="xMin" value="-9999"> ~ <input type="number" id="xMax" value="9999"></label>
+                <label class="coord-label">Z: <input type="number" id="zMin" value="-9999"> ~ <input type="number" id="zMax" value="9999"></label>
+            </div>
+        </div>
+
+        <!-- 底部了解我们 -->
+        <div class="about-us">
+            <span>📢 了解我们</span>
+            <span style="margin:0 8px;opacity:0.4;">|</span>
+            <span class="uid-label">B站：</span>
+            <a href="https://space.bilibili.com/1499790297" target="_blank" rel="noopener">陈之自信chen_zixin</a>
+            <span style="margin:0 4px;opacity:0.4;">&</span>
+            <a href="https://space.bilibili.com/3546698959816732" target="_blank" rel="noopener">五洲社</a>
+        </div>
+        <div class="footer-legal">
+            V3.0_BETA3 · © 五洲铁路模组服务器 2026
         </div>
     </div>
 
     <script>
         // ================================================================
-        //  1. 词 库
+        //  词库（V3.0_BETA3 扩展，总数 820+）
         // ================================================================
         const PREFIX_SINGLE = [
-            '清', '雅', '韵', '秀', '灵', '幽', '静', '翠', '碧', '苍',
-            '皓', '明', '和', '安', '宁', '逸', '致', '妙', '玄', '虚',
-            '幻', '梦', '云', '雾', '烟', '霞', '虹', '露', '霜', '雪',
-            '梅', '兰', '竹', '菊', '松', '柏', '柳', '桃', '杏', '梨',
-            '枫', '荷', '莲', '桂', '棠', '薇', '萱', '芷', '若', '蓉',
-            '芙', '蕖', '荻', '芦', '蒲', '藤', '萝', '蔓', '枝', '叶',
-            '花', '香', '芳', '菲', '芬', '馥', '郁', '馨', '暖', '寒',
-            '凉', '温', '润', '泽', '沛', '潇', '洒', '飘', '飞', '扬',
-            '舞', '翩', '跹', '婉', '约', '柔', '美', '丽', '艳', '娇',
-            '媚', '妩', '娟', '妍', '娴', '淑', '慧', '敏', '捷', '睿',
-            '智', '仁', '义', '礼', '信', '德', '善', '良', '慈', '悲',
-            '悯', '怀', '念', '思', '忆', '无', '空', '寂', '禅', '悟',
-            '觉', '醒', '风', '雨', '雷', '电', '冰', '寒', '暑', '春',
-            '夏', '秋', '冬', '晨', '暮', '夕', '夜', '晓', '曙', '曦',
-            '晖', '岚', '岫', '嶂', '壑', '涧', '汀', '渚', '洲', '屿',
-            '阜', '隰', '坂', '垄', '畦', '陌', '阡', '津', '渡', '浦',
-            '湾', '港', '澳', '碛', '磴', '硐', '硖', '崃', '崤', '嵯',
-            '峨', '峥', '嵘', '崔', '嵬', '嶙', '峋', '崎', '岖', '迤',
-            '逦', '蜿', '蜒', '蟠', '踞', '镇', '守', '护', '卫', '御',
-            '防', '固', '坚', '牢', '稳', '定', '平', '康', '泰', '丰',
-            '盈', '裕', '足', '富', '贵', '荣', '华', '显', '赫', '盛',
-            '昌', '兴', '旺', '隆', '熙', '睦', '谐', '协', '同', '共',
-            '享', '分', '合', '聚', '散', '离', '别', '逢', '遇', '交',
-            '往', '来', '去', '行', '止', '居', '停', '宿', '歇', '眠',
-            '卧', '坐', '立', '倚', '凭', '望', '眺', '瞰', '观', '赏',
-            '览', '游', '玩', '嬉', '乐', '悦', '欣', '喜', '欢', '爱',
-            '恋', '慕', '羡', '仰', '敬', '尊', '崇', '拜', '谒', '访',
-            '问', '询', '答', '对', '谈', '论', '议', '评', '品', '尝',
-            '饮', '食', '住', '衣', '冠', '带', '佩', '饰', '装', '扮',
-            '梳', '洗', '沐', '浴', '洁', '净', '爽', '畅', '舒', '适',
-            '宜', '怡', '缓', '徐', '悠', '闲', '暇', '余', '满', '盈',
-            '溢', '泛', '漫', '弥', '散', '布', '列', '排', '陈', '设',
-            '置', '安', '放', '存', '储', '积', '聚', '汇', '集', '合',
-            '并', '连', '接', '通', '达', '至', '到', '临', '莅', '顾',
-            '眷', '垂', '惠', '赐', '恩', '泽', '福', '祉', '祥', '瑞',
-            '吉', '庆', '贺', '祝', '颂', '歌', '舞', '奏', '演', '唱',
-            '吟', '咏', '诵', '读', '写', '画', '描', '绘', '染', '渲',
-            '泼', '洒', '挥', '展', '舒', '卷', '收', '放', '开', '闭',
-            '启', '封', '藏', '隐', '现', '显', '露', '呈', '献', '奉',
-            '贡', '纳', '受', '承', '担', '负', '荷', '载', '运', '转',
-            '进', '退', '止', '息', '生', '死', '存', '亡', '兴', '衰',
-            '荣', '枯', '成', '败', '得', '失', '是', '非', '善', '恶',
-            '美', '丑', '真', '假', '实', '有', '无', '多', '少', '大',
-            '小', '长', '短', '高', '低', '深', '浅', '宽', '窄', '厚',
-            '薄', '轻', '重', '缓', '急', '快', '慢', '迟', '早', '先',
-            '后', '左', '右', '前', '后', '上', '下', '内', '外', '中',
-            '间', '旁', '侧', '隅', '角'
+            '清', '雅', '韵', '秀', '灵', '幽', '静', '翠', '碧', '苍', '皓', '明', '和', '安', '宁', '逸', '致', '妙', '玄',
+            '虚', '幻', '梦', '云', '雾', '烟', '霞', '虹', '露', '霜', '雪', '梅', '兰', '竹', '菊', '松', '柏', '柳', '桃',
+            '杏', '梨', '枫', '荷', '莲', '桂', '棠', '薇', '萱', '芷', '若', '蓉', '芙', '蕖', '荻', '芦', '蒲', '藤', '萝',
+            '蔓', '枝', '叶', '花', '香', '芳', '菲', '芬', '馥', '郁', '馨', '暖', '寒', '凉', '温', '润', '泽', '沛', '潇',
+            '洒', '飘', '飞', '扬', '舞', '翩', '跹', '婉', '约', '柔', '美', '丽', '艳', '娇', '媚', '妩', '娟', '妍', '娴',
+            '淑', '慧', '敏', '捷', '睿', '智', '仁', '义', '礼', '信', '德', '善', '良', '慈', '悲', '悯', '怀', '念', '思',
+            '忆', '无', '空', '寂', '禅', '悟', '觉', '醒', '风', '雨', '雷', '电', '冰', '寒', '暑', '春', '夏', '秋', '冬',
+            '晨', '暮', '夕', '夜', '晓', '曙', '曦', '晖', '岚', '岫', '嶂', '壑', '涧', '汀', '渚', '洲', '屿', '阜', '隰',
+            '坂', '垄', '畦', '陌', '阡', '津', '渡', '浦', '湾', '港', '澳', '碛', '磴', '硐', '硖', '崃', '崤', '嵯', '峨',
+            '峥', '嵘', '崔', '嵬', '嶙', '峋', '崎', '岖', '迤', '逦', '蜿', '蜒', '蟠', '踞', '镇', '守', '护', '卫', '御',
+            '防', '固', '坚', '牢', '稳', '定', '平', '康', '泰', '丰', '盈', '裕', '足', '富', '贵', '荣', '华', '显', '赫',
+            '盛', '昌', '兴', '旺', '隆', '熙', '睦', '谐', '协', '同', '共', '享', '分', '合', '聚', '散', '离', '别', '逢',
+            '遇', '交', '往', '来', '去', '行', '止', '居', '停', '宿', '歇', '眠', '卧', '坐', '立', '倚', '凭', '望', '眺',
+            '瞰', '观', '赏', '览', '游', '玩', '嬉', '乐', '悦', '欣', '喜', '欢', '爱', '恋', '慕', '羡', '仰', '敬', '尊',
+            '崇', '拜', '谒', '访', '问', '询', '答', '对', '谈', '论', '议', '评', '品', '尝', '饮', '食', '住', '衣', '冠',
+            '带', '佩', '饰', '装', '扮', '梳', '洗', '沐', '浴', '洁', '净', '爽', '畅', '舒', '适', '宜', '怡', '缓', '徐',
+            '悠', '闲', '暇', '余', '满', '盈', '溢', '泛', '漫', '弥', '散', '布', '列', '排', '陈', '设', '置', '放', '存',
+            '储', '积', '聚', '汇', '集', '并', '连', '接', '通', '达', '至', '到', '临', '莅', '顾', '眷', '垂', '惠', '赐',
+            '恩', '福', '祉', '祥', '瑞', '吉', '庆', '贺', '祝', '颂', '歌', '舞', '奏', '演', '唱', '吟', '咏', '诵', '读',
+            '写', '画', '描', '绘', '染', '渲', '泼', '挥', '展', '舒', '卷', '收', '开', '闭', '启', '封', '藏', '隐', '现',
+            '呈', '献', '奉', '贡', '纳', '受', '承', '担', '负', '荷', '载', '运', '转', '进', '退', '息', '生', '死', '存',
+            '亡', '衰', '枯', '成', '败', '得', '失', '是', '非', '善', '恶', '美', '丑', '真', '假', '实', '有', '无', '多',
+            '少', '大', '小', '长', '短', '高', '低', '深', '浅', '宽', '窄', '厚', '薄', '轻', '重', '缓', '急', '快', '慢',
+            '迟', '早', '先', '后', '左', '右', '前', '后', '上', '下', '内', '外', '中', '间', '旁', '侧', '隅', '角',
+            '安', '宁', '平', '和', '顺', '昌', '盛', '隆', '兴', '旺', '荣', '华', '富', '贵', '祥', '瑞', '嘉', '禧', '祺',
+            '祎', '祜', '祚', '祈', '祉', '祯', '福', '禄', '禅', '礼', '禧', '川', '泽', '渊', '池', '沼', '沚', '沣', '沔',
+            '沘', '汾', '沂', '沭', '沱', '沲', '沴', '沵', '沶', '沷', '沺', '治', '沼', '沽', '沾', '沿', '泂', '泃', '泅',
+            '泆', '泇', '泈', '泋', '泍', '泎', '泏', '泐', '泑', '泒', '泔', '泖', '泘', '泙', '泚', '泜', '泝', '泞', '泟',
+            '泠', '泡', '波', '泣', '泤', '泥', '泦', '泧', '注', '泩', '泭', '泮', '泯', '泰', '泱', '泲', '泳', '泴', '泵',
+            '泶', '泷', '泸', '泹', '泺', '泻', '泼', '泽', '泾', '洁', '洄', '洅', '洆', '洇', '洈', '洉', '洊', '洋', '洌',
+            '洎', '洏', '洐', '洑', '洒', '洓'
         ];
         const SUFFIX_SINGLE = [
-            '山', '水', '江', '河', '湖', '海', '溪', '泉', '涧', '潭',
-            '池', '塘', '泽', '湾', '港', '岸', '汀', '洲', '渚', '岛',
-            '屿', '峰', '岭', '岳', '峦', '崖', '岩', '石', '洞', '穴',
-            '谷', '峡', '壑', '沟', '坡', '岗', '丘', '陵', '原', '野',
-            '田', '园', '林', '森', '亭', '台', '楼', '阁', '轩', '榭',
-            '廊', '桥', '城', '关', '镇', '村', '庄', '寨', '堡', '驿',
-            '站', '铺', '坊', '市', '集', '街', '巷', '弄', '院', '宅',
-            '府', '第', '堂', '室', '居', '庐', '舍', '斋', '庵', '观',
-            '庙', '寺', '宫', '殿', '苑', '圃', '景', '境', '界', '天',
-            '地', '日', '月', '星', '辰', '云', '风', '雨', '雪', '霜',
-            '露', '雾', '烟', '霞', '虹', '光', '影', '色'
+            '山', '水', '江', '河', '湖', '海', '溪', '泉', '涧', '潭', '池', '塘', '泽', '湾', '港', '岸', '汀', '洲', '渚',
+            '岛', '屿', '峰', '岭', '岳', '峦', '崖', '岩', '石', '洞', '穴', '谷', '峡', '壑', '沟', '坡', '岗', '丘', '陵',
+            '原', '野', '田', '园', '林', '森', '亭', '台', '楼', '阁', '轩', '榭', '廊', '桥', '城', '关', '镇', '村', '庄',
+            '寨', '堡', '驿', '站', '铺', '坊', '市', '集', '街', '巷', '弄', '院', '宅', '府', '第', '堂', '室', '居', '庐',
+            '舍', '斋', '庵', '观', '庙', '寺', '宫', '殿', '苑', '圃', '景', '境', '界', '天', '地', '日', '月', '星', '辰',
+            '云', '风', '雨', '雪', '霜', '露', '雾', '烟', '霞', '虹', '光', '影', '色',
+            '沚', '沣', '沔', '沘', '汾', '沂', '沭', '沱', '沲', '沴', '沵', '沶', '沷', '沺', '治', '沼', '沽', '沾', '沿',
+            '泂', '泃', '泅', '泆', '泇', '泈', '泋', '泍', '泎', '泏', '泐', '泑', '泒', '泔', '泖', '泘', '泙', '泚', '泜',
+            '泝', '泞', '泟', '泠', '泡', '波', '泣', '泤', '泥', '泦', '泧', '注'
         ];
         const PAIR_WORDS = [
-            '清风', '明月', '白云', '碧水', '青山', '翠竹', '红梅', '金桂',
-            '玉兰', '紫薇', '丹枫', '雪莲', '烟雨', '云雾', '霞光', '虹霓',
-            '霜雪', '冰凌', '寒梅', '暖阳', '春色', '秋韵', '夏荷', '冬雪',
-            '晨钟', '暮鼓', '晓风', '夕照', '星河', '月影', '花香', '鸟语',
-            '竹韵', '松涛', '泉声', '溪流', '湖光', '山色', '林壑', '峰峦',
-            '云海', '雾凇', '雪原', '冰峰', '翠谷', '幽涧', '碧潭', '清溪',
-            '秀峰', '灵岩', '仙境', '桃源', '蓬莱', '昆仑', '天山', '峨眉',
-            '青城', '武当', '嵩山', '衡山', '华山', '恒山', '泰山', '黄山',
-            '庐山', '雁荡', '武夷', '龙虎', '三清', '齐云', '鹤鸣', '普陀',
-            '九华', '五台', '琅琊', '会稽', '云梦', '潇湘', '洞庭', '鄱阳',
-            '太湖', '洪泽', '巢湖', '滇池', '洱海', '泸沽', '镜泊', '千岛',
-            '普陀', '峨眉', '九华', '五台', '青城', '武当', '龙虎', '齐云',
-            '三清', '鹤鸣', '鸡足', '梵净', '普贤', '文殊', '观音', '地藏',
-            '紫气', '祥云', '瑞雪', '甘露', '和风', '细雨', '薄雾', '轻烟',
-            '晚霞', '朝露', '晨曦', '暮霭', '晴空', '碧野', '苍茫', '浩渺'
+            '清风', '明月', '白云', '碧水', '青山', '翠竹', '红梅', '金桂', '玉兰', '紫薇', '丹枫', '雪莲', '烟雨', '云雾',
+            '霞光', '虹霓', '霜雪', '冰凌', '寒梅', '暖阳', '春色', '秋韵', '夏荷', '冬雪', '晨钟', '暮鼓', '晓风', '夕照',
+            '星河', '月影', '花香', '鸟语', '竹韵', '松涛', '泉声', '溪流', '湖光', '山色', '林壑', '峰峦', '云海', '雾凇',
+            '雪原', '冰峰', '翠谷', '幽涧', '碧潭', '清溪', '秀峰', '灵岩', '仙境', '桃源', '蓬莱', '昆仑', '天山', '峨眉',
+            '青城', '武当', '嵩山', '衡山', '华山', '恒山', '泰山', '黄山', '庐山', '雁荡', '武夷', '龙虎', '三清', '齐云',
+            '鹤鸣', '普陀', '九华', '五台', '琅琊', '会稽', '云梦', '潇湘', '洞庭', '鄱阳', '太湖', '洪泽', '巢湖', '滇池',
+            '洱海', '泸沽', '镜泊', '千岛', '普陀', '峨眉', '九华', '五台', '青城', '武当', '龙虎', '齐云', '三清', '鹤鸣',
+            '鸡足', '梵净', '普贤', '文殊', '观音', '地藏', '紫气', '祥云', '瑞雪', '甘露', '和风', '细雨', '薄雾', '轻烟',
+            '晚霞', '朝露', '晨曦', '暮霭', '晴空', '碧野', '苍茫', '浩渺',
+            '祥和', '安宁', '宁静', '平和', '泰然', '安然', '悠然', '怡然', '欣然', '悦然', '畅然', '浩然', '巍然', '毅然',
+            '卓然', '超然', '飘然', '洒脱', '飘逸', '潇洒', '风流', '文雅', '儒雅', '典雅', '优雅', '秀雅', '清雅', '素雅',
+            '淡雅', '静雅', '和雅', '高雅', '贵雅', '华雅', '灵雅', '韵雅', '致雅', '妙雅', '玄雅', '虚雅', '幻雅', '梦雅',
+            '宏图', '伟业', '丰碑', '盛世', '华章', '美景', '良辰', '佳期', '吉日', '祥瑞', '福气', '喜乐', '安康', '太平',
+            '昌盛', '繁荣', '兴旺', '发达', '和谐', '美满', '幸福', '如意', '吉祥', '安康', '安宁', '宁静', '平和', '泰然',
+            '安然', '悠然', '怡然', '欣然', '悦然', '畅然', '浩然', '巍然', '毅然', '卓然'
         ];
         const PAIR_SUFFIX = [
-            '山水', '江河', '湖海', '溪泉', '峰岭', '岳峦', '崖岩', '洞穴',
-            '峡谷', '壑沟', '坡岗', '丘陵', '原野', '田园', '园林', '亭台',
-            '楼阁', '轩榭', '廊桥', '城关', '村镇', '庄寨', '堡驿', '站铺',
-            '坊市', '街巷', '弄院', '宅府', '第堂', '室居', '庐舍', '斋庵',
-            '观庙', '寺宫', '殿苑', '圃景', '境界', '天地', '日月', '星辰',
-            '云风', '雨雪', '霜露', '雾烟', '霞虹', '光影', '烟波', '风月',
-            '云水', '山月', '松风', '竹雨', '梅雪', '兰烟', '荷风', '桂月',
-            '柳岸', '桃溪', '杏林', '梨云', '枫岭', '松涛', '竹海', '梅岭',
-            '兰谷', '菊径', '荷塘', '桂园', '薇苑', '萱庭', '芷岸', '若溪',
-            '蓉浦', '芙洲', '蕖泽', '荻渚', '芦汀', '蒲湾', '藤架', '萝径',
-            '蔓篱', '枝巢', '叶舟', '花坞', '香径', '芳洲', '菲岸', '芬谷',
-            '馥园', '郁林', '馨苑', '暖阁', '寒亭', '凉轩', '温榭', '润廊',
-            '泽桥', '沛居', '潇舍', '洒斋', '飘堂', '飞扬', '舞榭', '翩台',
-            '跹阁', '婉约', '柔美', '丽景', '艳阳', '娇春', '媚夏', '妩秋',
-            '娟冬', '妍晨', '娴暮', '淑夕', '慧夜', '敏捷', '睿智'
+            '山水', '江河', '湖海', '溪泉', '峰岭', '岳峦', '崖岩', '洞穴', '峡谷', '壑沟', '坡岗', '丘陵', '原野', '田园',
+            '园林', '亭台', '楼阁', '轩榭', '廊桥', '城关', '村镇', '庄寨', '堡驿', '站铺', '坊市', '街巷', '弄院', '宅府',
+            '第堂', '室居', '庐舍', '斋庵', '观庙', '寺宫', '殿苑', '圃景', '境界', '天地', '日月', '星辰', '云风', '雨雪',
+            '霜露', '雾烟', '霞虹', '光影', '烟波', '风月', '云水', '山月', '松风', '竹雨', '梅雪', '兰烟', '荷风', '桂月',
+            '柳岸', '桃溪', '杏林', '梨云', '枫岭', '松涛', '竹海', '梅岭', '兰谷', '菊径', '荷塘', '桂园', '薇苑', '萱庭',
+            '芷岸', '若溪', '蓉浦', '芙洲', '蕖泽', '荻渚', '芦汀', '蒲湾', '藤架', '萝径', '蔓篱', '枝巢', '叶舟', '花坞',
+            '香径', '芳洲', '菲岸', '芬谷', '馥园', '郁林', '馨苑', '暖阁', '寒亭', '凉轩', '温榭', '润廊', '泽桥', '沛居',
+            '潇舍', '洒斋', '飘堂', '飞扬', '舞榭', '翩台', '跹阁', '婉约', '柔美', '丽景', '艳阳', '娇春', '媚夏', '妩秋',
+            '娟冬', '妍晨', '娴暮', '淑夕', '慧夜', '敏捷', '睿智',
+            '春风', '夏雨', '秋霜', '冬雪', '晨光', '夕照', '暮云', '朝霞', '晴空', '碧海', '蓝天', '白云', '绿水', '青山',
+            '翠谷', '幽涧', '灵峰', '秀岭', '奇岩', '怪石', '飞瀑', '流泉', '古松', '新竹', '香樟', '梧桐', '银杏', '红枫',
+            '黄菊', '白梅', '青莲', '紫薇', '丹桂', '海棠', '玉兰', '茉莉', '玫瑰', '蔷薇', '菡萏', '芙蓉'
         ];
+
+        // ---- 风格专用词库 ----
+        const STYLE_PREFIX = {
+            classic: ['清', '雅', '韵', '秀', '灵', '幽', '静', '逸', '致', '妙', '玄', '虚', '幻', '梦', '婉', '约', '柔', '美',
+                '丽', '娟', '妍', '娴', '淑', '慧', '睿', '智', '仁', '义', '礼', '信', '德', '善', '良'
+            ],
+            nature: ['山', '水', '江', '河', '湖', '海', '溪', '泉', '涧', '潭', '峰', '岭', '岳', '峦', '崖', '岩', '石', '洞',
+                '穴', '谷', '峡', '壑', '沟', '坡', '岗', '丘', '陵', '原', '野', '田', '园', '林', '森'
+            ],
+            frontier: ['关', '城', '镇', '堡', '驿', '站', '塞', '漠', '沙', '戈', '壁', '烽', '烟', '铁', '马', '冰', '河', '雪',
+                '寒', '朔', '风', '霜', '刃', '旌', '旗', '鼓', '角', '弓', '刀', '阵', '营', '垒'
+            ],
+            jiangnan: ['亭', '台', '楼', '阁', '轩', '榭', '廊', '桥', '花', '月', '风', '柳', '荷', '莲', '桂', '棠', '桃', '杏',
+                '梨', '枫', '兰', '竹', '菊', '梅', '烟', '雨', '霞', '虹', '露', '霜'
+            ],
+            fantasy: ['云', '霞', '虹', '霓', '仙', '灵', '幻', '虚', '玄', '空', '寂', '禅', '悟', '觉', '醒', '霄', '汉', '星',
+                '辰', '月', '影', '光', '辉', '梦', '境', '寰', '宇', '乾', '坤', '太', '极'
+            ]
+        };
+        const STYLE_SUFFIX = {
+            classic: ['台', '阁', '轩', '榭', '亭', '楼', '馆', '斋', '庵', '观', '庙', '寺', '宫', '殿', '苑', '圃', '景', '境',
+                '界', '天', '地', '月', '星', '辰', '影', '色'
+            ],
+            nature: ['山', '水', '江', '河', '湖', '海', '溪', '泉', '涧', '潭', '峰', '岭', '岳', '峦', '崖', '岩', '石', '洞',
+                '穴', '谷', '峡', '壑', '沟', '坡', '岗', '丘', '陵', '原', '野', '田', '园', '林', '森', '泽', '滩', '洲', '渚'
+            ],
+            frontier: ['关', '城', '镇', '堡', '驿', '站', '塞', '漠', '沙', '戈', '壁', '烽', '烟', '河', '雪', '寒', '朔', '风',
+                '霜', '刃', '旌', '旗', '鼓', '角', '弓', '刀', '阵', '营', '垒', '门', '台'
+            ],
+            jiangnan: ['亭', '台', '楼', '阁', '轩', '榭', '廊', '桥', '园', '苑', '圃', '榭', '舫', '堤', '岸', '汀', '洲', '渚',
+                '浦', '湾', '港', '渡', '津', '桥', '径', '篱', '墙', '壁'
+            ],
+            fantasy: ['台', '阁', '楼', '殿', '宫', '观', '境', '界', '天', '地', '宇', '宙', '星', '辰', '月', '影', '光', '辉',
+                '云', '霞', '虹', '霓', '梦', '境', '幻', '虚', '空', '玄', '妙', '灵'
+            ]
+        };
+        const STYLE_PAIR_WORDS = {
+            classic: ['清风', '明月', '雅韵', '灵秀', '幽静', '逸致', '妙玄', '虚怀', '婉约', '柔美', '慧心', '睿智', '仁德', '善念',
+                '清雅', '秀逸'
+            ],
+            nature: ['青山', '碧水', '翠竹', '红梅', '金桂', '玉兰', '紫薇', '丹枫', '烟雨', '云雾', '霞光', '霜雪', '冰凌', '寒梅',
+                '暖阳', '春色', '秋韵', '夏荷', '冬雪', '星河', '月影'
+            ],
+            frontier: ['烽烟', '铁马', '冰河', '朔风', '旌旗', '鼓角', '弓刀', '阵云', '寒霜', '边塞', '关城', '戈壁', '沙场', '战鼓',
+                '金戈', '铁衣'
+            ],
+            jiangnan: ['烟雨', '霞光', '虹霓', '露霜', '花月', '柳岸', '荷塘', '桂园', '桃溪', '杏林', '梨云', '枫岭', '兰谷', '菊径',
+                '梅岭', '竹海'
+            ],
+            fantasy: ['云霞', '虹霓', '仙灵', '幻境', '虚空', '玄妙', '寂灭', '禅心', '悟道', '觉醒', '星辰', '月影', '光辉', '梦境',
+                '寰宇', '乾坤'
+            ]
+        };
+        const STYLE_PAIR_SUFFIX = {
+            classic: ['山水', '风月', '云水', '山月', '松风', '竹雨', '梅雪', '兰烟', '荷风', '桂月', '柳岸', '桃溪', '杏林', '梨云',
+                '枫岭', '松涛'
+            ],
+            nature: ['山水', '江河', '湖海', '溪泉', '峰岭', '岳峦', '崖岩', '洞穴', '峡谷', '壑沟', '坡岗', '丘陵', '原野', '田园',
+                '园林', '亭台', '楼阁'
+            ],
+            frontier: ['关城', '镇堡', '驿塞', '漠沙', '戈壁', '烽烟', '铁马', '冰河', '朔风', '旌旗', '鼓角', '弓刀', '阵营', '壁垒',
+                '门台', '戍楼'
+            ],
+            jiangnan: ['亭台', '楼阁', '轩榭', '廊桥', '园苑', '圃榭', '舫堤', '岸汀', '洲渚', '浦湾', '港渡', '津桥', '径篱', '墙壁',
+                '水岸', '花径'
+            ],
+            fantasy: ['云霞', '虹霓', '仙灵', '幻境', '虚空', '玄妙', '寂灭', '禅心', '悟道', '觉醒', '星辰', '月影', '光辉', '梦境',
+                '寰宇', '乾坤'
+            ]
+        };
+        const STYLE_NAMES = {
+            classic: '古风雅韵',
+            nature: '山水自然',
+            frontier: '边塞雄浑',
+            jiangnan: '江南婉约',
+            fantasy: '仙侠奇幻'
+        };
+
         const LOCATION_LIST = [
             '临江渡口', '河畔集镇', '滨湖小城', '沿海港口', '山谷村镇', '山腰驿站',
             '高山城关', '岭间村落', '平原大镇', '田间小村', '官道枢纽', '交叉集镇',
             '林海据点', '林间驿站', '幽谷小镇', '溪畔村落', '边塞重镇', '边关驿站',
             '内陆商都', '丘陵乡落', '湖心岛屿', '河畔半岛', '峡谷隘口', '古道驿站'
         ];
-        const PINYIN_MAP = {
-            清: 'qīng', 雅: 'yǎ', 韵: 'yùn', 秀: 'xiù', 灵: 'líng', 幽: 'yōu', 静: 'jìng', 翠: 'cuì', 碧: 'bì', 苍: 'cāng',
-            皓: 'hào', 明: 'míng', 和: 'hé', 安: 'ān', 宁: 'níng', 逸: 'yì', 致: 'zhì', 妙: 'miào', 玄: 'xuán', 虚: 'xū',
-            幻: 'huàn', 梦: 'mèng', 云: 'yún', 雾: 'wù', 烟: 'yān', 霞: 'xiá', 虹: 'hóng', 露: 'lù', 霜: 'shuāng', 雪: 'xuě',
-            梅: 'méi', 兰: 'lán', 竹: 'zhú', 菊: 'jú', 松: 'sōng', 柏: 'bǎi', 柳: 'liǔ', 桃: 'táo', 杏: 'xìng', 梨: 'lí',
-            枫: 'fēng', 荷: 'hé', 莲: 'lián', 桂: 'guì', 棠: 'táng', 薇: 'wēi', 萱: 'xuān', 芷: 'zhǐ', 若: 'ruò', 蓉: 'róng',
-            芙: 'fú', 蕖: 'qú', 荻: 'dí', 芦: 'lú', 蒲: 'pú', 藤: 'téng', 萝: 'luó', 蔓: 'màn', 枝: 'zhī', 叶: 'yè',
-            花: 'huā', 香: 'xiāng', 芳: 'fāng', 菲: 'fēi', 芬: 'fēn', 馥: 'fù', 郁: 'yù', 馨: 'xīn', 暖: 'nuǎn', 寒: 'hán',
-            凉: 'liáng', 温: 'wēn', 润: 'rùn', 泽: 'zé', 沛: 'pèi', 潇: 'xiāo', 洒: 'sǎ', 飘: 'piāo', 飞: 'fēi', 扬: 'yáng',
-            舞: 'wǔ', 翩: 'piān', 跹: 'xiān', 婉: 'wǎn', 约: 'yuē', 柔: 'róu', 美: 'měi', 丽: 'lì', 艳: 'yàn', 娇: 'jiāo',
-            媚: 'mèi', 妩: 'wǔ', 娟: 'juān', 妍: 'yán', 娴: 'xián', 淑: 'shū', 慧: 'huì', 敏: 'mǐn', 捷: 'jié', 睿: 'ruì',
-            智: 'zhì', 仁: 'rén', 义: 'yì', 礼: 'lǐ', 信: 'xìn', 德: 'dé', 善: 'shàn', 良: 'liáng', 慈: 'cí', 悲: 'bēi',
-            悯: 'mǐn', 怀: 'huái', 念: 'niàn', 思: 'sī', 忆: 'yì', 无: 'wú', 空: 'kōng', 寂: 'jì', 禅: 'chán', 悟: 'wù',
-            觉: 'jué', 醒: 'xǐng', 风: 'fēng', 雨: 'yǔ', 雷: 'léi', 电: 'diàn', 冰: 'bīng', 暑: 'shǔ', 春: 'chūn', 夏: 'xià',
-            秋: 'qiū', 冬: 'dōng', 晨: 'chén', 暮: 'mù', 夕: 'xī', 夜: 'yè', 晓: 'xiǎo', 曙: 'shǔ', 曦: 'xī', 晖: 'huī',
-            岚: 'lán', 岫: 'xiù', 嶂: 'zhàng', 壑: 'hè', 涧: 'jiàn', 汀: 'tīng', 渚: 'zhǔ', 洲: 'zhōu', 屿: 'yǔ', 阜: 'fù',
-            隰: 'xí', 坂: 'bǎn', 垄: 'lǒng', 畦: 'qí', 陌: 'mò', 阡: 'qiān', 津: 'jīn', 渡: 'dù', 浦: 'pǔ', 湾: 'wān',
-            港: 'gǎng', 澳: 'ào', 碛: 'qì', 磴: 'dèng', 硐: 'dòng', 硖: 'xiá', 崃: 'lái', 崤: 'xiáo', 嵯: 'cuó', 峨: 'é',
-            峥: 'zhēng', 嵘: 'róng', 崔: 'cuī', 嵬: 'wéi', 嶙: 'lín', 峋: 'xún', 崎: 'qí', 岖: 'qū', 迤: 'yǐ', 逦: 'lǐ',
-            蜿: 'wān', 蜒: 'yán', 蟠: 'pán', 踞: 'jù', 镇: 'zhèn', 守: 'shǒu', 护: 'hù', 卫: 'wèi', 御: 'yù', 防: 'fáng',
-            固: 'gù', 坚: 'jiān', 牢: 'láo', 稳: 'wěn', 定: 'dìng', 平: 'píng', 康: 'kāng', 泰: 'tài', 丰: 'fēng', 盈: 'yíng',
-            裕: 'yù', 足: 'zú', 富: 'fù', 贵: 'guì', 荣: 'róng', 华: 'huá', 显: 'xiǎn', 赫: 'hè', 盛: 'shèng', 昌: 'chāng',
-            兴: 'xīng', 旺: 'wàng', 隆: 'lóng', 熙: 'xī', 睦: 'mù', 谐: 'xié', 协: 'xié', 同: 'tóng', 共: 'gòng', 享: 'xiǎng',
-            分: 'fēn', 合: 'hé', 聚: 'jù', 散: 'sàn', 离: 'lí', 别: 'bié', 逢: 'féng', 遇: 'yù', 交: 'jiāo', 往: 'wǎng',
-            来: 'lái', 去: 'qù', 行: 'xíng', 止: 'zhǐ', 居: 'jū', 停: 'tíng', 宿: 'sù', 歇: 'xiē', 眠: 'mián', 卧: 'wò',
-            坐: 'zuò', 立: 'lì', 倚: 'yǐ', 凭: 'píng', 望: 'wàng', 眺: 'tiào', 瞰: 'kàn', 观: 'guān', 赏: 'shǎng', 览: 'lǎn',
-            游: 'yóu', 玩: 'wán', 嬉: 'xī', 乐: 'lè', 悦: 'yuè', 欣: 'xīn', 喜: 'xǐ', 欢: 'huān', 爱: 'ài', 恋: 'liàn',
-            慕: 'mù', 羡: 'xiàn', 仰: 'yǎng', 敬: 'jìng', 尊: 'zūn', 崇: 'chóng', 拜: 'bài', 谒: 'yè', 访: 'fǎng', 问: 'wèn',
-            询: 'xún', 答: 'dá', 对: 'duì', 谈: 'tán', 论: 'lùn', 议: 'yì', 评: 'píng', 品: 'pǐn', 尝: 'cháng', 饮: 'yǐn',
-            食: 'shí', 住: 'zhù', 衣: 'yī', 冠: 'guān', 带: 'dài', 佩: 'pèi', 饰: 'shì', 装: 'zhuāng', 扮: 'bàn', 梳: 'shū',
-            洗: 'xǐ', 沐: 'mù', 浴: 'yù', 洁: 'jié', 净: 'jìng', 爽: 'shuǎng', 畅: 'chàng', 舒: 'shū', 适: 'shì', 宜: 'yí',
-            怡: 'yí', 缓: 'huǎn', 徐: 'xú', 悠: 'yōu', 闲: 'xián', 暇: 'xiá', 余: 'yú', 满: 'mǎn', 溢: 'yì', 泛: 'fàn',
-            漫: 'màn', 弥: 'mí', 散: 'sàn', 布: 'bù', 列: 'liè', 排: 'pái', 陈: 'chén', 设: 'shè', 置: 'zhì', 安: 'ān',
-            放: 'fàng', 存: 'cún', 储: 'chǔ', 积: 'jī', 聚: 'jù', 汇: 'huì', 集: 'jí', 合: 'hé', 并: 'bìng', 连: 'lián',
-            接: 'jiē', 通: 'tōng', 达: 'dá', 至: 'zhì', 到: 'dào', 临: 'lín', 莅: 'lì', 顾: 'gù', 眷: 'juàn', 垂: 'chuí',
-            惠: 'huì', 赐: 'cì', 恩: 'ēn', 泽: 'zé', 福: 'fú', 祉: 'zhǐ', 祥: 'xiáng', 瑞: 'ruì', 吉: 'jí', 庆: 'qìng',
-            贺: 'hè', 祝: 'zhù', 颂: 'sòng', 歌: 'gē', 舞: 'wǔ', 奏: 'zòu', 演: 'yǎn', 唱: 'chàng', 吟: 'yín', 咏: 'yǒng',
-            诵: 'sòng', 读: 'dú', 写: 'xiě', 画: 'huà', 描: 'miáo', 绘: 'huì', 染: 'rǎn', 渲: 'xuàn', 泼: 'pō', 洒: 'sǎ',
-            挥: 'huī', 展: 'zhǎn', 舒: 'shū', 卷: 'juǎn', 收: 'shōu', 放: 'fàng', 开: 'kāi', 闭: 'bì', 启: 'qǐ', 封: 'fēng',
-            藏: 'cáng', 隐: 'yǐn', 现: 'xiàn', 显: 'xiǎn', 露: 'lù', 呈: 'chéng', 献: 'xiàn', 奉: 'fèng', 贡: 'gòng', 纳: 'nà',
-            受: 'shòu', 承: 'chéng', 担: 'dān', 负: 'fù', 荷: 'hé', 载: 'zài', 运: 'yùn', 转: 'zhuǎn', 进: 'jìn', 退: 'tuì',
-            止: 'zhǐ', 息: 'xī', 生: 'shēng', 死: 'sǐ', 存: 'cún', 亡: 'wáng', 兴: 'xīng', 衰: 'shuāi', 荣: 'róng', 枯: 'kū',
-            成: 'chéng', 败: 'bài', 得: 'dé', 失: 'shī', 是: 'shì', 非: 'fēi', 善: 'shàn', 恶: 'è', 美: 'měi', 丑: 'chǒu',
-            真: 'zhēn', 假: 'jiǎ', 实: 'shí', 有: 'yǒu', 无: 'wú', 多: 'duō', 少: 'shǎo', 大: 'dà', 小: 'xiǎo', 长: 'cháng',
-            短: 'duǎn', 高: 'gāo', 低: 'dī', 深: 'shēn', 浅: 'qiǎn', 宽: 'kuān', 窄: 'zhǎi', 厚: 'hòu', 薄: 'bó', 轻: 'qīng',
-            重: 'zhòng', 缓: 'huǎn', 急: 'jí', 快: 'kuài', 慢: 'màn', 迟: 'chí', 早: 'zǎo', 先: 'xiān', 后: 'hòu', 左: 'zuǒ',
-            右: 'yòu', 前: 'qián', 后: 'hòu', 上: 'shàng', 下: 'xià', 内: 'nèi', 外: 'wài', 中: 'zhōng', 间: 'jiān', 旁: 'páng',
-            侧: 'cè', 隅: 'yú', 角: 'jiǎo', 山: 'shān', 水: 'shuǐ', 江: 'jiāng', 河: 'hé', 湖: 'hú', 海: 'hǎi', 溪: 'xī',
-            泉: 'quán', 涧: 'jiàn', 潭: 'tán', 池: 'chí', 塘: 'táng', 泽: 'zé', 湾: 'wān', 港: 'gǎng', 岸: 'àn', 汀: 'tīng',
-            洲: 'zhōu', 渚: 'zhǔ', 岛: 'dǎo', 屿: 'yǔ', 峰: 'fēng', 岭: 'lǐng', 岳: 'yuè', 峦: 'luán', 崖: 'yá', 岩: 'yán',
-            石: 'shí', 洞: 'dòng', 穴: 'xué', 谷: 'gǔ', 峡: 'xiá', 壑: 'hè', 沟: 'gōu', 坡: 'pō', 岗: 'gǎng', 丘: 'qiū',
-            陵: 'líng', 原: 'yuán', 野: 'yě', 田: 'tián', 园: 'yuán', 林: 'lín', 森: 'sēn', 亭: 'tíng', 台: 'tái', 楼: 'lóu',
-            阁: 'gé', 轩: 'xuān', 榭: 'xiè', 廊: 'láng', 桥: 'qiáo', 城: 'chéng', 关: 'guān', 镇: 'zhèn', 村: 'cūn', 庄: 'zhuāng',
-            寨: 'zhài', 堡: 'bǎo', 驿: 'yì', 站: 'zhàn', 铺: 'pù', 坊: 'fāng', 市: 'shì', 集: 'jí', 街: 'jiē', 巷: 'xiàng',
-            弄: 'lòng', 院: 'yuàn', 宅: 'zhái', 府: 'fǔ', 第: 'dì', 堂: 'táng', 室: 'shì', 居: 'jū', 庐: 'lú', 舍: 'shè',
-            斋: 'zhāi', 庵: 'ān', 观: 'guàn', 庙: 'miào', 寺: 'sì', 宫: 'gōng', 殿: 'diàn', 苑: 'yuàn', 圃: 'pǔ', 景: 'jǐng',
-            境: 'jìng', 界: 'jiè', 天: 'tiān', 地: 'dì', 日: 'rì', 月: 'yuè', 星: 'xīng', 辰: 'chén', 光: 'guāng', 影: 'yǐng',
-            色: 'sè'
+
+        const MEANING_MAP = {
+            清: '清澈纯净',
+            雅: '高雅端庄',
+            韵: '韵律悠长',
+            秀: '秀丽出众',
+            灵: '灵动精巧',
+            幽: '幽静深远',
+            静: '宁静安详',
+            翠: '翠绿葱郁',
+            碧: '碧绿清澈',
+            苍: '苍茫辽阔',
+            皓: '皓白明亮',
+            明: '明亮清晰',
+            和: '和谐温润',
+            安: '安宁祥和',
+            宁: '宁静安定',
+            逸: '飘逸洒脱',
+            致: '精致雅致',
+            妙: '奇妙精妙',
+            玄: '玄妙深远',
+            虚: '虚怀若谷',
+            幻: '梦幻缥缈',
+            梦: '梦境美好',
+            云: '云卷云舒',
+            雾: '雾霭朦胧',
+            烟: '烟波浩渺',
+            霞: '霞光绚烂',
+            虹: '虹彩斑斓',
+            露: '露珠晶莹',
+            霜: '霜华洁白',
+            雪: '雪落无声',
+            梅: '梅花傲雪',
+            兰: '兰花幽香',
+            竹: '竹节高洁',
+            菊: '菊花淡雅',
+            松: '松柏长青',
+            柏: '柏树挺拔',
+            柳: '柳枝婀娜',
+            桃: '桃花灼灼',
+            杏: '杏花微雨',
+            梨: '梨花似雪',
+            枫: '枫叶如火',
+            荷: '荷花清雅',
+            莲: '莲花圣洁',
+            桂: '桂花飘香',
+            棠: '海棠娇艳',
+            薇: '薇草柔美',
+            萱: '萱草忘忧',
+            芷: '芷兰芬芳',
+            若: '若水灵秀',
+            蓉: '芙蓉出水',
+            芙: '芙蓉清丽',
+            蕖: '芙蕖亭亭',
+            荻: '荻花瑟瑟',
+            芦: '芦苇轻摇',
+            蒲: '蒲草韧如',
+            藤: '藤蔓缠绵',
+            萝: '萝蔓垂荫',
+            蔓: '蔓延伸展',
+            枝: '枝繁叶茂',
+            叶: '叶落知秋',
+            花: '花开烂漫',
+            香: '香气氤氲',
+            芳: '芳华绝代',
+            菲: '芳菲馥郁',
+            芬: '芬香扑鼻',
+            馥: '馥郁芬芳',
+            郁: '郁郁葱葱',
+            馨: '馨香远播',
+            暖: '暖意融融',
+            寒: '寒梅傲立',
+            凉: '凉风习习',
+            温: '温润如玉',
+            润: '润泽万物',
+            泽: '泽被苍生',
+            沛: '沛雨甘霖',
+            潇: '潇潇暮雨',
+            洒: '洒脱不羁',
+            飘: '飘飘欲仙',
+            飞: '飞鸟归林',
+            扬: '扬帆远航',
+            舞: '舞姿翩跹',
+            翩: '翩翩起舞',
+            跹: '跹跹如仙',
+            婉: '婉转悠扬',
+            约: '约素含章',
+            柔: '柔美温婉',
+            美: '美轮美奂',
+            丽: '丽质天成',
+            艳: '艳若桃李',
+            娇: '娇花照水',
+            媚: '媚眼如丝',
+            妩: '妩媚动人',
+            娟: '娟秀清丽',
+            妍: '妍丽多姿',
+            娴: '娴静优雅',
+            淑: '淑女窈窕',
+            慧: '慧心玲珑',
+            敏: '敏思好学',
+            捷: '捷足先登',
+            睿: '睿智明达',
+            智: '智珠在握',
+            仁: '仁爱宽厚',
+            义: '义薄云天',
+            礼: '礼尚往来',
+            信: '信守不渝',
+            德: '德泽绵长',
+            善: '善解人意',
+            良: '良辰美景',
+            慈: '慈母之心',
+            悲: '悲天悯人',
+            悯: '悯怀苍生',
+            怀: '怀揣梦想',
+            念: '念念不忘',
+            思: '思绪万千',
+            忆: '忆昔往昔',
+            无: '无欲则刚',
+            空: '空灵澄澈',
+            寂: '寂然无声',
+            禅: '禅心如水',
+            悟: '悟道明心',
+            觉: '觉者自明',
+            醒: '醒世恒言',
+            风: '风过无痕',
+            雨: '雨润万物',
+            雷: '雷霆万钧',
+            电: '电光火石',
+            冰: '冰清玉洁',
+            暑: '暑气渐消',
+            春: '春暖花开',
+            夏: '夏荷映日',
+            秋: '秋月春风',
+            冬: '冬雪皑皑',
+            晨: '晨光熹微',
+            暮: '暮色苍茫',
+            夕: '夕阳西下',
+            夜: '夜色阑珊',
+            晓: '晓风残月',
+            曙: '曙光照耀',
+            曦: '曦光初露',
+            晖: '晖映大地',
+            岚: '岚气氤氲',
+            岫: '岫云出岫',
+            嶂: '嶂峦叠翠',
+            壑: '壑谷幽深',
+            涧: '涧水潺潺',
+            汀: '汀洲芳草',
+            渚: '渚清沙白',
+            洲: '洲头远望',
+            屿: '屿岛孤悬',
+            阜: '阜丰物饶',
+            隰: '隰畔湿地',
+            坂: '坂道蜿蜒',
+            垄: '垄上耕耘',
+            畦: '畦间菜圃',
+            陌: '陌上花开',
+            阡: '阡陌纵横',
+            津: '津渡往来',
+            渡: '渡口送别',
+            浦: '浦江之滨',
+            湾: '湾流回环',
+            港: '港湾宁静',
+            澳: '澳深水阔',
+            碛: '碛石嶙峋',
+            磴: '磴道盘桓',
+            硐: '硐穴幽邃',
+            硖: '硖谷幽深',
+            崃: '崃山巍峨',
+            崤: '崤函之固',
+            嵯: '嵯峨高耸',
+            峨: '峨眉秀色',
+            峥: '峥嵘岁月',
+            嵘: '嵘光闪耀',
+            崔: '崔嵬挺拔',
+            嵬: '嵬然不动',
+            嶙: '嶙峋奇石',
+            峋: '峋峰叠嶂',
+            崎: '崎岖山路',
+            岖: '岖径通幽',
+            迤: '迤逦而行',
+            逦: '逦迤不绝',
+            蜿: '蜿蜒曲折',
+            蜒: '蜒蜒如龙',
+            蟠: '蟠龙卧虎',
+            踞: '踞守一方',
+            镇: '镇守边关',
+            守: '守望相助',
+            护: '护佑平安',
+            卫: '卫戍边疆',
+            御: '御风而行',
+            防: '防微杜渐',
+            固: '固若金汤',
+            坚: '坚如磐石',
+            牢: '牢不可破',
+            稳: '稳如泰山',
+            定: '定国安邦',
+            平: '平湖秋月',
+            康: '康泰安宁',
+            泰: '泰然自若',
+            丰: '丰年瑞雪',
+            盈: '盈门喜气',
+            裕: '裕民足国',
+            足: '足智多谋',
+            富: '富丽堂皇',
+            贵: '贵气逼人',
+            荣: '荣光焕发',
+            华: '华彩乐章',
+            显: '显赫一时',
+            赫: '赫赫有名',
+            盛: '盛世太平',
+            昌: '昌盛繁荣',
+            兴: '兴旺发达',
+            旺: '旺气冲天',
+            隆: '隆冬时节',
+            熙: '熙熙攘攘',
+            睦: '睦邻友好',
+            谐: '和谐共处',
+            协: '协力同心',
+            同: '同舟共济',
+            共: '共享盛世',
+            享: '享誉四海',
+            分: '分花拂柳',
+            合: '合璧连珠',
+            聚: '聚沙成塔',
+            散: '散落人间',
+            离: '离愁别绪',
+            别: '别梦依稀',
+            逢: '逢春再生',
+            遇: '遇水架桥',
+            交: '交相辉映',
+            往: '往来如织',
+            来: '来日方长',
+            去: '去留无意',
+            行: '行云流水',
+            止: '止于至善',
+            居: '居安思危',
+            停: '停云落月',
+            宿: '宿雨初晴',
+            歇: '歇马听松',
+            眠: '眠花宿柳',
+            卧: '卧龙藏虎',
+            坐: '坐看云起',
+            立: '立地成佛',
+            倚: '倚天屠龙',
+            凭: '凭栏远眺',
+            望: '望眼欲穿',
+            眺: '眺望远方',
+            瞰: '俯瞰山河',
+            观: '观山玩水',
+            赏: '赏心悦目',
+            览: '览胜探幽',
+            游: '游历四方',
+            玩: '玩味无穷',
+            嬉: '嬉戏玩闹',
+            乐: '乐在其中',
+            悦: '悦耳动听',
+            欣: '欣然自得',
+            喜: '喜从天降',
+            欢: '欢声笑语',
+            爱: '爱不释手',
+            恋: '恋恋不舍',
+            慕: '慕名而来',
+            羡: '羡鱼结网',
+            仰: '仰慕已久',
+            敬: '敬而远之',
+            尊: '尊师重道',
+            崇: '崇山峻岭',
+            拜: '拜将封侯',
+            谒: '谒见高贤',
+            访: '访友寻幽',
+            问: '问道于盲',
+            询: '询事考言',
+            答: '答非所问',
+            对: '对酒当歌',
+            谈: '谈笑风生',
+            论: '论道经邦',
+            议: '议论风发',
+            评: '评头品足',
+            品: '品茗论道',
+            尝: '尝鼎一脔',
+            饮: '饮马长江',
+            食: '食不厌精',
+            住: '住持一方',
+            衣: '衣锦还乡',
+            冠: '冠冕堂皇',
+            带: '带月披星',
+            佩: '佩玉鸣鸾',
+            饰: '饰终追远',
+            装: '装点门面',
+            扮: '扮靓人生',
+            梳: '梳妆打扮',
+            洗: '洗尽铅华',
+            沐: '沐雨栉风',
+            浴: '浴火重生',
+            洁: '洁身自好',
+            净: '净心寡欲',
+            爽: '爽朗豁达',
+            畅: '畅所欲言',
+            舒: '舒展自如',
+            适: '适逢其会',
+            宜: '宜室宜家',
+            怡: '怡然自乐',
+            缓: '缓步徐行',
+            徐: '徐徐清风',
+            悠: '悠然自得',
+            闲: '闲云野鹤',
+            暇: '暇日悠游',
+            余: '余音绕梁',
+            满: '满载而归',
+            溢: '溢彩流光',
+            泛: '泛舟湖上',
+            漫: '漫步云端',
+            弥: '弥足珍贵',
+            布: '布衣之交',
+            列: '列阵待发',
+            排: '排山倒海',
+            陈: '陈年旧事',
+            设: '设身处地',
+            置: '置若罔闻',
+            放: '放浪形骸',
+            存: '存亡继绝',
+            储: '储精蓄锐',
+            积: '积少成多',
+            汇: '汇流成海',
+            集: '集思广益',
+            并: '并驾齐驱',
+            连: '连珠合璧',
+            接: '接连不断',
+            通: '通衢大道',
+            达: '达官显贵',
+            至: '至高无上',
+            到: '到处逢春',
+            临: '临渊羡鱼',
+            莅: '莅临指导',
+            顾: '顾盼生辉',
+            眷: '眷恋故土',
+            垂: '垂涎欲滴',
+            惠: '惠风和畅',
+            赐: '赐福苍生',
+            恩: '恩泽四方',
+            福: '福星高照',
+            祉: '祉福绵长',
+            祥: '祥瑞之兆',
+            瑞: '瑞雪丰年',
+            吉: '吉星高照',
+            庆: '庆云祥瑞',
+            贺: '贺岁迎新',
+            祝: '祝颂华章',
+            颂: '颂赞盛世',
+            歌: '歌声绕梁',
+            奏: '奏响华章',
+            演: '演绎人生',
+            唱: '唱和相随',
+            吟: '吟诗作赋',
+            咏: '咏梅赏雪',
+            诵: '诵经礼佛',
+            读: '读万卷书',
+            写: '写意人生',
+            画: '画龙点睛',
+            描: '描摹山水',
+            绘: '绘声绘色',
+            染: '染指流年',
+            渲: '渲染气氛',
+            泼: '泼墨山水',
+            挥: '挥斥方遒',
+            展: '展望未来',
+            卷: '卷土重来',
+            收: '收放自如',
+            开: '开怀大笑',
+            闭: '闭月羞花',
+            启: '启明星辰',
+            封: '封狼居胥',
+            藏: '藏龙卧虎',
+            隐: '隐姓埋名',
+            现: '现身说法',
+            显: '显山露水',
+            呈: '呈祥献瑞',
+            献: '献计献策',
+            奉: '奉公守法',
+            贡: '贡品献瑞',
+            纳: '纳百川流',
+            受: '受宠若惊',
+            承: '承前启后',
+            担: '担当重任',
+            负: '负重致远',
+            载: '载歌载舞',
+            运: '运筹帷幄',
+            转: '转危为安',
+            进: '进退有度',
+            退: '退避三舍',
+            息: '息息相关',
+            生: '生生不息',
+            死: '死生契阔',
+            存: '存亡之秋',
+            亡: '亡羊补牢',
+            兴: '兴风作浪',
+            衰: '衰草连天',
+            荣: '荣华富贵',
+            枯: '枯木逢春',
+            成: '成竹在胸',
+            败: '败军之将',
+            得: '得心应手',
+            失: '失之交臂',
+            是: '是非分明',
+            非: '非同小可',
+            善: '善始善终',
+            恶: '恶贯满盈',
+            真: '真知灼见',
+            假: '假以时日',
+            实: '实事求是',
+            有: '有始有终',
+            多: '多才多艺',
+            少: '少安毋躁',
+            大: '大展宏图',
+            小: '小巧玲珑',
+            长: '长长久久',
+            短: '短兵相接',
+            高: '高山流水',
+            低: '低吟浅唱',
+            深: '深不可测',
+            浅: '浅尝辄止',
+            宽: '宽以待人',
+            窄: '窄巷深宅',
+            厚: '厚德载物',
+            薄: '薄暮冥冥',
+            轻: '轻描淡写',
+            重: '重峦叠嶂',
+            急: '急流勇进',
+            快: '快马加鞭',
+            慢: '慢条斯理',
+            迟: '迟日江山',
+            早: '早春二月',
+            先: '先发制人',
+            后: '后发先至',
+            左: '左右逢源',
+            右: '右军书法',
+            前: '前无古人',
+            上: '上善若水',
+            下: '下笔有神',
+            内: '内外兼修',
+            外: '外圆内方',
+            中: '中流砥柱',
+            间: '间不容发',
+            旁: '旁若无人',
+            侧: '侧耳倾听',
+            隅: '隅中时分',
+            角: '角立杰出',
+            山: '山峦叠翠',
+            水: '水波不兴',
+            江: '江流宛转',
+            河: '河清海晏',
+            湖: '湖光潋滟',
+            海: '海阔天空',
+            溪: '溪水潺潺',
+            泉: '泉水叮咚',
+            涧: '涧壑幽深',
+            潭: '潭影空明',
+            池: '池鱼戏水',
+            塘: '塘荷映日',
+            湾: '湾水回环',
+            港: '港通四海',
+            岸: '岸芷汀兰',
+            汀: '汀上白鹭',
+            洲: '洲头落日',
+            渚: '渚清沙白',
+            岛: '岛屿孤悬',
+            屿: '屿上人家',
+            峰: '峰回路转',
+            岭: '岭上白云',
+            岳: '岳峙渊渟',
+            峦: '峦峰叠翠',
+            崖: '崖壁千仞',
+            岩: '岩松屹立',
+            石: '石破天惊',
+            洞: '洞天福地',
+            穴: '穴居野处',
+            谷: '谷幽兰香',
+            峡: '峡江奔流',
+            壑: '壑谷回音',
+            沟: '沟壑纵横',
+            坡: '坡上青草',
+            岗: '岗峦起伏',
+            丘: '丘陵起伏',
+            陵: '陵谷沧桑',
+            原: '原野辽阔',
+            野: '野趣横生',
+            田: '田畴沃野',
+            园: '园林雅致',
+            林: '林海雪原',
+            森: '森罗万象',
+            亭: '亭台楼阁',
+            台: '台阁生风',
+            楼: '楼阁高耸',
+            阁: '阁楼藏书',
+            轩: '轩窗映月',
+            榭: '榭台观鱼',
+            廊: '廊桥遗梦',
+            桥: '桥边红药',
+            城: '城垣巍峨',
+            关: '关山万里',
+            镇: '镇守四方',
+            村: '村落炊烟',
+            庄: '庄园锦绣',
+            寨: '寨堡森严',
+            堡: '堡垒坚固',
+            驿: '驿站古道',
+            站: '站台远望',
+            铺: '铺面相连',
+            坊: '坊间传说',
+            市: '市井繁华',
+            集: '集市喧闹',
+            街: '街巷深深',
+            巷: '巷弄幽静',
+            弄: '弄堂风韵',
+            院: '院落深深',
+            宅: '宅邸宽宏',
+            府: '府邸威严',
+            第: '第宅相连',
+            堂: '堂皇富丽',
+            室: '室雅兰香',
+            居: '居所安宁',
+            庐: '庐山真面',
+            舍: '舍南舍北',
+            斋: '斋心养性',
+            庵: '庵堂清静',
+            观: '观云听涛',
+            庙: '庙宇庄严',
+            寺: '寺钟悠扬',
+            宫: '宫殿辉煌',
+            殿: '殿堂肃穆',
+            苑: '苑囿春色',
+            圃: '圃园花木',
+            景: '景色宜人',
+            境: '境由心生',
+            界: '界分天地',
+            天: '天高云淡',
+            地: '地大物博',
+            日: '日升月恒',
+            月: '月下独酌',
+            星: '星罗棋布',
+            辰: '辰宿列张',
+            光: '光彩照人',
+            影: '影随心动',
+            色: '色舞飞花'
         };
 
         // ================================================================
-        //  2. 工 具 函 数
+        //  工具函数
         // ================================================================
-        function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
-        function getPinyinStr(name) {
-            let res = '';
-            for (const c of name) {
-                res += (PINYIN_MAP[c] || c) + ' ';
-            }
-            return res.trim();
+        function createRNG(seed) {
+            let s = seed || Date.now();
+            return function() { s = (s * 9301 + 49297) % 233280; return s / 233280; };
         }
+        let currentRNG = createRNG();
+
+        function resetRNG(seed) {
+            if (seed === undefined || seed === null || seed === '') {
+                currentRNG = createRNG(Date.now() + Math.random() * 99999);
+            } else {
+                const numSeed = typeof seed === 'number' ? seed : seed.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+                currentRNG = createRNG(numSeed);
+            }
+        }
+
+        function pick(arr) { if (!arr || !arr.length) return ''; return arr[Math.floor(currentRNG() * arr.length)]; }
 
         function getRandomXZ() {
             const xMin = parseInt(document.getElementById('xMin').value) || -9999;
@@ -1170,83 +2396,257 @@
                 x2 = Math.max(xMin, xMax);
             const z1 = Math.min(zMin, zMax),
                 z2 = Math.max(zMin, zMax);
-            const x = Math.floor(Math.random() * (x2 - x1 + 1)) + x1;
-            const z = Math.floor(Math.random() * (z2 - z1 + 1)) + z1;
+            const x = Math.floor(currentRNG() * (x2 - x1 + 1)) + x1;
+            const z = Math.floor(currentRNG() * (z2 - z1 + 1)) + z1;
             return `X: ${x}, Z: ${z}`;
         }
 
+        function getStyleName(styleKey) { return STYLE_NAMES[styleKey] || '全部'; }
+
+        function generateMeaning(name) {
+            if (!name || !name.length) return '寓意深远';
+            const chars = name.split('');
+            const meanings = chars.map(c => MEANING_MAP[c] || '');
+            const validMeanings = meanings.filter(m => m);
+            if (validMeanings.length === 0) return '寓意深远，雅致不凡';
+            if (chars.length === 2) {
+                const m1 = MEANING_MAP[chars[0]] || '优雅';
+                const m2 = MEANING_MAP[chars[1]] || '美好';
+                const templates = [
+                    `${m1}与${m2}，相得益彰，寓意和谐美好`,
+                    `${m1}之韵，${m2}之姿，雅致非凡`,
+                    `${m1}中见${m2}，意境深远，令人神往`,
+                    `${m1}而${m2}，浑然天成，别有洞天`
+                ];
+                return pick(templates);
+            } else if (chars.length === 3) {
+                const m1 = MEANING_MAP[chars[0]] || '优雅';
+                const m2 = MEANING_MAP[chars[1]] || '美好';
+                const m3 = MEANING_MAP[chars[2]] || '灵动';
+                const templates = [
+                    `${m1}，${m2}，${m3}，三才合一，寓意圆满`,
+                    `${m1}之灵，${m2}之秀，${m3}之韵，浑然一体`,
+                    `${m1}引${m2}，${m2}生${m3}，生生不息，意境悠长`
+                ];
+                return pick(templates);
+            } else if (chars.length === 4) {
+                const m1 = MEANING_MAP[chars[0]] || '优雅';
+                const m2 = MEANING_MAP[chars[1]] || '美好';
+                const m3 = MEANING_MAP[chars[2]] || '灵动';
+                const m4 = MEANING_MAP[chars[3]] || '深远';
+                const templates = [
+                    `${m1}${m2}，${m3}${m4}，四时有序，八方安康`,
+                    `${m1}与${m2}相映，${m3}与${m4}成趣，大雅之堂`,
+                    `${m1}${m2}之韵，${m3}${m4}之风，气象万千`
+                ];
+                return pick(templates);
+            } else {
+                return validMeanings.slice(0, 3).join('，') + '，寓意深远';
+            }
+        }
+
+        function getStyleWords(styleKey) {
+            if (styleKey === 'all' || !styleKey) {
+                return { prefix: PREFIX_SINGLE, suffix: SUFFIX_SINGLE, pair: PAIR_WORDS, pairSuffix: PAIR_SUFFIX };
+            }
+            return {
+                prefix: STYLE_PREFIX[styleKey] || PREFIX_SINGLE,
+                suffix: STYLE_SUFFIX[styleKey] || SUFFIX_SINGLE,
+                pair: STYLE_PAIR_WORDS[styleKey] || PAIR_WORDS,
+                pairSuffix: STYLE_PAIR_SUFFIX[styleKey] || PAIR_SUFFIX
+            };
+        }
+
+        function generateName(type, styleKey, lastChar) {
+            const styleWords = getStyleWords(styleKey);
+            let prefixes = styleWords.prefix;
+            let suffixes = styleWords.suffix;
+            let pairs = styleWords.pair;
+            let pairSuffixs = styleWords.pairSuffix;
+            if (customPrefixes.length) { prefixes = prefixes.concat(customPrefixes); }
+            let chainPrefix = null;
+            if (lastChar && typeof lastChar === 'string' && lastChar.length === 1) {
+                const candidates = prefixes.filter(p => p === lastChar);
+                if (candidates.length) { chainPrefix = pick(candidates); }
+            }
+            const useChain = chainPrefix !== null && document.getElementById('chainSwitch').checked;
+            switch (type) {
+                case 2: {
+                    const p = useChain ? chainPrefix : pick(prefixes);
+                    const s = pick(suffixes);
+                    return p + s;
+                }
+                case 3: {
+                    const mode = currentRNG();
+                    if (mode < 0.45) {
+                        const p = useChain ? chainPrefix : pick(prefixes);
+                        return p + pick(suffixes) + pick(suffixes);
+                    } else if (mode < 0.80) {
+                        const p1 = useChain ? chainPrefix : pick(prefixes);
+                        let p2 = pick(prefixes);
+                        let tries = 0;
+                        while (p2 === p1 && tries < 10) { p2 = pick(prefixes);
+                            tries++; }
+                        return p1 + p2 + pick(suffixes);
+                    } else {
+                        const p = useChain ? chainPrefix : pick(prefixes);
+                        return p + pick(suffixes) + pick(prefixes);
+                    }
+                }
+                default: {
+                    const t = Math.floor(currentRNG() * 2) + 2;
+                    return generateName(t, styleKey, lastChar);
+                }
+            }
+        }
+
+        function generateBatch(seedValue) {
+            const count = Math.min(Math.max(parseInt(countInput.value) || 8, 1), 50);
+            const type = parseInt(typeSelect.value) || 0;
+            const style = document.getElementById('styleSelect').value || 'all';
+            if (seedValue !== undefined && seedValue !== null && seedValue !== '') {
+                resetRNG(seedValue);
+            } else {
+                const seedInput = document.getElementById('seedInput').value;
+                if (seedInput && seedInput.trim() !== '') { resetRNG(seedInput.trim()); } else { resetRNG(null); }
+            }
+            const names = [];
+            const usedNames = new Set();
+            let attempts = 0;
+            const maxAttempts = 5000;
+            let lastChar = null;
+            const chainMode = document.getElementById('chainSwitch').checked;
+            if (chainMode && currentNames.length > 0) {
+                const last = currentNames[currentNames.length - 1];
+                if (last && last.length > 0) { lastChar = last[last.length - 1]; }
+            }
+            const uniqueMode = document.getElementById('uniqueCheck').checked;
+            while (names.length < count && attempts < maxAttempts) {
+                attempts++;
+                let name;
+                if (chainMode && lastChar && names.length === 0) {
+                    name = generateName(type, style, lastChar);
+                } else if (chainMode && names.length > 0) {
+                    const prevName = names[names.length - 1];
+                    const prevLastChar = prevName ? prevName[prevName.length - 1] : null;
+                    name = generateName(type, style, prevLastChar);
+                } else {
+                    name = generateName(type, style, null);
+                }
+                if (!name || name.length < 2) continue;
+                if (uniqueMode) {
+                    if (usedNames.has(name)) continue;
+                    usedNames.add(name);
+                }
+                names.push(name);
+            }
+            if (chainMode && names.length < count) {
+                while (names.length < count) {
+                    const name = generateName(type, style, null);
+                    if (!name || name.length < 2) continue;
+                    if (uniqueMode && usedNames.has(name)) continue;
+                    if (uniqueMode) usedNames.add(name);
+                    names.push(name);
+                }
+            }
+            render(names);
+            saveHistory(names);
+            saveConfig();
+            updateDailyRecommend();
+            const seedDisplay = document.getElementById('seedInput').value || '随机';
+            showToast(`✅ 已生成 ${names.length} 个地名 · 种子: ${seedDisplay}`, 1500);
+        }
+
         // ================================================================
-        //  3. 存 储 工 具
+        //  存储
         // ================================================================
         const storage = {
             get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
             set(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
         };
 
-        // ================================================================
-        //  4. 配 置 & 收 藏 & 自 定 义 词 库
-        // ================================================================
         let config = storage.get('wzConfig') || {
             count: 8,
             type: 2,
+            style: 'all',
             dark: false,
             noUpdateToday: false,
             xMin: -9999,
             xMax: 9999,
             zMin: -9999,
-            zMax: 9999
+            zMax: 9999,
+            chain: false,
+            unique: false,
+            animSpeed: 1.0,
+            animEnabled: true,
+            bgColor: '#f7f2ea',
+            bgImage: null,
+            fontFamily: 'default',
+            customFont: null
         };
+        if (config.type === 4) config.type = 2;
         let collectList = storage.get('wzCollect') || [];
+        let deletedCollect = storage.get('wzDeletedCollect') || [];
         let customPrefixes = storage.get('wzCustomPrefixes') || [];
+        let currentNames = [];
+        const HISTORY_KEY = 'wzHistory';
+        const MAX_HISTORY = 50;
+
+        function getHistory() { return storage.get(HISTORY_KEY) || []; }
+
+        function saveHistory(names) {
+            if (!names || !names.length) return;
+            let history = getHistory();
+            const currentStr = names.join('|||');
+            if (history.length > 0) {
+                const last = history[0];
+                if (last.names && last.names.join('|||') === currentStr) {
+                    last.timestamp = Date.now();
+                    storage.set(HISTORY_KEY, history);
+                    return;
+                }
+            }
+            history.unshift({ names: names.slice(), timestamp: Date.now() });
+            if (history.length > MAX_HISTORY) history = history.slice(0, MAX_HISTORY);
+            storage.set(HISTORY_KEY, history);
+        }
 
         function saveConfig() {
             config.count = parseInt(countInput.value) || 8;
             config.type = parseInt(typeSelect.value) || 0;
+            config.style = document.getElementById('styleSelect').value || 'all';
             config.xMin = parseInt(document.getElementById('xMin').value) || -9999;
             config.xMax = parseInt(document.getElementById('xMax').value) || 9999;
             config.zMin = parseInt(document.getElementById('zMin').value) || -9999;
             config.zMax = parseInt(document.getElementById('zMax').value) || 9999;
+            config.chain = document.getElementById('chainSwitch').checked;
+            config.unique = document.getElementById('uniqueCheck').checked;
+            config.animSpeed = parseFloat(document.getElementById('animSpeed').value) || 1.0;
+            config.animEnabled = document.getElementById('animToggle').checked;
+            config.bgColor = document.getElementById('bgColorPicker').value;
+            config.fontFamily = document.getElementById('fontSelect').value;
             storage.set('wzConfig', config);
+            storage.set('wzCollect', collectList);
+            storage.set('wzDeletedCollect', deletedCollect);
+            storage.set('wzCustomPrefixes', customPrefixes);
         }
 
-        function getAllPrefixes() {
-            return PREFIX_SINGLE.concat(customPrefixes);
-        }
-
-        function generateName(type) {
-            const prefixes = getAllPrefixes();
-            switch (type) {
-                case 2:
-                    return pick(prefixes) + pick(SUFFIX_SINGLE);
-                case 3: {
-                    const mode = Math.random();
-                    if (mode < 0.45) return pick(prefixes) + pick(SUFFIX_SINGLE) + pick(SUFFIX_SINGLE);
-                    if (mode < 0.80) return pick(prefixes) + pick(prefixes) + pick(SUFFIX_SINGLE);
-                    return pick(prefixes) + pick(SUFFIX_SINGLE) + pick(prefixes);
-                }
-                case 4:
-                    return pick(PAIR_WORDS) + pick(PAIR_SUFFIX);
-                default: {
-                    const t = Math.floor(Math.random() * 3) + 2;
-                    return generateName(t);
-                }
-            }
-        }
+        function getAllPrefixes() { return PREFIX_SINGLE.concat(customPrefixes); }
 
         // ================================================================
-        //  5. DOM 引 用
+        //  DOM 引用
         // ================================================================
         const countInput = document.getElementById('countInput');
         const typeSelect = document.getElementById('typeSelect');
+        const styleSelect = document.getElementById('styleSelect');
         const generateBtn = document.getElementById('generateBtn');
-        // copyBtn 已移除
         const clearBtn = document.getElementById('clearBtn');
         const exportBtn = document.getElementById('exportBtn');
-        const themeBtn = document.getElementById('themeBtn');
+        const exportFormat = document.getElementById('exportFormat');
         const copyAllFull = document.getElementById('copyAllFull');
         const globalUniqueBtn = document.getElementById('globalUniqueBtn');
         const uniqueCheck = document.getElementById('uniqueCheck');
-        const pinyinSwitch = document.getElementById('pinyinSwitch');
+        const chainSwitch = document.getElementById('chainSwitch');
         const importDictBtn = document.getElementById('importDictBtn');
         const dictFileInput = document.getElementById('dictFileInput');
         const dictManageBtn = document.getElementById('dictManageBtn');
@@ -1258,11 +2658,8 @@
         const nameGrid = document.getElementById('nameGrid');
         const emptyState = document.getElementById('emptyState');
         const statsInfo = document.getElementById('statsInfo');
+        const searchResultCount = document.getElementById('searchResultCount');
         const toast = document.getElementById('toast');
-        const devBtn = document.getElementById('devBtn');
-        const devModal = document.getElementById('devModal');
-        const devClose = document.getElementById('devClose');
-        const openUpdateBtn = document.getElementById('openUpdateBtn');
         const updateModal = document.getElementById('updateModal');
         const updateClose = document.getElementById('updateClose');
         const updateIgnore = document.getElementById('updateIgnore');
@@ -1273,6 +2670,7 @@
         const collectEmpty = document.getElementById('collectEmpty');
         const collectCopyAll = document.getElementById('collectCopyAll');
         const collectClearAll = document.getElementById('collectClearAll');
+        const collectRestoreBtn = document.getElementById('collectRestoreBtn');
         const helpBtn = document.getElementById('helpBtn');
         const helpModal = document.getElementById('helpModal');
         const helpClose = document.getElementById('helpClose');
@@ -1282,23 +2680,40 @@
         const historyClearAll = document.getElementById('historyClearAll');
         const historyList = document.getElementById('historyList');
         const historyEmpty = document.getElementById('historyEmpty');
-
-        let currentNames = [];
+        const searchInput = document.getElementById('searchInput');
+        const searchClear = document.getElementById('searchClear');
+        const seedInput = document.getElementById('seedInput');
+        const resetSeedBtn = document.getElementById('resetSeedBtn');
+        const dailyRecName = document.getElementById('dailyRecName');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const settingsModal = document.getElementById('settingsModal');
+        const settingsClose = document.getElementById('settingsClose');
+        const animSpeedInput = document.getElementById('animSpeed');
+        const animSpeedDisplay = document.getElementById('animSpeedDisplay');
+        const animToggle = document.getElementById('animToggle');
+        const themeBtnSettings = document.getElementById('themeBtnSettings');
+        const openUpdateBtn = document.getElementById('openUpdateBtn');
+        const openUpdateBtn2 = document.getElementById('openUpdateBtn2');
+        const devModal = document.getElementById('devModal');
+        const devClose = document.getElementById('devClose');
+        // 背景
+        const bgImageInput = document.getElementById('bgImageInput');
+        const bgFileName = document.getElementById('bgFileName');
+        const bgColorPicker = document.getElementById('bgColorPicker');
+        const bgClearBtn = document.getElementById('bgClearBtn');
+        // 字体
+        const fontSelect = document.getElementById('fontSelect');
+        const fontFileInput = document.getElementById('fontFileInput');
+        const fontFileName = document.getElementById('fontFileName');
+        const fontClearBtn = document.getElementById('fontClearBtn');
 
         // ================================================================
-        //  6. 弹窗控制辅助函数
+        //  弹窗控制
         // ================================================================
-        function showModal(modal) {
-            modal.classList.add('active');
-        }
+        function showModal(modal) { modal.classList.add('active'); }
 
-        function hideModal(modal) {
-            modal.classList.remove('active');
-        }
+        function hideModal(modal) { modal.classList.remove('active'); }
 
-        // ================================================================
-        //  7. Toast
-        // ================================================================
         function showToast(msg, duration = 1800) {
             toast.textContent = msg;
             toast.classList.add('show');
@@ -1307,19 +2722,40 @@
         }
 
         // ================================================================
-        //  8. 渲 染 核 心
+        //  每日推荐
         // ================================================================
-        function render(names) {
+        function updateDailyRecommend() {
+            const today = new Date();
+            const dateStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today
+                .getDate()).padStart(2, '0');
+            const seed = dateStr.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+            const rng = createRNG(seed);
+            const oldRNG = currentRNG;
+            currentRNG = rng;
+            const name = generateName(2, 'all', null);
+            currentRNG = oldRNG;
+            if (name && name.length >= 2) {
+                dailyRecName.textContent = name + ' · ' + (MEANING_MAP[name[0]] || '雅致') + (MEANING_MAP[name[1]] || '美好');
+            } else {
+                dailyRecName.textContent = '清风明月';
+            }
+        }
+
+        // ================================================================
+        //  渲染
+        // ================================================================
+        function render(names, filterText) {
             currentNames = names || [];
+            const searchTerm = (filterText || searchInput.value || '').trim().toLowerCase();
             if (!currentNames.length) {
                 nameGrid.style.display = 'none';
                 emptyState.style.display = 'block';
                 statsInfo.textContent = '暂无地名，点击「生成」';
+                searchResultCount.textContent = '';
                 return;
             }
             emptyState.style.display = 'none';
             nameGrid.style.display = 'grid';
-
             const lenMap = {};
             currentNames.forEach(n => { const l = n.length;
                 lenMap[l] = (lenMap[l] || 0) + 1; });
@@ -1328,43 +2764,71 @@
             if (lenMap[3]) parts.push(`三字 ${lenMap[3]} 个`);
             if (lenMap[4]) parts.push(`四字 ${lenMap[4]} 个`);
             statsInfo.textContent = `共 ${currentNames.length} 个 · ${parts.join(' · ')}`;
-
-            const showPinyin = pinyinSwitch.checked;
-            nameGrid.innerHTML = currentNames.map(name => {
+            const styleKey = styleSelect.value || 'all';
+            const styleName = getStyleName(styleKey);
+            let filtered = currentNames;
+            if (searchTerm) {
+                filtered = currentNames.filter(name => {
+                    const meaning = generateMeaning(name);
+                    return name.includes(searchTerm) || meaning.includes(searchTerm);
+                });
+                searchResultCount.textContent = `🔍 找到 ${filtered.length} 个`;
+            } else {
+                searchResultCount.textContent = '';
+            }
+            if (!filtered.length) {
+                nameGrid.innerHTML =
+                    `<div class="empty-state" style="grid-column:1/-1;padding:30px 0;font-size:16px;">🔍 未找到匹配「${searchTerm}」的地名</div>`;
+                return;
+            }
+            const speed = config.animSpeed || 1.0;
+            const animEnabled = config.animEnabled !== false;
+            const duration = 0.45 / speed;
+            const noAnimClass = animEnabled ? '' : 'no-animation';
+            nameGrid.innerHTML = filtered.map((name, idx) => {
                 const lenTag = name.length === 2 ? '两字' : name.length === 3 ? '三字' : '四字';
                 const isStar = collectList.includes(name);
                 const location = pick(LOCATION_LIST);
                 const coords = getRandomXZ();
-                const pinyinHtml = showPinyin ? `<div class="name-pinyin">${getPinyinStr(name)}</div>` : '';
+                const meaning = generateMeaning(name);
+                const styleTag = styleKey !== 'all' ? `<span class="name-style-tag">${styleName}</span>` : '';
+                const delay = (idx % 18) * 0.04;
+                const animStyle = animEnabled ?
+                    `animation: cardIn ${duration}s ease forwards; animation-delay: ${delay}s;` :
+                    '';
                 return `
-                        <div class="name-item">
+                        <div class="name-item ${noAnimClass}" style="${animStyle}">
+                            ${styleTag}
                             <span class="star ${isStar?'active':''}" data-name="${name}">⭐</span>
                             <div class="name-text">${name}</div>
-                            ${pinyinHtml}
+                            <div class="name-meaning">📖 ${meaning}</div>
                             <div class="name-length-tag">${lenTag}</div>
                             <div class="name-location">📍 ${location}</div>
                             <div class="name-coords">🗺️ ${coords}</div>
                         </div>
                     `;
             }).join('');
-
             nameGrid.querySelectorAll('.star').forEach(star => {
                 star.onclick = function(e) {
                     e.stopPropagation();
                     const n = this.dataset.name;
                     if (collectList.includes(n)) {
+                        // 删除时存入回收站
+                        deletedCollect.push(n);
+                        if (deletedCollect.length > 100) deletedCollect = deletedCollect.slice(-100);
                         collectList = collectList.filter(x => x !== n);
                         this.classList.remove('active');
-                        showToast(`取消收藏「${n}」`);
+                        storage.set('wzDeletedCollect', deletedCollect);
+                        showToast(`已删除「${n}」，可点击收藏面板「恢复删除」找回`);
                     } else {
                         collectList.push(n);
                         this.classList.add('active');
                         showToast(`已收藏「${n}」`);
                     }
                     storage.set('wzCollect', collectList);
+                    saveConfig();
                 };
             });
-
             nameGrid.querySelectorAll('.name-item').forEach(item => {
                 item.onclick = function(e) {
                     if (e.target.closest('.star')) return;
@@ -1386,122 +2850,90 @@
         }
 
         // ================================================================
-        //  9. 历 史 记 录 函 数
-        // ================================================================
-        const HISTORY_KEY = 'wzHistory';
-        const MAX_HISTORY = 50;
-
-        function getHistory() {
-            return storage.get(HISTORY_KEY) || [];
-        }
-
-        function saveHistory(names) {
-            if (!names || !names.length) return;
-            let history = getHistory();
-            const currentStr = names.join('|||');
-            if (history.length > 0) {
-                const last = history[0];
-                if (last.names.join('|||') === currentStr) {
-                    last.timestamp = Date.now();
-                    storage.set(HISTORY_KEY, history);
-                    return;
-                }
-            }
-            history.unshift({ names: names.slice(), timestamp: Date.now() });
-            if (history.length > MAX_HISTORY) history = history.slice(0, MAX_HISTORY);
-            storage.set(HISTORY_KEY, history);
-        }
-
-        // ================================================================
-        //  10. 生 成 批 量
-        // ================================================================
-        function generateBatch() {
-            const count = Math.min(Math.max(parseInt(countInput.value) || 8, 1), 50);
-            const type = parseInt(typeSelect.value) || 0;
-            const names = [];
-            if (uniqueCheck.checked) {
-                const set = new Set();
-                let attempts = 0;
-                while (set.size < count && attempts < 2000) {
-                    set.add(generateName(type));
-                    attempts++;
-                }
-                names.push(...set);
-            } else {
-                for (let i = 0; i < count; i++) {
-                    names.push(generateName(type));
-                }
-            }
-            render(names);
-            saveHistory(names);
-            saveConfig();
-        }
-
-        // ================================================================
-        //  11. 收 藏 面 板
+        //  收藏面板（含恢复功能）
         // ================================================================
         function renderCollectPanel() {
-            if (!collectList.length) {
+            if (!collectList.length && !deletedCollect.length) {
                 collectEmpty.style.display = 'block';
                 collectListDom.style.display = 'none';
                 return;
             }
             collectEmpty.style.display = 'none';
             collectListDom.style.display = 'grid';
-            collectListDom.innerHTML = collectList.map((name, idx) => `
+            let html = '';
+            collectList.forEach((name, idx) => {
+                html += `
                     <div class="collect-item">
                         ${name}
                         <span class="collect-del" data-del="${idx}">移除</span>
                     </div>
-                `).join('');
+                `;
+            });
+            if (deletedCollect.length) {
+                html += `<div style="grid-column:1/-1;text-align:center;font-size:12px;color:var(--text-light);padding:8px 0;border-top:1px dashed var(--border-color);">
+                    🗑️ 回收站 (${deletedCollect.length} 项)
+                </div>`;
+                deletedCollect.forEach((name, idx) => {
+                    html += `
+                        <div class="collect-item" style="opacity:0.6;">
+                            ${name}
+                            <span class="collect-restore" data-restore="${idx}">↩️ 恢复</span>
+                        </div>
+                    `;
+                });
+            }
+            collectListDom.innerHTML = html;
             collectListDom.querySelectorAll('.collect-del').forEach(el => {
                 el.onclick = function() {
                     const idx = parseInt(this.dataset.del);
-                    collectList.splice(idx, 1);
-                    storage.set('wzCollect', collectList);
-                    renderCollectPanel();
-                    if (currentNames.length) {
-                        nameGrid.querySelectorAll('.star').forEach(s => {
-                            const n = s.dataset.name;
-                            if (collectList.includes(n)) s.classList.add('active');
-                            else s.classList.remove('active');
-                        });
+                    const name = collectList[idx];
+                    if (name) {
+                        deletedCollect.push(name);
+                        if (deletedCollect.length > 100) deletedCollect = deletedCollect.slice(-100);
+                        collectList.splice(idx, 1);
+                        storage.set('wzDeletedCollect', deletedCollect);
+                        storage.set('wzCollect', collectList);
+                        renderCollectPanel();
+                        if (currentNames.length) {
+                            nameGrid.querySelectorAll('.star').forEach(s => {
+                                const n = s.dataset.name;
+                                if (collectList.includes(n)) s.classList.add('active');
+                                else s.classList.remove('active');
+                            });
+                        }
+                        showToast(`已移入回收站：${name}`);
+                        saveConfig();
+                    }
+                };
+            });
+            collectListDom.querySelectorAll('.collect-restore').forEach(el => {
+                el.onclick = function() {
+                    const idx = parseInt(this.dataset.restore);
+                    const name = deletedCollect[idx];
+                    if (name) {
+                        deletedCollect.splice(idx, 1);
+                        if (!collectList.includes(name)) {
+                            collectList.push(name);
+                        }
+                        storage.set('wzDeletedCollect', deletedCollect);
+                        storage.set('wzCollect', collectList);
+                        renderCollectPanel();
+                        if (currentNames.length) {
+                            nameGrid.querySelectorAll('.star').forEach(s => {
+                                const n = s.dataset.name;
+                                if (collectList.includes(n)) s.classList.add('active');
+                                else s.classList.remove('active');
+                            });
+                        }
+                        showToast(`✅ 已恢复「${name}」`);
+                        saveConfig();
                     }
                 };
             });
         }
 
         // ================================================================
-        //  12. 词 库 管 理 面 板
-        // ================================================================
-        function renderDictPanel() {
-            const allWords = getAllPrefixes();
-            dictStats.textContent = `共 ${allWords.length} 个词（默认 ${PREFIX_SINGLE.length}，自定义 ${customPrefixes.length}）`;
-            dictWordList.innerHTML = allWords.map((word, idx) => {
-                const isCustom = idx >= PREFIX_SINGLE.length;
-                const realIdx = isCustom ? idx - PREFIX_SINGLE.length : idx;
-                return `
-                        <div style="background:rgba(235,220,208,0.2);padding:6px 8px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-size:14px;">
-                            <span>${word}</span>
-                            ${isCustom ? `<span class="dict-del" data-idx="${realIdx}" style="cursor:pointer;color:#b88;font-size:12px;">✕</span>` : `<span style="color:#999;font-size:11px;">默认</span>`}
-                        </div>
-                    `;
-            }).join('');
-
-            dictWordList.querySelectorAll('.dict-del').forEach(el => {
-                el.onclick = function(e) {
-                    e.stopPropagation();
-                    const idx = parseInt(this.dataset.idx);
-                    customPrefixes.splice(idx, 1);
-                    storage.set('wzCustomPrefixes', customPrefixes);
-                    renderDictPanel();
-                    showToast('已删除该词');
-                };
-            });
-        }
-
-        // ================================================================
-        //  13. 历 史 记 录 面 板 渲 染
+        //  历史记录
         // ================================================================
         function renderHistoryPanel() {
             const history = getHistory();
@@ -1519,7 +2951,7 @@
                 return `
                         <div class="collect-item" style="cursor:pointer;text-align:left;padding:10px 14px;" data-idx="${idx}">
                             <div style="font-weight:bold;">📌 ${preview}</div>
-                            <div style="font-size:12px;color:#a08570;margin-top:4px;">
+                            <div style="font-size:12px;color:var(--text-light);margin-top:4px;">
                                 ${count} 个地名 · ${time}
                             </div>
                         </div>
@@ -1546,10 +2978,75 @@
         }
 
         // ================================================================
-        //  14. 事 件 绑 定
+        //  词库管理
         // ================================================================
-        generateBtn.addEventListener('click', generateBatch);
+        function renderDictPanel() {
+            const allWords = getAllPrefixes();
+            dictStats.textContent = `共 ${allWords.length} 个词（默认 ${PREFIX_SINGLE.length}，自定义 ${customPrefixes.length}）`;
+            dictWordList.innerHTML = allWords.map((word, idx) => {
+                const isCustom = idx >= PREFIX_SINGLE.length;
+                const realIdx = isCustom ? idx - PREFIX_SINGLE.length : idx;
+                return `
+                        <div style="background:rgba(235,220,208,0.2);padding:6px 8px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-size:14px;">
+                            <span>${word}</span>
+                            ${isCustom ? `<span class="dict-del" data-idx="${realIdx}" style="cursor:pointer;color:#b88;font-size:12px;">✕</span>` : `<span style="color:#999;font-size:11px;">默认</span>`}
+                        </div>
+                    `;
+            }).join('');
+            dictWordList.querySelectorAll('.dict-del').forEach(el => {
+                el.onclick = function(e) {
+                    e.stopPropagation();
+                    const idx = parseInt(this.dataset.idx);
+                    customPrefixes.splice(idx, 1);
+                    storage.set('wzCustomPrefixes', customPrefixes);
+                    renderDictPanel();
+                    showToast('已删除该词');
+                    saveConfig();
+                };
+            });
+        }
 
+        // ================================================================
+        //  字体与背景应用
+        // ================================================================
+        function applyFont() {
+            const fontVal = config.fontFamily || 'default';
+            const root = document.documentElement;
+            if (fontVal === 'default') {
+                root.style.setProperty('--font-family', "'Georgia', '华文楷体', 'KaiTi', 'SimSun', serif");
+            } else if (fontVal === 'mc') {
+                root.style.setProperty('--font-family', "'Minecraft', 'Minecraftia', 'Courier New', monospace");
+            } else if (fontVal === 'mi') {
+                root.style.setProperty('--font-family', "'MiSans', 'PingFang SC', 'Microsoft YaHei', sans-serif");
+            } else if (fontVal === 'custom' && config.customFont) {
+                root.style.setProperty('--font-family', `'CustomFont', 'Georgia', '华文楷体', serif`);
+            }
+        }
+
+        function applyBackground() {
+            const body = document.body;
+            const color = config.bgColor || '#f7f2ea';
+            const image = config.bgImage;
+            body.classList.remove('custom-bg-img', 'custom-bg-color');
+            if (image) {
+                body.classList.add('custom-bg-img');
+                body.style.setProperty('--custom-bg-image', `url(${image})`);
+                if (color) {
+                    body.classList.add('custom-bg-color');
+                    body.style.setProperty('--custom-bg-color', color);
+                }
+            } else if (color) {
+                body.classList.add('custom-bg-color');
+                body.style.setProperty('--custom-bg-color', color);
+            }
+        }
+
+        // ================================================================
+        //  事件绑定
+        // ================================================================
+
+        // 生成
+        generateBtn.addEventListener('click', function() { generateBatch(); });
         countInput.addEventListener('change', function() {
             let v = parseInt(this.value) || 8;
             v = Math.min(Math.max(v, 1), 50);
@@ -1557,42 +3054,49 @@
             saveConfig();
         });
         countInput.addEventListener('keydown', e => { if (e.key === 'Enter') generateBatch(); });
-
         typeSelect.addEventListener('change', saveConfig);
         typeSelect.addEventListener('keydown', e => { if (e.key === 'Enter') generateBatch(); });
+        styleSelect.addEventListener('change', saveConfig);
 
         // 清空
         clearBtn.addEventListener('click', function() { render([]);
             showToast('已清空', 1000); });
 
-        // 明暗切换
-        themeBtn.addEventListener('click', function() {
-            config.dark = !config.dark;
-            document.documentElement.classList.toggle('dark', config.dark);
-            saveConfig();
-            showToast(config.dark ? '🌙 已切换至暗色' : '☀️ 已切换至浅色');
-        });
-
-        // 导出TXT
+        // 导出
         exportBtn.addEventListener('click', function() {
             if (!currentNames.length) { showToast('暂无地名，无法导出'); return; }
-            const lines = [];
+            const format = exportFormat.value;
+            let items = [];
             nameGrid.querySelectorAll('.name-item').forEach(item => {
                 const name = item.querySelector('.name-text')?.textContent || '';
                 const loc = item.querySelector('.name-location')?.textContent?.replace('📍 ', '') || '';
                 const coord = item.querySelector('.name-coords')?.textContent?.replace('🗺️ ', '') || '';
-                lines.push(`${name} | ${loc} | ${coord}`);
+                const meaning = item.querySelector('.name-meaning')?.textContent?.replace('📖 ', '') || '';
+                items.push({ name, location: loc, coords: coord, meaning });
             });
-            const blob = new Blob([lines.join('\r\n')], { type: 'text/plain;charset=utf-8' });
+            let content = '';
+            let ext = format;
+            if (format === 'txt') {
+                content = items.map(it => `${it.name} | ${it.location} | ${it.coords} | ${it.meaning}`).join('\r\n');
+            } else if (format === 'json') {
+                content = JSON.stringify(items, null, 2);
+            } else if (format === 'csv') {
+                content = '地名,位置,坐标,寓意\n' + items.map(it =>
+                    `"${it.name}","${it.location}","${it.coords}","${it.meaning}"`).join('\n');
+            }
+            let fileName = prompt('请输入文件名（不含扩展名）：', '五洲地名列表');
+            if (fileName === null) return;
+            fileName = fileName.trim() || '五洲地名列表';
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = '五洲地名列表.txt';
+            a.download = `${fileName}.${ext === 'txt' ? 'txt' : ext}`;
             a.click();
             URL.revokeObjectURL(a.href);
-            showToast('✅ 已导出TXT文件');
+            showToast(`✅ 已导出 ${format.toUpperCase()} 文件`);
         });
 
-        // 复制完整信息
+        // 复制完整
         copyAllFull.addEventListener('click', function() {
             if (!currentNames.length) { showToast('暂无生成内容'); return; }
             const lines = [];
@@ -1600,13 +3104,13 @@
                 const name = item.querySelector('.name-text')?.textContent || '';
                 const loc = item.querySelector('.name-location')?.textContent?.replace('📍 ', '') || '';
                 const coord = item.querySelector('.name-coords')?.textContent?.replace('🗺️ ', '') || '';
-                lines.push(`${name} | ${loc} | ${coord}`);
+                const meaning = item.querySelector('.name-meaning')?.textContent?.replace('📖 ', '') || '';
+                lines.push(`${name} | ${loc} | ${coord} | ${meaning}`);
             });
-            const text = lines.join('\n');
-            navigator.clipboard.writeText(text).then(() => showToast(`✅ 已复制 ${lines.length} 条完整信息`))
+            navigator.clipboard.writeText(lines.join('\n')).then(() => showToast(`✅ 已复制 ${lines.length} 条完整信息`))
                 .catch(() => {
                     const ta = document.createElement('textarea');
-                    ta.value = text;
+                    ta.value = lines.join('\n');
                     document.body.appendChild(ta);
                     ta.select();
                     document.execCommand('copy');
@@ -1615,7 +3119,7 @@
                 });
         });
 
-        // 全局去重
+        // 去重
         globalUniqueBtn.addEventListener('click', function() {
             if (!currentNames.length) { showToast('暂无生成内容'); return; }
             const unique = Array.from(new Set(currentNames));
@@ -1623,12 +3127,8 @@
             showToast(`🔂 去重完成，剩余 ${unique.length} 个不重复地名`);
         });
 
-        // 拼音开关
-        pinyinSwitch.addEventListener('change', function() {
-            if (currentNames.length) render(currentNames);
-        });
-
-        // 坐标范围变更保存
+        chainSwitch.addEventListener('change', saveConfig);
+        uniqueCheck.addEventListener('change', saveConfig);
         ['xMin', 'xMax', 'zMin', 'zMax'].forEach(id => {
             document.getElementById(id).addEventListener('change', saveConfig);
         });
@@ -1646,6 +3146,7 @@
                 storage.set('wzCustomPrefixes', customPrefixes);
                 showToast(`✅ 成功导入 ${arr.length} 个自定义单字词！`);
                 dictFileInput.value = '';
+                saveConfig();
             };
             reader.readAsText(file);
         });
@@ -1664,22 +3165,13 @@
                 storage.set('wzCustomPrefixes', customPrefixes);
                 renderDictPanel();
                 showToast('已清空自定义词库');
+                saveConfig();
             }
         });
 
-        // 开发者
-        devBtn.addEventListener('click', () => { showModal(devModal); });
-        devClose.addEventListener('click', () => { hideModal(devModal); });
-        devModal.addEventListener('click', (e) => { if (e.target === devModal) hideModal(devModal); });
-
-        openUpdateBtn.addEventListener('click', () => {
-            hideModal(devModal);
-            showModal(updateModal);
-        });
-
+        // 更新日志
         updateClose.addEventListener('click', () => { hideModal(updateModal); });
         updateModal.addEventListener('click', (e) => { if (e.target === updateModal) hideModal(updateModal); });
-
         updateIgnore.addEventListener('click', function() {
             config.noUpdateToday = true;
             storage.set('updateDate', new Date().toDateString());
@@ -1687,8 +3179,28 @@
             hideModal(updateModal);
             showToast('今日不再弹出更新');
         });
+        openUpdateBtn.addEventListener('click', () => {
+            hideModal(devModal);
+            showModal(updateModal);
+        });
+        openUpdateBtn2.addEventListener('click', () => {
+            hideModal(settingsModal);
+            showModal(updateModal);
+        });
 
-        // 收藏面板
+        // 开发者（已废弃，打开设置）
+        document.getElementById('devBtn')?.addEventListener('click', function() {
+            showModal(settingsModal);
+            // 滚动到开发者信息区域
+            setTimeout(() => {
+                const devInfo = document.querySelector('.settings-dev-info');
+                if (devInfo) devInfo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        });
+        devClose.addEventListener('click', () => { hideModal(devModal); });
+        devModal.addEventListener('click', (e) => { if (e.target === devModal) hideModal(devModal); });
+
+        // 收藏
         collectOpenBtn.addEventListener('click', function() {
             renderCollectPanel();
             showModal(collectModal);
@@ -1701,21 +3213,49 @@
             navigator.clipboard.writeText(collectList.join(' ')).then(() => showToast('✅ 已复制全部收藏'));
         });
         collectClearAll.addEventListener('click', function() {
-            collectList = [];
+            if (collectList.length === 0 && deletedCollect.length === 0) { showToast('没有可清空的内容'); return; }
+            if (confirm('确定清空全部收藏（包括回收站）吗？')) {
+                // 清空前先全部移入回收站
+                collectList.forEach(name => { if (!deletedCollect.includes(name)) deletedCollect.push(name); });
+                collectList = [];
+                storage.set('wzCollect', collectList);
+                storage.set('wzDeletedCollect', deletedCollect);
+                renderCollectPanel();
+                if (currentNames.length) {
+                    nameGrid.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+                }
+                showToast('🗑️ 全部收藏已移入回收站');
+                saveConfig();
+            }
+        });
+        collectRestoreBtn.addEventListener('click', function() {
+            if (!deletedCollect.length) { showToast('回收站为空'); return; }
+            // 恢复所有
+            const count = deletedCollect.length;
+            deletedCollect.forEach(name => {
+                if (!collectList.includes(name)) collectList.push(name);
+            });
+            deletedCollect = [];
+            storage.set('wzDeletedCollect', deletedCollect);
             storage.set('wzCollect', collectList);
             renderCollectPanel();
             if (currentNames.length) {
-                nameGrid.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+                nameGrid.querySelectorAll('.star').forEach(s => {
+                    const n = s.dataset.name;
+                    if (collectList.includes(n)) s.classList.add('active');
+                    else s.classList.remove('active');
+                });
             }
-            showToast('🗑️ 收藏已清空');
+            showToast(`✅ 已恢复 ${count} 个被删除的收藏`);
+            saveConfig();
         });
 
-        // 说明弹窗
+        // 说明
         helpBtn.addEventListener('click', () => { showModal(helpModal); });
         helpClose.addEventListener('click', () => { hideModal(helpModal); });
         helpModal.addEventListener('click', (e) => { if (e.target === helpModal) hideModal(helpModal); });
 
-        // 历史记录
+        // 历史
         historyBtn.addEventListener('click', function() {
             renderHistoryPanel();
             showModal(historyModal);
@@ -1724,29 +3264,203 @@
         historyModal.addEventListener('click', (e) => { if (e.target === historyModal) hideModal(historyModal); });
         historyClearAll.addEventListener('click', clearHistory);
 
+        // 种子重置
+        resetSeedBtn.addEventListener('click', function() {
+            seedInput.value = '';
+            showToast('已重置种子为随机');
+        });
+
+        // 搜索
+        searchInput.addEventListener('input', function() {
+            if (currentNames.length) render(currentNames, this.value);
+        });
+        searchClear.addEventListener('click', function() {
+            searchInput.value = '';
+            if (currentNames.length) render(currentNames);
+            searchInput.focus();
+        });
+
         // ================================================================
-        //  15. 初 始 化
+        //  设置面板
+        // ================================================================
+        settingsBtn.addEventListener('click', function() {
+            animSpeedInput.value = config.animSpeed || 1.0;
+            animSpeedDisplay.textContent = (config.animSpeed || 1.0).toFixed(1) + '×';
+            animToggle.checked = config.animEnabled !== false;
+            bgColorPicker.value = config.bgColor || '#f7f2ea';
+            fontSelect.value = config.fontFamily || 'default';
+            if (config.bgImage) {
+                bgFileName.textContent = '已上传图片';
+            } else {
+                bgFileName.textContent = '未选择';
+            }
+            if (config.customFont) {
+                fontFileName.textContent = '已上传字体';
+            } else {
+                fontFileName.textContent = '未选择';
+            }
+            showModal(settingsModal);
+        });
+
+        settingsClose.addEventListener('click', () => { hideModal(settingsModal); });
+        settingsModal.addEventListener('click', (e) => { if (e.target === settingsModal) hideModal(settingsModal); });
+
+        // 动画速率
+        animSpeedInput.addEventListener('input', function() {
+            const val = parseFloat(this.value);
+            animSpeedDisplay.textContent = val.toFixed(1) + '×';
+            config.animSpeed = val;
+            saveConfig();
+            if (currentNames.length) render(currentNames);
+        });
+
+        // 动画开关
+        animToggle.addEventListener('change', function() {
+            config.animEnabled = this.checked;
+            saveConfig();
+            if (currentNames.length) render(currentNames);
+            showToast(this.checked ? '✨ 入场动画已开启' : '⏸️ 入场动画已关闭', 1200);
+        });
+
+        // 明暗切换
+        themeBtnSettings.addEventListener('click', function() {
+            config.dark = !config.dark;
+            document.documentElement.classList.toggle('dark', config.dark);
+            saveConfig();
+            showToast(config.dark ? '🌙 已切换至暗色' : '☀️ 已切换至浅色');
+        });
+
+        // ===== 背景设置 =====
+        bgImageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const dataUrl = ev.target.result;
+                config.bgImage = dataUrl;
+                bgFileName.textContent = file.name;
+                applyBackground();
+                saveConfig();
+                showToast('✅ 背景图片已应用');
+            };
+            reader.readAsDataURL(file);
+        });
+
+        bgColorPicker.addEventListener('input', function() {
+            config.bgColor = this.value;
+            applyBackground();
+            saveConfig();
+        });
+
+        bgClearBtn.addEventListener('click', function() {
+            config.bgImage = null;
+            bgFileName.textContent = '未选择';
+            bgImageInput.value = '';
+            applyBackground();
+            saveConfig();
+            showToast('已清除自定义背景');
+        });
+
+        // ===== 字体设置 =====
+        fontSelect.addEventListener('change', function() {
+            config.fontFamily = this.value;
+            if (this.value !== 'custom') {
+                config.customFont = null;
+                fontFileName.textContent = '未选择';
+                fontFileInput.value = '';
+            }
+            applyFont();
+            saveConfig();
+            showToast('字体已切换');
+        });
+
+        fontFileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const dataUrl = ev.target.result;
+                config.customFont = dataUrl;
+                config.fontFamily = 'custom';
+                fontFileName.textContent = file.name;
+                fontSelect.value = 'custom';
+                // 动态加载字体
+                const fontName = 'CustomFont';
+                const fontFace = new FontFace(fontName, `url(${dataUrl})`);
+                fontFace.load().then(function(loadedFace) {
+                    document.fonts.add(loadedFace);
+                    applyFont();
+                    showToast('✅ 自定义字体已加载');
+                }).catch(function(err) {
+                    showToast('⚠️ 字体加载失败，请检查文件格式');
+                    console.error(err);
+                });
+                saveConfig();
+            };
+            reader.readAsDataURL(file);
+        });
+
+        fontClearBtn.addEventListener('click', function() {
+            config.customFont = null;
+            config.fontFamily = 'default';
+            fontFileName.textContent = '未选择';
+            fontFileInput.value = '';
+            fontSelect.value = 'default';
+            applyFont();
+            saveConfig();
+            showToast('已恢复默认字体');
+        });
+
+        // ================================================================
+        //  初始化
         // ================================================================
         window.addEventListener('DOMContentLoaded', function() {
             countInput.value = config.count || 8;
             typeSelect.value = config.type || 2;
+            styleSelect.value = config.style || 'all';
             document.getElementById('xMin').value = config.xMin ?? -9999;
             document.getElementById('xMax').value = config.xMax ?? 9999;
             document.getElementById('zMin').value = config.zMin ?? -9999;
             document.getElementById('zMax').value = config.zMax ?? 9999;
             if (config.dark) document.documentElement.classList.add('dark');
+            chainSwitch.checked = config.chain || false;
+            uniqueCheck.checked = config.unique || false;
+            animSpeedInput.value = config.animSpeed || 1.0;
+            animSpeedDisplay.textContent = (config.animSpeed || 1.0).toFixed(1) + '×';
+            animToggle.checked = config.animEnabled !== false;
+            bgColorPicker.value = config.bgColor || '#f7f2ea';
+            fontSelect.value = config.fontFamily || 'default';
+
+            // 应用背景
+            applyBackground();
+            // 应用字体
+            applyFont();
+
+            // 如果有自定义字体数据，加载
+            if (config.customFont && config.fontFamily === 'custom') {
+                try {
+                    const fontFace = new FontFace('CustomFont', `url(${config.customFont})`);
+                    fontFace.load().then(function(loadedFace) {
+                        document.fonts.add(loadedFace);
+                        applyFont();
+                    }).catch(function() {});
+                } catch (e) {}
+            }
 
             const updateDate = storage.get('updateDate');
             if (config.noUpdateToday && updateDate === new Date().toDateString()) {
-                // 不显示更新弹窗
+                // 不显示
             } else {
                 showModal(updateModal);
             }
 
             generateBatch();
-            console.log('🏯 五洲铁路模组服务器地名生成器 已启动 · 五洲共力 · 四海同心');
-            console.log(`📚 词库规模: 前缀 ${PREFIX_SINGLE.length} 个 · 后缀 ${SUFFIX_SINGLE.length} 个 · 双字词 ${PAIR_WORDS.length} 个 · 双字后缀 ${PAIR_SUFFIX.length} 个 · 自定义 ${customPrefixes.length} 个`);
-            console.log(`⭐ 收藏数: ${collectList.length}`);
+            console.log('🏯 五洲铁路模组服务器地名生成器 V3.0_BETA3 已启动');
+            console.log(
+                `📚 词库规模: 前缀 ${PREFIX_SINGLE.length} 个 · 后缀 ${SUFFIX_SINGLE.length} 个 · 双字词 ${PAIR_WORDS.length} 个 · 双字后缀 ${PAIR_SUFFIX.length} 个 · 自定义 ${customPrefixes.length} 个`
+                );
+            console.log(`⭐ 收藏数: ${collectList.length}, 回收站: ${deletedCollect.length}`);
+            console.log(`⚙️ 动画速率: ${config.animSpeed || 1.0}x, 动画: ${config.animEnabled !== false ? '开启' : '关闭'}`);
         });
     </script>
 </body>
