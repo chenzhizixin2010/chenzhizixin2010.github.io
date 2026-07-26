@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>五洲铁路模组服务器地名生成器 V3.0_RC1</title>
+    <title>五洲铁路模组服务器地名生成器 V3.0_RC2</title>
     <style>
         /* ========== 全局重置 & 字体 ========== */
         * {
@@ -36,6 +36,7 @@
             --watermark-color: #d4c5b2;
             --settings-item-border: rgba(200, 180, 160, 0.12);
             --range-accent: #8b6b54;
+            --dict-text: #5a3e2b;
         }
         html.dark {
             --bg-body: #1c1a18;
@@ -61,6 +62,7 @@
             --watermark-color: #5a5048;
             --settings-item-border: rgba(145, 130, 115, 0.2);
             --range-accent: #b8a088;
+            --dict-text: #e8e0d8;
         }
         body {
             min-height: 100vh;
@@ -637,37 +639,68 @@
             white-space: nowrap;
         }
 
-        /* ===== 底部了解我们 ===== */
-        .about-us {
+        /* ===== 底部了解我们（同步文件2） ===== */
+        .about-us-wrap {
             margin-top: 28px;
-            padding-top: 18px;
+            padding-top: 20px;
             border-top: 1px solid var(--border-color);
             text-align: center;
-            font-size: 13px;
-            color: var(--text-light);
-            letter-spacing: 2px;
         }
-        .about-us a {
+        .about-us-wrap .about-title {
+            font-size: 18px;
+            color: var(--text-main);
+            letter-spacing: 4px;
+            margin-bottom: 6px;
+        }
+        .about-us-wrap .about-divider {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--text-light), transparent);
+            margin: 6px auto 12px;
+            border-radius: 2px;
+        }
+        .about-us-wrap p {
+            font-size: 14px;
+            color: var(--text-sub);
+            line-height: 1.7;
+            margin: 4px 0;
+            opacity: 0.85;
+        }
+        .about-us-wrap .about-meta {
+            font-size: 12px;
+            color: var(--text-light);
+            opacity: 0.6;
+            margin-top: 6px;
+            letter-spacing: 1px;
+        }
+        .about-us-wrap .bili-links {
+            margin-top: 10px;
+            font-size: 13px;
+            letter-spacing: 1px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 4px 10px;
+        }
+        .about-us-wrap .bili-links a {
             color: var(--text-sub);
             text-decoration: none;
             border-bottom: 1px dashed rgba(200, 180, 160, 0.3);
             transition: color 0.2s, border-color 0.2s;
-            margin: 0 4px;
         }
-        .about-us a:hover {
+        .about-us-wrap .bili-links a:hover {
             color: var(--text-main);
             border-bottom-color: var(--text-sub);
         }
-        .about-us .uid-label {
-            font-size: 12px;
-            opacity: 0.7;
+        .about-us-wrap .bili-links .sep {
+            opacity: 0.3;
         }
-        .footer-legal {
-            text-align: center;
+        .about-us-wrap .footer-legal {
             font-size: 11px;
             color: var(--text-light);
-            opacity: 0.5;
-            margin-top: 8px;
+            opacity: 0.4;
+            margin-top: 10px;
             letter-spacing: 2px;
             font-family: 'Georgia', serif;
         }
@@ -697,7 +730,7 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* ===== 弹窗通用 - 按钮固定底部 ===== */
+        /* ===== 弹窗通用 - 按钮固定底部 + 背景模糊 ===== */
         .dev-modal,
         .update-modal,
         .collect-modal,
@@ -710,6 +743,8 @@
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             z-index: 9999;
             align-items: center;
             justify-content: center;
@@ -1032,6 +1067,35 @@
             font-family: var(--font-family);
         }
 
+        /* ===== 词库管理暗色修复 ===== */
+        #dictWordList {
+            color: var(--dict-text);
+        }
+        #dictWordList > div {
+            color: var(--dict-text);
+        }
+        #dictWordList .dict-del {
+            color: #cc8888 !important;
+        }
+        #dictWordList .dict-del:hover {
+            color: #ff6666 !important;
+        }
+        html.dark #dictWordList > div {
+            background: rgba(60, 54, 48, 0.4) !important;
+        }
+        html.dark #dictWordList .dict-del {
+            color: #cc9999 !important;
+        }
+        html.dark #dictWordList .dict-del:hover {
+            color: #ff8888 !important;
+        }
+        #dictStats {
+            color: var(--text-sub);
+        }
+        html.dark #dictStats {
+            color: #c8c0b8;
+        }
+
         /* ===== 响应式 ===== */
         @media (max-width: 820px) {
             .container {
@@ -1294,13 +1358,11 @@
                 font-size: 9px;
                 padding: 1px 8px;
             }
-            .about-us {
-                font-size: 11px;
-                letter-spacing: 1px;
+            .about-us-wrap p {
+                font-size: 12px;
             }
-            .about-us a {
-                display: inline-block;
-                margin: 2px 0;
+            .about-us-wrap .bili-links {
+                font-size: 11px;
             }
             .set-group .coord-group {
                 flex-wrap: wrap;
@@ -1361,21 +1423,19 @@
     <div class="update-modal" id="updateModal">
         <div class="update-box">
             <div class="modal-scroll">
-                <h3>📜 更新日志 · V3.0_RC1</h3>
+                <h3>📜 更新日志 · V3.0_RC2</h3>
                 <div class="update-content">
-                    V3.0_RC1 2026-07-25
+                    V3.0_RC2 2026-07-26
 
                     🎉 本次更新：
-                    1. 字体新增「汉仪文黑85W」和「微软黑体」
-                    2. 设置面板布局调整：动画控制移至开发者信息下方
-                    3. 新增「GitHub历史版本仓库」按钮，链接至项目存档
-                    4. 地名卡片新增英文音译（大写拼音），并增加独立开关
-                    5. 移除地名下方的「两字」「三字」标签，界面更简洁
-                    6. 版本号更新至 V3.0_RC1
-                    7. 电脑端容器覆盖范围扩大，视觉更饱满
-                    8. 所有弹窗按钮固定底部，无需滚动即可操作
+                    1. 同步车站录入系统「了解我们」信息（服务器地址、官方群、B站链接）
+                    2. 导入词库功能整合至词库管理面板，操作更集中
+                    3. 修复暗色模式下词库管理文字颜色看不清的问题
+                    4. 收藏夹回收站新增「清空回收站」按钮，一键清理
+                    5. 所有弹窗背景增强模糊效果（backdrop-filter: blur(8px)）
+                    6. 版本号更新至 V3.0_RC2
 
-                    ✂️ 功能保留：
+                    ✂️ 保留功能：
                     - 风格选择（古风雅韵、山水自然、边塞雄浑、江南婉约、仙侠奇幻）
                     - 地名寓意解释 · 接龙模式 · 随机种子系统
                     - 导出 TXT / JSON / CSV（支持自定义文件名）
@@ -1406,7 +1466,7 @@
                 <h3>👤 开发者信息</h3>
                 <div class="dev-name-text">
                     开发者：Deepseek · 豆包 · 陈之自信
-                    版本：V3.0_RC1（2026-07-25）
+                    版本：V3.0_RC2（2026-07-26）
                     反馈：3064450669@qq.com 或 WRMSPNG@hotmail.com
                     © 五洲铁路模组服务器 2026
                 </div>
@@ -1431,6 +1491,7 @@
                     <button class="btn btn-secondary" id="collectCopyAll">复制全部收藏</button>
                     <button class="btn btn-secondary" id="collectRestoreBtn">🔄 恢复删除</button>
                     <button class="btn btn-secondary" id="collectClearAll">清空收藏</button>
+                    <button class="btn btn-secondary" id="collectClearTrash">🗑️ 清空回收站</button>
                 </div>
             </div>
             <div class="modal-footer">
@@ -1508,7 +1569,7 @@
         </div>
     </div>
 
-    <!-- ====== 词库管理弹窗 ====== -->
+    <!-- ====== 词库管理弹窗（含导入功能） ====== -->
     <div class="collect-modal" id="dictModal">
         <div class="collect-box" style="max-width:700px;">
             <div class="modal-scroll">
@@ -1516,6 +1577,8 @@
                 <div style="display:flex;gap:12px;justify-content:center;margin-bottom:12px;flex-wrap:wrap;">
                     <span id="dictStats" style="color:var(--text-sub);">共 0 个词</span>
                     <button class="btn btn-secondary" id="dictClearCustom" style="padding:4px 16px;font-size:13px;">清空自定义</button>
+                    <button class="btn btn-secondary" id="dictImportBtn" style="padding:4px 16px;font-size:13px;">📂 导入词库</button>
+                    <input type="file" id="dictFileInput" accept=".txt" style="display:none;">
                 </div>
                 <div id="dictWordList" style="max-height:400px;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;padding:8px 0;"></div>
             </div>
@@ -1544,7 +1607,7 @@
                     <label style="font-weight:bold;font-size:15px;">👤 开发者信息</label>
                     <div class="settings-dev-info">
                         <div><span class="dev-label">开发者：</span>Deepseek · 豆包 · 陈之自信</div>
-                        <div><span class="dev-label">版本：</span>V3.0_RC1（2026-07-25）</div>
+                        <div><span class="dev-label">版本：</span>V3.0_RC2（2026-07-26）</div>
                         <div><span class="dev-label">反馈：</span><a href="mailto:3064450669@qq.com">3064450669@qq.com</a> 或 <a href="mailto:WRMSPNG@hotmail.com">WRMSPNG@hotmail.com</a></div>
                         <div style="margin-top:4px;font-size:12px;opacity:0.6;">© 五洲铁路模组服务器 2026</div>
                     </div>
@@ -1622,7 +1685,7 @@
         <!-- 头部 -->
         <div class="header">
             <img class="header-img" src="https://pic1.imgdb.cn/i/033vPhrLk7PoHOs4qjTP8C.png" alt="五洲铁路模组服务器" />
-            <h1>五洲铁路模组服务器地名生成器 <span class="version-tag">V3.0_RC1</span></h1>
+            <h1>五洲铁路模组服务器地名生成器 <span class="version-tag">V3.0_RC2</span></h1>
             <div class="subtitle">— 五 洲 共 力 · 四 海 同 心 —</div>
             <div class="divider-line"></div>
             <div class="daily-recommend-header">
@@ -1665,10 +1728,6 @@
             <button class="btn btn-secondary btn-sm" id="dictManageBtn" style="min-height:30px;">
                 <span class="btn-icon">📚</span> 词库
             </button>
-            <button class="btn btn-secondary btn-sm" id="importDictBtn" style="min-height:30px;">
-                📂 导入
-            </button>
-            <input type="file" id="dictFileInput" accept=".txt" style="display:none;">
             <button class="btn btn-secondary btn-sm" id="helpBtn" style="min-height:30px;">
                 ❓ 说明
             </button>
@@ -1736,23 +1795,28 @@
             </div>
         </div>
 
-        <!-- 底部了解我们 -->
-        <div class="about-us">
-            <span>📢 了解我们</span>
-            <span style="margin:0 8px;opacity:0.4;">|</span>
-            <span class="uid-label">B站：</span>
-            <a href="https://space.bilibili.com/1499790297" target="_blank" rel="noopener">陈之自信chen_zixin</a>
-            <span style="margin:0 4px;opacity:0.4;">&</span>
-            <a href="https://space.bilibili.com/3546698959816732" target="_blank" rel="noopener">五洲社</a>
-        </div>
-        <div class="footer-legal">
-            V3.0_RC1 · © 五洲铁路模组服务器 2026
+        <!-- ===== 底部了解我们（同步文件2） ===== -->
+        <div class="about-us-wrap">
+            <div class="about-title">🚆 了解我们 · 五洲铁路模组服务器</div>
+            <div class="about-divider"></div>
+            <p>五洲铁路模组服务器（WRMS）成立于2023年，服务器属于《我的世界》MTR铁路模组主题服务器。</p>
+            <p>我们致力于打造高自由度的轨道交通世界，汇集了铁路爱好者与建筑师，希望共同构建一个宏伟的交通世界。</p>
+            <p style="margin-top:4px;font-size:13px;opacity:0.7;">📌 服务器地址：mc.chinadlrs.com ｜ 官方群：905631712</p>
+            <div class="bili-links">
+                <span>📢</span>
+                <span class="sep">|</span>
+                <span>B站：</span>
+                <a href="https://space.bilibili.com/1499790297" target="_blank" rel="noopener">陈之自信chen_zixin</a>
+                <span class="sep">&</span>
+                <a href="https://space.bilibili.com/3546698959816732" target="_blank" rel="noopener">五洲社</a>
+            </div>
+            <div class="footer-legal">V3.0_RC2 · © 五洲铁路模组服务器 2026</div>
         </div>
     </div>
 
     <script>
         // ================================================================
-        //  词库（V3.0_RC1 扩展，总数 820+）
+        //  词库（V3.0_RC2 扩展，总数 820+）
         // ================================================================
         const PREFIX_SINGLE = [
             '清', '雅', '韵', '秀', '灵', '幽', '静', '翠', '碧', '苍', '皓', '明', '和', '安', '宁', '逸', '致', '妙', '玄',
@@ -2822,14 +2886,15 @@
         const uniqueCheck = document.getElementById('uniqueCheck');
         const chainSwitch = document.getElementById('chainSwitch');
         const enSwitch = document.getElementById('enSwitch');
-        const importDictBtn = document.getElementById('importDictBtn');
-        const dictFileInput = document.getElementById('dictFileInput');
+        // 导入词库已整合到词库管理，移除独立按钮
         const dictManageBtn = document.getElementById('dictManageBtn');
         const dictModal = document.getElementById('dictModal');
         const dictClose = document.getElementById('dictClose');
         const dictWordList = document.getElementById('dictWordList');
         const dictStats = document.getElementById('dictStats');
         const dictClearCustom = document.getElementById('dictClearCustom');
+        const dictImportBtn = document.getElementById('dictImportBtn');
+        const dictFileInput = document.getElementById('dictFileInput');
         const nameGrid = document.getElementById('nameGrid');
         const emptyState = document.getElementById('emptyState');
         const statsInfo = document.getElementById('statsInfo');
@@ -2845,6 +2910,7 @@
         const collectEmpty = document.getElementById('collectEmpty');
         const collectCopyAll = document.getElementById('collectCopyAll');
         const collectClearAll = document.getElementById('collectClearAll');
+        const collectClearTrash = document.getElementById('collectClearTrash');
         const collectRestoreBtn = document.getElementById('collectRestoreBtn');
         const helpBtn = document.getElementById('helpBtn');
         const helpModal = document.getElementById('helpModal');
@@ -2871,12 +2937,10 @@
         const openUpdateBtn2 = document.getElementById('openUpdateBtn2');
         const devModal = document.getElementById('devModal');
         const devClose = document.getElementById('devClose');
-        // 背景
         const bgImageInput = document.getElementById('bgImageInput');
         const bgFileName = document.getElementById('bgFileName');
         const bgColorPicker = document.getElementById('bgColorPicker');
         const bgClearBtn = document.getElementById('bgClearBtn');
-        // 字体
         const fontSelect = document.getElementById('fontSelect');
         const fontFileInput = document.getElementById('fontFileInput');
         const fontFileName = document.getElementById('fontFileName');
@@ -3029,7 +3093,7 @@
         }
 
         // ================================================================
-        //  收藏面板（含恢复功能）
+        //  收藏面板（含恢复功能 + 清空回收站）
         // ================================================================
         function renderCollectPanel() {
             if (!collectList.length && !deletedCollect.length) {
@@ -3157,7 +3221,7 @@
         }
 
         // ================================================================
-        //  词库管理
+        //  词库管理（含导入功能）
         // ================================================================
         function renderDictPanel() {
             const allWords = getAllPrefixes();
@@ -3168,7 +3232,7 @@
                 return `
                         <div style="background:rgba(235,220,208,0.2);padding:6px 8px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-size:14px;">
                             <span>${word}</span>
-                            ${isCustom ? `<span class="dict-del" data-idx="${realIdx}" style="cursor:pointer;color:#b88;font-size:12px;">✕</span>` : `<span style="color:#999;font-size:11px;">默认</span>`}
+                            ${isCustom ? `<span class="dict-del" data-idx="${realIdx}" style="cursor:pointer;font-size:12px;">✕</span>` : `<span style="color:#999;font-size:11px;">默认</span>`}
                         </div>
                     `;
             }).join('');
@@ -3324,25 +3388,7 @@
             document.getElementById(id).addEventListener('change', saveConfig);
         });
 
-        // 导入词库
-        importDictBtn.addEventListener('click', () => dictFileInput.click());
-        dictFileInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-                const text = ev.target.result;
-                const arr = text.split(/[\n\r,，\s]+/).filter(s => s.length > 0);
-                customPrefixes.push(...arr);
-                storage.set('wzCustomPrefixes', customPrefixes);
-                showToast(`✅ 成功导入 ${arr.length} 个自定义单字词！`);
-                dictFileInput.value = '';
-                saveConfig();
-            };
-            reader.readAsText(file);
-        });
-
-        // 词库管理
+        // ---- 词库管理（导入功能整合） ----
         dictManageBtn.addEventListener('click', function() {
             renderDictPanel();
             showModal(dictModal);
@@ -3358,6 +3404,24 @@
                 showToast('已清空自定义词库');
                 saveConfig();
             }
+        });
+        // 导入词库按钮触发文件选择
+        dictImportBtn.addEventListener('click', () => dictFileInput.click());
+        dictFileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const text = ev.target.result;
+                const arr = text.split(/[\n\r,，\s]+/).filter(s => s.length > 0);
+                customPrefixes.push(...arr);
+                storage.set('wzCustomPrefixes', customPrefixes);
+                renderDictPanel();
+                showToast(`✅ 成功导入 ${arr.length} 个自定义单字词！`);
+                dictFileInput.value = '';
+                saveConfig();
+            };
+            reader.readAsText(file);
         });
 
         // 更新日志
@@ -3414,6 +3478,17 @@
                     nameGrid.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
                 }
                 showToast('🗑️ 全部收藏已移入回收站');
+                saveConfig();
+            }
+        });
+        // 清空回收站
+        collectClearTrash.addEventListener('click', function() {
+            if (!deletedCollect.length) { showToast('回收站为空'); return; }
+            if (confirm('确定清空回收站所有已删除的收藏吗？（不可恢复）')) {
+                deletedCollect = [];
+                storage.set('wzDeletedCollect', deletedCollect);
+                renderCollectPanel();
+                showToast('🗑️ 回收站已清空');
                 saveConfig();
             }
         });
@@ -3640,7 +3715,7 @@
             }
 
             generateBatch();
-            console.log('🏯 五洲铁路模组服务器地名生成器 V3.0_RC1 已启动');
+            console.log('🏯 五洲铁路模组服务器地名生成器 V3.0_RC2 已启动');
             console.log(
                 `📚 词库规模: 前缀 ${PREFIX_SINGLE.length} 个 · 后缀 ${SUFFIX_SINGLE.length} 个 · 双字词 ${PAIR_WORDS.length} 个 · 双字后缀 ${PAIR_SUFFIX.length} 个 · 自定义 ${customPrefixes.length} 个`
                 );
